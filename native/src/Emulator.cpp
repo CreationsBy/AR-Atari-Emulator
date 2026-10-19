@@ -153,6 +153,12 @@ extern "C" void ad_shutdown() {
     rom.clear();flushAudio.store(true,std::memory_order_release);ad_reset_reconstruction();
 }
 extern "C" const char *ad_last_error() {return error.c_str();}
+// Private renderer access on the emulator queue. Never exposed to network peers.
+// Game-specific adapters read graphics from the user's loaded cartridge rather
+// than distributing commercial sprite/room data in the application.
+extern "C" const uint8_t *ad_loaded_cartridge(size_t *size) {
+    *size=loaded?rom.size():0;return loaded?rom.data():nullptr;
+}
 extern "C" const ADFrame *ad_run_frame() {
     if(!loaded)return nullptr;
     traceCount=traceDropped=0;retro_run();++frame.number;

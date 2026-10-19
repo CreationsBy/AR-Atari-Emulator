@@ -42,7 +42,9 @@ struct SharedPresentation: Codable, Equatable {
     func actorRotation(reconstruction: String?, role: Int32) -> simd_quatf {
         // Semantic skaters already stand above their foot anchor. In a vertical
         // rink their silhouettes should stand in the screen plane, not lie on it.
-        upright && reconstruction == "iceHockeyNTSCv1" && role == 2 ?
+        let standing = reconstruction == "iceHockeyNTSCv1" && role == 2 ||
+            reconstruction == "adventureNTSCv1" && (role == 2 || role == 5)
+        return upright && standing ?
             simd_quatf(angle: -.pi / 2, axis: [1,0,0]) : simd_quatf()
     }
     func validate() throws {

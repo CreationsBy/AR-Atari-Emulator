@@ -7,6 +7,8 @@
 #include <vector>
 extern "C" const ADScene *ad_reconstruct_ice_hockey(const ADFrame*, const ADProfile*);
 extern "C" void ad_reset_ice_hockey();
+extern "C" const ADScene *ad_reconstruct_adventure(const ADFrame*, const ADProfile*);
+extern "C" void ad_reset_adventure();
 
 namespace {
 struct Component {
@@ -43,6 +45,7 @@ bool matches(const Component &c, const ADRule &r, int w,int h) {
 }
 extern "C" void ad_reset_reconstruction() {
     ad_reset_ice_hockey();
+    ad_reset_adventure();
     objects.clear(); previous.clear(); boxes.clear(); previousRoom=-1;
     previousWidth=previousHeight=0; ++sceneID;
 }
@@ -52,6 +55,7 @@ extern "C" const ADScene *ad_reconstruct(const ADFrame *f,const ADProfile *p) {
     if(!f || !p || !f->rgba || !f->width || !f->height || f->width>512 || f->height>512)
         return &result;
     if(p->adapter==1) if(auto scene=ad_reconstruct_ice_hockey(f,p))return scene;
+    if(p->adapter==2) if(auto scene=ad_reconstruct_adventure(f,p))return scene;
     int w=int(f->width),h=int(f->height),n=w*h;
     int top=std::clamp(int(p->hud_top*h),0,h), bottom=std::clamp(h-int(p->hud_bottom*h),top,h);
     int room=p->scene_ram_offset>=0 && p->scene_ram_offset<128 && f->ram ? f->ram[p->scene_ram_offset] : -1;

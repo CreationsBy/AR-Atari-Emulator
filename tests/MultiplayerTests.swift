@@ -51,6 +51,14 @@ func rejects(_ body: () throws -> Void) throws {
         try expect(abs(pose.worldRotation(nativeUpright: true).angle) < 0.0001, "Side-view profile rotated twice")
         let skaterHead = pose.worldRotation(nativeUpright: false).act(pose.actorRotation(reconstruction: "iceHockeyNTSCv1", role: 2).act(SIMD3<Float>(0,0.07,0)))
         try expect(skaterHead.y > 0.069 && abs(skaterHead.z) < 0.001, "Vertical skater silhouette lies sideways on the rink")
+        for role in [Int32(2), Int32(5)] {
+            let head = pose.worldRotation(nativeUpright: false).act(pose.actorRotation(reconstruction: "adventureNTSCv1", role: role).act(SIMD3<Float>(0,0.07,0)))
+            try expect(head.y > 0.069 && abs(head.z) < 0.001, "Vertical Adventure creature/item lies sideways")
+        }
+        try expect(abs(pose.actorRotation(reconstruction: "adventureNTSCv1", role: 4).angle) < 0.0001, "Adventure bridge counterrotated as a standing item")
+        var adventure = GameProfile.generic; adventure.reconstruction = "adventureNTSCv1"
+        let adventureAdapter = adventure.withNative(ram: [], depth: 1, quality: 1) { $0.adapter }
+        try expect(adventureAdapter == 2, "Adventure profile did not select native interpretation")
         var tilted = settings; tilted.tilt = 30; tilted.rotation = 45
         let tiltedPose = SharedPresentation(tilted)
         let foot = tiltedPose.worldRotation(nativeUpright: false).act(SIMD3<Float>(0,0,0.375)) * tiltedPose.width + tiltedPose.worldOffset(nativeUpright: false)

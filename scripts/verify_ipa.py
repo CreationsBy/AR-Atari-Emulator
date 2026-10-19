@@ -29,6 +29,7 @@ def main():
             profiles=[n for n in z.namelist() if n.startswith(root+'profiles/') and n.endswith('.json')]
             if len(profiles)!=6 or root+'profiles/ice-hockey-ntsc.json' not in profiles:raise SystemExit('Missing conversion profiles')
             if json.loads(z.read(root+'profiles/ice-hockey-ntsc.json'))!=json.loads(Path('profiles/ice-hockey-ntsc.json').read_text()):raise SystemExit('Ice Hockey profile differs from source')
+            if json.loads(z.read(root+'profiles/adventure-experimental.json'))!=json.loads(Path('profiles/adventure-experimental.json').read_text()):raise SystemExit('Adventure profile differs from source')
             verified=False
             if args.signing!='unsigned' and sys.platform=='darwin':
                 with tempfile.TemporaryDirectory(prefix='atari-ipa-verify-') as temporary:

@@ -29,7 +29,9 @@ for obj in data['objects']:
     for x,y,z,w,h,d in obj['boxes']:
         start=len(vertices)
         corners=[(x+sx*w/2,y+sy*h/2,z+sz*d/2) for sx,sz,sy in [(-1,-1,-1),(1,-1,-1),(1,1,-1),(-1,1,-1),(-1,-1,1),(1,-1,1),(1,1,1),(-1,1,1)]]
-        if args.upright and data.get('reconstruction')=='iceHockeyNTSCv1' and obj['role']==2:
+        standing=(data.get('reconstruction')=='iceHockeyNTSCv1' and obj['role']==2 or
+                  data.get('reconstruction')=='adventureNTSCv1' and obj['role'] in (2,5))
+        if args.upright and standing:
             corners=[(cx,cz,-cy) for cx,cy,cz in corners]
         corners=[(cx+px,cy+py,cz+pz) for cx,cy,cz in corners]
         vertices += [(cx,cy,0.375-cz) if args.upright else (cx,cz,cy) for cx,cy,cz in corners]

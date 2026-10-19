@@ -61,3 +61,17 @@ Use the new build and the exact cartridge hashes in [ICE_HOCKEY.md](ICE_HOCKEY.m
 | Vertical skaters | Skater silhouettes stay upright when the rink changes between Tabletop and Vertical; no stale actor rotations remain after Reset or save/load | Pending |
 | Two-phone orientation | With the same updated build on both phones, the host's Vertical/Tabletop choice propagates while each phone retains its own camera view | Pending |
 | Ice Hockey two-player | Host selects game 2 or 4 and resets; each phone independently controls the correct team, including Fire, with no ROM in the guest library | Pending |
+
+## Adventure acceptance (pending)
+
+Use the exact revision in [ADVENTURE.md](ADVENTURE.md). Reopen it to select `adventure-ntsc-v2`; the earlier profile's save identity changed.
+
+| Test | Acceptance condition | Current result |
+|---|---|---|
+| Castle/key/gate | Player and key stay distinct; carrying the key opens the original gate; animation preserves the passage | Pending |
+| Rooms/dark maze | Openings match original pixels; no old-room objects remain; dark walls appear only within the game's displayed visibility window | Pending |
+| Creatures/items | Compare all dragon states, bat theft, keys, sword, chalice, magnet and bridge against original pixels, including overlap/flicker | Pending |
+| Original rules | Complete all three variations; carrying, dropping, dragon death/eating and winning remain original emulated behavior | Pending |
+| Presentation/restore | Tabletop/Vertical keep silhouettes upright; Reset/save/load clear stale models without moving AR placement | Pending |
+| Shared spectator | Same-build guest sees the scene from its own position without a ROM; stock Adventure remains single-player | Pending |
+| Performance | Record device FPS, analysis/mesh counts, input/audio timing and sustained thermal behavior | Pending |

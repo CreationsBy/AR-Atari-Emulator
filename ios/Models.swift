@@ -70,7 +70,7 @@ struct GameProfile: Codable, Identifiable {
                 background_index: backgroundIndex, side_view: perspective == "sideView" ? 1 : 0,
                 max_objects: quality == 0 ? 256 : 1024, max_boxes: quality == 0 ? 6000 : 24000,
                 scene_ram_offset: sceneRAMOffset, rule_count: UInt32(buffer.count), rules: UnsafePointer(buffer.baseAddress),
-                adapter: reconstruction == "iceHockeyNTSCv1" ? 1 : 0)
+                adapter: reconstruction == "iceHockeyNTSCv1" ? 1 : reconstruction == "adventureNTSCv1" ? 2 : 0)
             return body(&p)
         }
     }

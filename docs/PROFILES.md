@@ -50,7 +50,7 @@ This means: when `(RAM[5] & 1) == 1`, change rule 3's height. Instructions run a
 
 ## Inspect a new ROM
 
-The [Ice Hockey profile](ICE_HOCKEY.md) is the first dedicated native semantic adapter. Its optional `reconstruction: "iceHockeyNTSCv1"` selects read-only interpretation of captured pixels and four measured RAM slots. The schema/validator restrict that adapter to the measured cartridge revision. Other profiles continue using the generic segmentation pipeline.
+The [Ice Hockey profile](ICE_HOCKEY.md) uses `iceHockeyNTSCv1` for pixels and measured RAM slots. The [Adventure profile](ADVENTURE.md) uses `adventureNTSCv1` for visible pixels, the room/display cache and graphics read privately from the user's cartridge. Both adapters are restricted to measured hashes by the validator. No cartridge bytes are sent to a multiplayer guest; it receives geometry. Other profiles use generic segmentation.
 
 1. Import your own legally obtained ROM. Keep the default generic label.
 2. Inspect the original raster and scene side by side. Record exact ROM hashes and the core revision.
@@ -59,4 +59,4 @@ The [Ice Hockey profile](ICE_HOCKEY.md) is the first dedicated native semantic a
 5. Author roles, background, HUD and scene boundaries. Test every room and sprite animation state, including carrying/overlap and disappearing objects.
 6. Save/restore at transitions and verify geometry reconstructs without moving the AR anchor. Keep the unmodified original framebuffer for every regression capture.
 
-The existing Adventure, Combat, Breakout and Pitfall! files provide initial size/perspective hypotheses, not completed semantic maps. For example, same-color adjacent Breakout bricks currently form a single component; they shrink/disappear with actual ROM pixels but are not yet identified as individual bricks. A true game-specific interpreter must solve that before claiming complete conversion.
+The Combat, Breakout and Pitfall! files still provide initial size/perspective hypotheses. Same-color adjacent Breakout bricks can form one component; a dedicated interpreter must separate them before claiming complete conversion. Adventure and Ice Hockey now have measured native adapters, but remain experimental pending broader gameplay and physical acceptance.

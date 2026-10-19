@@ -49,7 +49,7 @@ def profile_from_json(filename):
     storage=(Rule*len(rules))(*rules)
     p=Profile(data.get('hudTop',0),data.get('hudBottom',0),data.get('defaultHeight',.025),data.get('backgroundIndex',-1),int(data.get('perspective')=='sideView'),1024,24000,data.get('sceneRAMOffset',-1),len(storage),storage)
     p._rules=storage
-    p.adapter=1 if data.get('reconstruction')=='iceHockeyNTSCv1' else 0
+    p.adapter={'iceHockeyNTSCv1':1,'adventureNTSCv1':2}.get(data.get('reconstruction'),0)
     return p
 
 def copy_struct(obj):
