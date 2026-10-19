@@ -1,6 +1,7 @@
 import Foundation
 import CryptoKit
 import Compression
+import simd
 
 enum MultiplayerError: LocalizedError {
     case invalid(String)
@@ -27,7 +28,17 @@ struct SharedPresentation: Codable, Equatable {
     var width: Float
     var rotation: Float
     var tilt: Float
-    init(_ settings: AppSettings) { width = settings.worldWidth; rotation = settings.rotation; tilt = settings.tilt }
+    var upright: Bool
+    init(_ settings: AppSettings) { width = settings.worldWidth; rotation = settings.rotation; tilt = settings.tilt; upright = settings.upright ?? false }
+    func worldRotation(nativeUpright: Bool) -> simd_quatf {
+        let standUp: Float = upright && !nativeUpright ? .pi / 2 : 0
+        return simd_quatf(angle: rotation * .pi / 180, axis: [0, 1, 0]) *
+            simd_quatf(angle: standUp + tilt * .pi / 180, axis: [1, 0, 0])
+    }
+    func worldOffset(nativeUpright: Bool) -> SIMD3<Float> {
+        // Pivot the entire upright scene around its bottom edge, including tilt.
+        upright && !nativeUpright ? -worldRotation(nativeUpright: false).act(SIMD3<Float>(0,0,0.375)) * width : .zero
+    }
     func validate() throws {
         guard width.isFinite, (0.08...1.5).contains(width), rotation.isFinite, abs(rotation) < 100_000,
               tilt.isFinite, (-60...60).contains(tilt) else { throw MultiplayerError.invalid("Invalid shared placement.") }
@@ -57,7 +68,7 @@ enum RoomMessage: UInt8 {
 }
 
 enum RoomCodec {
-    static let version: UInt8 = 1
+    static let version: UInt8 = 2
     static let maxPacket = 8 * 1024 * 1024
     static let maxDecoded = 24 * 1024 * 1024
     static func plist<T: Encodable>(_ value: T) throws -> Data {
@@ -142,7 +153,8 @@ struct SharedFrame {
         w.u64(s.number); w.u64(s.sceneID); w.u32(UInt32(s.width)); w.u32(UInt32(s.height))
         w.double(s.fps); w.double(s.sampleRate); w.double(s.analysisMS)
         w.u32(s.traceCount); w.u32(s.traceDropped); w.u32(s.droppedObjects)
-        w.u8(paused ? 1 : 0); w.float(presentation.width); w.float(presentation.rotation); w.float(presentation.tilt)
+        w.u8(paused ? 1 : 0); w.u8(presentation.upright ? 1 : 0)
+        w.float(presentation.width); w.float(presentation.rotation); w.float(presentation.tilt)
         w.blob(s.pixels); w.blob(Data(s.ram)); w.blob(s.pcm)
         w.u32(UInt32(s.objects.count)); w.u32(UInt32(s.boxes.count))
         for o in s.objects {
@@ -161,7 +173,8 @@ struct SharedFrame {
         guard (1...160).contains(width), (1...320).contains(height), (40...70).contains(fps),
               (8000...96000).contains(rate), analysis.isFinite else { throw MultiplayerError.invalid("Invalid frame dimensions or timing.") }
         let trace = try r.u32(), traceDropped = try r.u32(), objectsDropped = try r.u32(), paused = try r.u8() != 0
-        let presentation = try SharedPresentation(width: r.float(), rotation: r.float(), tilt: r.float())
+        let upright = try r.u8() != 0
+        let presentation = try SharedPresentation(width: r.float(), rotation: r.float(), tilt: r.float(), upright: upright)
         try presentation.validate()
         let pixels = try r.blob(max: 160 * 320 * 4), ram = try r.blob(max: 128), pcm = try r.blob(max: 8192 * 4)
         guard pixels.count == width * height * 4, ram.count == 128, pcm.count % 4 == 0 else { throw MultiplayerError.invalid("Invalid frame resources.") }
@@ -195,7 +208,9 @@ struct SharedFrame {
 }
 
 extension SharedPresentation {
-    init(width: Float, rotation: Float, tilt: Float) { self.width = width; self.rotation = rotation; self.tilt = tilt }
+    init(width: Float, rotation: Float, tilt: Float, upright: Bool = false) {
+        self.width = width; self.rotation = rotation; self.tilt = tilt; self.upright = upright
+    }
 }
 
 struct WireWriter {

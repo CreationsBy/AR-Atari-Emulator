@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "ice-hockey-ntsc-v1",
+  "title": "Ice Hockey",
+  "sha256": ["fc8b861d9cf9c9d5f7f7677f22b39d512d249697b69c1e7dcf238c5dc8f44b60"],
+  "md5": ["a4c08c4994eb9d24fb78be1793e82e26"],
+  "compatibility": "experimental",
+  "notes": "First Ice Hockey NTSC profile, tested against the supplied ROM on the host. Thin ice with open goal mouths, raised boards/net frames, RAM-anchored multicolor upright skaters and pixel-detected puck. Scores/timer stay original pixels. Overlapping or fallen skaters and a hidden puck can be ambiguous. iPhone acceptance pending. Select game 2 or 4 for two players.",
+  "controller": "joystick",
+  "perspective": "topDown",
+  "reconstruction": "iceHockeyNTSCv1",
+  "backgroundIndex": 0,
+  "hudTop": 0.13333333333333333,
+  "hudBottom": 0.10476190476190476,
+  "sceneRAMOffset": -1,
+  "defaultHeight": 0.018,
+  "rules": [
+    {"name": "Fallback ice", "colorIndex": 10, "role": 4, "height": 0.003},
+    {"name": "Fallback blue jerseys", "colorIndex": 132, "role": 2, "height": 0.04},
+    {"name": "Fallback yellow jerseys", "colorIndex": 252, "role": 2, "height": 0.04},
+    {"name": "Fallback red skater parts", "colorIndex": 68, "role": 2, "height": 0.035},
+    {"name": "Fallback green skater parts", "colorIndex": 212, "role": 2, "height": 0.035}
+  ]
+}

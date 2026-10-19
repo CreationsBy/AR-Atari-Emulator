@@ -9,6 +9,7 @@
     "md5":{"type":"array","items":{"type":"string","pattern":"^[a-f0-9]{32}$"}},
     "compatibility":{"enum":["development","experimental","generic","full"]},
     "controller":{"enum":["joystick","paddles"]}, "perspective":{"enum":["topDown","sideView"]},
+    "reconstruction":{"enum":["iceHockeyNTSCv1"]},
     "backgroundIndex":{"type":"integer","minimum":-1,"maximum":255},
     "sceneRAMOffset":{"type":"integer","minimum":-1,"maximum":127},
     "hudTop":{"type":"number","minimum":0,"exclusiveMaximum":1}, "hudBottom":{"type":"number","minimum":0,"exclusiveMaximum":1},

@@ -196,19 +196,28 @@ struct DioramaView: UIViewRepresentable {
         func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool { true }
         private func configure(_ settings: AppSettings, shared: SharedPresentation? = nil) {
             let presentation = model.isGuest ? (shared ?? model.presentation) : SharedPresentation(settings)
+            let nativeUpright = model.profile.perspective == "sideView"
             world.scale = SIMD3<Float>(repeating: presentation.width)
-            world.orientation = simd_quatf(angle: presentation.rotation * .pi / 180, axis: [0, 1, 0]) *
-                simd_quatf(angle: presentation.tilt * .pi / 180, axis: [1, 0, 0])
+            world.orientation = presentation.worldRotation(nativeUpright: nativeUpright)
+            world.position = presentation.worldOffset(nativeUpright: nativeUpright)
+            // Side-view profiles already use an upright pixel plane. Only their
+            // presentation backing changes, rather than rotating them twice.
+            if presentation.upright && nativeUpright {
+                floor?.orientation = simd_quatf(angle: .pi / 2, axis: [1, 0, 0])
+                floor?.position = [0, 0.375, -0.008]
+            } else {
+                floor?.orientation = simd_quatf(); floor?.position = [0, -0.008, 0]
+            }
             view?.environment.lighting.intensityExponent = settings.ambient * 2 - 1
             if let camera {
                 let size = presentation.width
                 let side = model.profile.perspective == "sideView"
-                let target = SIMD3<Float>(0, side ? 0.30 * size : 0.025 * size, 0)
+                let target = SIMD3<Float>(0, presentation.upright ? 0.375 * size : (side ? 0.30 * size : 0.025 * size), 0)
                 let offset: SIMD3<Float>
                 switch settings.view {
-                case "Top Down": offset = [0, 1.8, 0.001]
-                case "Original": offset = side ? [0, 0.3, 1.8] : [0, 1.8, 0.001]
-                default: offset = [1.05, 1.25, 1.35]
+                case "Top Down": offset = presentation.upright ? [0, 0.375, 1.8] : [0, 1.8, 0.001]
+                case "Original": offset = presentation.upright ? [0, 0.375, 1.8] : (side ? [0, 0.3, 1.8] : [0, 1.8, 0.001])
+                default: offset = presentation.upright ? [1.05, 0.9, 1.6] : [1.05, 1.25, 1.35]
                 }
                 camera.look(at: target, from: offset * size, relativeTo: nil)
             }

@@ -1,6 +1,7 @@
 import Foundation
 import Network
 import Combine
+import simd
 
 enum TestFailure: Error { case failed(String) }
 func expect(_ condition: @autoclosure () -> Bool, _ message: String) throws {
@@ -38,7 +39,21 @@ func rejects(_ body: () throws -> Void) throws {
         try expect(RoomCode.key("ABCDEFGH") != RoomCode.key("ABCDEFGJ"), "TLS keys must differ")
         let malicious = RemoteInput(buttons: .max, paddle: .nan)
         try expect(malicious.safeButtons == 0xf1 && malicious.safePaddle == 0, "Guest input can access host switches")
-        let settings = AppSettings(), snapshot = fixture()
+        var settings = AppSettings()
+        settings.volume = 0.23; settings.player = 1
+        let legacy = try JSONDecoder().decode(AppSettings.self, from: JSONEncoder().encode(settings))
+        try expect(legacy.upright == nil && legacy.volume == 0.23 && legacy.player == 1, "Legacy preferences lost during orientation migration")
+        settings.upright = true
+        let pose = SharedPresentation(settings)
+        let bottom = pose.worldRotation(nativeUpright: false).act(SIMD3<Float>(0,0,0.375)) * pose.width + pose.worldOffset(nativeUpright: false)
+        let top = pose.worldRotation(nativeUpright: false).act(SIMD3<Float>(0,0,-0.375)) * pose.width + pose.worldOffset(nativeUpright: false)
+        try expect(simd_length(bottom) < 0.0001 && top.y > 0.25, "Upright world is not standing on its bottom edge")
+        try expect(abs(pose.worldRotation(nativeUpright: true).angle) < 0.0001, "Side-view profile rotated twice")
+        var tilted = settings; tilted.tilt = 30; tilted.rotation = 45
+        let tiltedPose = SharedPresentation(tilted)
+        let foot = tiltedPose.worldRotation(nativeUpright: false).act(SIMD3<Float>(0,0,0.375)) * tiltedPose.width + tiltedPose.worldOffset(nativeUpright: false)
+        try expect(simd_length(foot) < 0.0001, "Vertical tilt detached its bottom edge")
+        let snapshot = fixture()
         let frame = SharedFrame(snapshot: snapshot, paused: false, presentation: SharedPresentation(settings))
         let bytes = try frame.encode(), packet = try RoomCodec.packet(.frame, bytes)
         try expect(packet.count < bytes.count / 4, "Frame compression ineffective")
@@ -49,6 +64,7 @@ func rejects(_ body: () throws -> Void) throws {
         try expect(messages.count == 1, "Fragmented TCP packet framing")
         let (kind, body) = try RoomCodec.unpack(messages[0]); let result = try SharedFrame.decode(body)
         try expect(kind == .frame && result.snapshot.number == 42 && result.snapshot.sceneID == 7, "Scene identity roundtrip")
+        try expect(result.presentation.upright, "Vertical mode was not synchronized")
         try expect(result.snapshot.pixels == snapshot.pixels && result.snapshot.pcm == snapshot.pcm, "Pixels/audio roundtrip")
         try expect(result.snapshot.objects[0].geometry_hash == 123 && result.snapshot.boxes[0].height == 0.04, "Volumetric geometry roundtrip")
         var combined = TCPMessages()
@@ -57,7 +73,8 @@ func rejects(_ body: () throws -> Void) throws {
         try expect(coalesced.count == 2, "Coalesced TCP messages")
         var shortHeader = TCPMessages()
         try rejects { _ = try shortHeader.append(Data([255, 255, 255, 127])) }
-        try rejects { _ = try RoomCodec.unpack(Data([1, RoomMessage.frame.rawValue, 1, 1, 0, 0, 0])) }
+        try rejects { _ = try RoomCodec.unpack(Data([RoomCodec.version, RoomMessage.frame.rawValue, 1, 1, 0, 0, 0])) }
+        try rejects { _ = try RoomCodec.unpack(Data([1, RoomMessage.ping.rawValue, 0, 0, 0, 0, 0])) }
         try rejects { _ = try SharedFrame.decode(bytes.dropLast()) }
         var broken = snapshot; broken.objects[0].box_count = 24001
         try rejects { _ = try SharedFrame.decode(SharedFrame(snapshot: broken, paused: false, presentation: SharedPresentation(settings)).encode()) }

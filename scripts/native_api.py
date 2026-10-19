@@ -10,7 +10,7 @@ class Frame(C.Structure):
 class Rule(C.Structure):
     _fields_=[('color_index',C.c_int32),('role',C.c_int32)]+[(x,C.c_float) for x in ['min_x','max_x','min_y','max_y','min_width','max_width','min_height','max_height','height','elevation']]+[('pattern',C.c_uint64)]
 class Profile(C.Structure):
-    _fields_=[('hud_top',C.c_float),('hud_bottom',C.c_float),('default_height',C.c_float),('background_index',C.c_int32),('side_view',C.c_int32),('max_objects',C.c_uint32),('max_boxes',C.c_uint32),('scene_ram_offset',C.c_int32),('rule_count',C.c_uint32),('rules',C.POINTER(Rule))]
+    _fields_=[('hud_top',C.c_float),('hud_bottom',C.c_float),('default_height',C.c_float),('background_index',C.c_int32),('side_view',C.c_int32),('max_objects',C.c_uint32),('max_boxes',C.c_uint32),('scene_ram_offset',C.c_int32),('rule_count',C.c_uint32),('rules',C.POINTER(Rule)),('adapter',C.c_uint32)]
 class Box(C.Structure):
     _fields_=[(x,C.c_float) for x in ['x','y','z','width','height','depth']]
 class Object(C.Structure):
@@ -49,6 +49,7 @@ def profile_from_json(filename):
     storage=(Rule*len(rules))(*rules)
     p=Profile(data.get('hudTop',0),data.get('hudBottom',0),data.get('defaultHeight',.025),data.get('backgroundIndex',-1),int(data.get('perspective')=='sideView'),1024,24000,data.get('sceneRAMOffset',-1),len(storage),storage)
     p._rules=storage
+    p.adapter=1 if data.get('reconstruction')=='iceHockeyNTSCv1' else 0
     return p
 
 def copy_struct(obj):

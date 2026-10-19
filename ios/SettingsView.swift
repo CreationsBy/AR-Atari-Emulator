@@ -7,6 +7,12 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 Section("Miniature world") {
+                    Picker("World orientation", selection: Binding(get: { model.settings.upright ?? false }, set: { model.settings.upright = $0 })) {
+                        Text("Tabletop").tag(false)
+                        Text("Vertical").tag(true)
+                    }.disabled(model.isGuest)
+                    Text("Vertical stands the whole 3D world upright on its bottom edge. It still anchors on a table or floor.")
+                        .font(.caption).foregroundStyle(.secondary)
                     Picker("View", selection: $model.settings.view) {
                         ForEach(["Free AR", "Isometric", "Top Down", "Original"], id: \.self) { Text($0) }
                     }

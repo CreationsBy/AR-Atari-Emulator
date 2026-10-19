@@ -6,7 +6,7 @@ Profiles are independent visual interpretations. Start with a known cartridge an
 
 Every imported ROM gets a SHA-256 and an MD5. Exact SHA-256 profiles take the same matching path as known MD5s from Stella's ROM database; arbitrary filenames never choose a commercial profile. Dedicated original fixtures use SHA-256. Commercial entries presently use known database MD5s, identify specific revisions and remain `experimental`.
 
-Add a JSON file to `profiles/`, following the [schema](profile.schema.json). The iOS build bundles that entire folder. The existing package verifier expects five profiles; update that expected count deliberately when adding a new one. Run `scripts/validate_project.py`, update captures and bump `id` whenever incompatible interpretation data changes. No filename matching or unverified hash guessing is permitted.
+Add a JSON file to `profiles/`, following the [schema](profile.schema.json). The iOS build bundles that entire folder. The package verifier now expects six profiles, including Ice Hockey; update that expected count deliberately when adding a new one. Run `scripts/validate_project.py`, update captures and bump `id` whenever incompatible interpretation data changes. No filename matching or unverified hash guessing is permitted.
 
 Confidence labels are `development`, `experimental`, `generic` and `full`. Only mark `full` after the relevant rooms, objects, HUD, controllers and transitions have been exercised on the actual ROM and a device acceptance report records them. No existing commercial profile has that status.
 
@@ -49,6 +49,8 @@ For room-dependent geometry, an optional bounded instruction array can read RAM 
 This means: when `(RAM[5] & 1) == 1`, change rule 3's height. Instructions run after static rule creation and before segmentation rules are applied. At most 128 run per frame; invalid indices are skipped by the Swift runtime. The program is stateless and deterministic, so loading a state reconstructs it from restored RAM. There is no arbitrary network, filesystem, JavaScript or game-state write access. More complex semantic interpreters can be added as native profile adapters, preserving the read-only contract. The Swift program path awaits an Apple build/device test.
 
 ## Inspect a new ROM
+
+The [Ice Hockey profile](ICE_HOCKEY.md) is the first dedicated native semantic adapter. Its optional `reconstruction: "iceHockeyNTSCv1"` selects read-only interpretation of captured pixels and four measured RAM slots. The schema/validator restrict that adapter to the measured cartridge revision. Other profiles continue using the generic segmentation pipeline.
 
 1. Import your own legally obtained ROM. Keep the default generic label.
 2. Inspect the original raster and scene side by side. Record exact ROM hashes and the core revision.

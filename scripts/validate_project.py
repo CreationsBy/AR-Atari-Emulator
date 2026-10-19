@@ -8,7 +8,7 @@ import plistlib
 ROOT=Path(__file__).resolve().parents[1]
 def main():
     hashes=set();ids=set();profiles=list((ROOT/'profiles').glob('*.json'))
-    assert len(profiles)==5,'Expected five explicit conversion profiles'
+    assert len(profiles)==6,'Expected six explicit conversion profiles'
     properties={'minX','maxX','minY','maxY','minWidth','maxWidth','minHeight','maxHeight'}
     coreDB=(ROOT/'third_party/stella2014/stella/src/emucore/DefProps.hxx').read_text()
     for file in profiles:
@@ -16,6 +16,10 @@ def main():
         assert p['id'] not in ids;ids.add(p['id'])
         assert p['compatibility'] in ['development','experimental','generic','full']
         assert p['controller'] in ['joystick','paddles'];assert p['perspective'] in ['topDown','sideView']
+        if 'reconstruction' in p:
+            assert p['reconstruction']=='iceHockeyNTSCv1'
+            assert p['sha256']==['fc8b861d9cf9c9d5f7f7677f22b39d512d249697b69c1e7dcf238c5dc8f44b60']
+            assert p['md5']==['a4c08c4994eb9d24fb78be1793e82e26']
         assert -1<=p['backgroundIndex']<256;assert -1<=p['sceneRAMOffset']<128
         assert 0<=p['hudTop']<1 and 0<=p['hudBottom']<1 and p['hudTop']+p['hudBottom']<1
         assert 0<p['defaultHeight']<=.5 and len(p['rules'])<=128

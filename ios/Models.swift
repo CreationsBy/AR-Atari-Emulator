@@ -42,6 +42,7 @@ struct GameProfile: Codable, Identifiable {
     var defaultHeight: Float
     var rules: [ConversionRule]
     var program: [ProfileInstruction]?
+    var reconstruction: String? = nil
 
     static let generic = GameProfile(schemaVersion: 1, id: "generic-v1", title: "Unknown cartridge", sha256: [], md5: [],
         compatibility: "generic", notes: "Experimental color segmentation. Objects and depths may be inaccurate; a game-specific profile improves interpretation.",
@@ -68,7 +69,8 @@ struct GameProfile: Codable, Identifiable {
             var p = ADProfile(hud_top: hudTop, hud_bottom: hudBottom, default_height: defaultHeight * depth,
                 background_index: backgroundIndex, side_view: perspective == "sideView" ? 1 : 0,
                 max_objects: quality == 0 ? 256 : 1024, max_boxes: quality == 0 ? 6000 : 24000,
-                scene_ram_offset: sceneRAMOffset, rule_count: UInt32(buffer.count), rules: UnsafePointer(buffer.baseAddress))
+                scene_ram_offset: sceneRAMOffset, rule_count: UInt32(buffer.count), rules: UnsafePointer(buffer.baseAddress),
+                adapter: reconstruction == "iceHockeyNTSCv1" ? 1 : 0)
             return body(&p)
         }
     }
@@ -81,6 +83,8 @@ struct LibraryGame: Codable, Identifiable {
 }
 
 struct AppSettings: Codable {
+    // Optional for migration: older settings files decode without losing preferences.
+    var upright: Bool? = nil
     var worldWidth: Float = 0.35
     var rotation: Float = 0
     var tilt: Float = 0

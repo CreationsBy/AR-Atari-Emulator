@@ -46,6 +46,7 @@ typedef struct {
     int32_t scene_ram_offset; // -1 disabled; room transition resets tracking IDs
     uint32_t rule_count;
     const ADRule *rules;
+    uint32_t adapter; // 0 generic; 1 exact-hash Ice Hockey NTSC interpretation
 } ADProfile;
 typedef struct {
     float x,y,z, width,height,depth; // component-local box center and dimensions

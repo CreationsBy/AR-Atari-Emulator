@@ -27,7 +27,8 @@ def main():
             if args.signing!='unsigned' and not signed:raise SystemExit('Signed IPA missing provisioning or signature resources')
             if root+'TabletopTest.a26' not in z.namelist():raise SystemExit('Missing homebrew test ROM')
             profiles=[n for n in z.namelist() if n.startswith(root+'profiles/') and n.endswith('.json')]
-            if len(profiles)!=5:raise SystemExit('Missing conversion profiles')
+            if len(profiles)!=6 or root+'profiles/ice-hockey-ntsc.json' not in profiles:raise SystemExit('Missing conversion profiles')
+            if json.loads(z.read(root+'profiles/ice-hockey-ntsc.json'))!=json.loads(Path('profiles/ice-hockey-ntsc.json').read_text()):raise SystemExit('Ice Hockey profile differs from source')
             verified=False
             if args.signing!='unsigned' and sys.platform=='darwin':
                 with tempfile.TemporaryDirectory(prefix='atari-ipa-verify-') as temporary:
