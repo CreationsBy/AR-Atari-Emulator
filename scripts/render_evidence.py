@@ -17,6 +17,7 @@ parser.add_argument('--upright',action='store_true')
 args=parser.parse_args(sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else [])
 output=args.output.resolve();output.mkdir(parents=True,exist_ok=True)
 data=json.loads(args.input.read_text())
+wall_front=max((o['position'][1]+b[1]+b[4]/2 for o in data['objects'] if o['role']==1 for b in o['boxes']),default=0)
 bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
 
 def material(name,color):
@@ -26,6 +27,8 @@ def material(name,color):
 
 for obj in data['objects']:
     vertices=[];faces=[];px,py,pz=obj['position']
+    if args.upright and data.get('reconstruction')=='adventureNTSCv1' and (obj['role'] in (2,5) or obj['role']==0 and obj['id']==2):
+        py=max(py,wall_front+.006)
     for x,y,z,w,h,d in obj['boxes']:
         start=len(vertices)
         corners=[(x+sx*w/2,y+sy*h/2,z+sz*d/2) for sx,sz,sy in [(-1,-1,-1),(1,-1,-1),(1,1,-1),(-1,1,-1),(-1,-1,1),(1,-1,1),(1,1,1),(-1,1,1)]]

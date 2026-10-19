@@ -21,7 +21,7 @@ The adapter reads visible pixels, RAM and graphics from the user's already-loade
 
 The two selected sprite masks are intersected with visible pixels. Recently observed, unchanged sprites can be held for at most three frames to reduce multiplexing flicker. Position/state/room changes invalidate held shapes; no unseen objects or predicted motion are invented. Frame-boundary room/display mismatches briefly use generic reconstruction. Room changes and state restoration clear history.
 
-Settings → Miniature world → World orientation → **Vertical** stands the world upright. **Tabletop** restores the horizontal diorama. Standing creatures/items counterrotate in Vertical; floors, walls, bridge and player retain their intended transforms.
+Settings → Miniature world → World orientation → **Vertical** stands the world upright. **Tabletop** restores the horizontal diorama. Standing creatures/items counterrotate in Vertical; the player, creatures and items move to a layer in front of the deepest wall so castle relief does not bury them. Tabletop positions and the bridge remain unchanged. This presentation offset is derived from shared geometry and also applies on the guest.
 
 ## Host checks and limits
 

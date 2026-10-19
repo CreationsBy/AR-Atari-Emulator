@@ -47,6 +47,15 @@ struct SharedPresentation: Codable, Equatable {
         return upright && standing ?
             simd_quatf(angle: -.pi / 2, axis: [1,0,0]) : simd_quatf()
     }
+    func objectPosition(_ position: SIMD3<Float>, reconstruction: String?, role: Int32, id: UInt64, wallFront: Float) -> SIMD3<Float> {
+        var result = position
+        if upright && reconstruction == "adventureNTSCv1" && (role == 2 || role == 5 || role == 0 && id == 2) {
+            // In the vertical relief, keep gameplay silhouettes in front of
+            // raised castle walls rather than at the bottom of a deep recess.
+            result.y = max(result.y, wallFront + 0.006)
+        }
+        return result
+    }
     func validate() throws {
         guard width.isFinite, (0.08...1.5).contains(width), rotation.isFinite, abs(rotation) < 100_000,
               tilt.isFinite, (-60...60).contains(tilt) else { throw MultiplayerError.invalid("Invalid shared placement.") }

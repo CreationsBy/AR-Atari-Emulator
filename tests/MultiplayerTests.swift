@@ -59,6 +59,12 @@ func rejects(_ body: () throws -> Void) throws {
         var adventure = GameProfile.generic; adventure.reconstruction = "adventureNTSCv1"
         let adventureAdapter = adventure.withNative(ram: [], depth: 1, quality: 1) { $0.adapter }
         try expect(adventureAdapter == 2, "Adventure profile did not select native interpretation")
+        let itemPosition = SIMD3<Float>(0.1,0.004,0.2)
+        let forwardItem = pose.objectPosition(itemPosition, reconstruction: "adventureNTSCv1", role: 5, id: 111, wallFront: 0.12)
+        try expect(abs(forwardItem.y - 0.126) < 0.0001 && forwardItem.x == itemPosition.x && forwardItem.z == itemPosition.z, "Vertical Adventure item is buried in castle relief")
+        let tabletop = SharedPresentation(width: 0.35, rotation: 0, tilt: 0)
+        try expect(tabletop.objectPosition(itemPosition, reconstruction: "adventureNTSCv1", role: 5, id: 111, wallFront: 0.12) == itemPosition, "Tabletop item was raised by vertical relief")
+        try expect(pose.objectPosition(itemPosition, reconstruction: "adventureNTSCv1", role: 4, id: 110, wallFront: 0.12) == itemPosition, "Bridge was moved into foreground relief")
         var tilted = settings; tilted.tilt = 30; tilted.rotation = 45
         let tiltedPose = SharedPresentation(tilted)
         let foot = tiltedPose.worldRotation(nativeUpright: false).act(SIMD3<Float>(0,0,0.375)) * tiltedPose.width + tiltedPose.worldOffset(nativeUpright: false)

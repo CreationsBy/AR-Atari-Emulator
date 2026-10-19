@@ -25,6 +25,8 @@ struct DioramaView: UIViewRepresentable {
         private var arAnchor: ARAnchor?
         private var entities: [UInt64: ModelEntity] = [:]
         private var entityRoles: [UInt64: Int32] = [:]
+        private var entityPositions: [UInt64: SIMD3<Float>] = [:]
+        private var reliefFront: Float = 0
         private var geometry: [UInt64: UInt64] = [:]
         private var colors: [UInt64: UInt32] = [:]
         private var meshCache: [UInt64: MeshResource] = [:]
@@ -203,6 +205,10 @@ struct DioramaView: UIViewRepresentable {
             world.position = presentation.worldOffset(nativeUpright: nativeUpright)
             for (id, entity) in entities {
                 entity.orientation = presentation.actorRotation(reconstruction: model.profile.reconstruction, role: entityRoles[id] ?? 0)
+                if let position = entityPositions[id] {
+                    entity.position = presentation.objectPosition(position, reconstruction: model.profile.reconstruction,
+                        role: entityRoles[id] ?? 0, id: id, wallFront: reliefFront)
+                }
             }
             // Side-view profiles already use an upright pixel plane. Only their
             // presentation backing changes, rather than rotating them twice.
@@ -268,7 +274,15 @@ struct DioramaView: UIViewRepresentable {
         private func render(_ snapshot: FrameSnapshot) {
             if lastScene != snapshot.sceneID {
                 entities.values.forEach { $0.removeFromParent() }
-                entities.removeAll(); entityRoles.removeAll(); geometry.removeAll(); colors.removeAll(); lastScene = snapshot.sceneID
+                entities.removeAll(); entityRoles.removeAll(); entityPositions.removeAll(); geometry.removeAll(); colors.removeAll(); lastScene = snapshot.sceneID
+            }
+            reliefFront = 0
+            for object in snapshot.objects where object.role == 1 {
+                let first = Int(object.first_box), end = first + Int(object.box_count)
+                guard first >= 0, end <= snapshot.boxes.count else { continue }
+                for box in snapshot.boxes[first..<end] {
+                    reliefFront = max(reliefFront, object.y + box.y + box.height / 2)
+                }
             }
             var live = Set<UInt64>()
             for object in snapshot.objects {
@@ -277,7 +291,10 @@ struct DioramaView: UIViewRepresentable {
                 if entities[object.id] == nil { world.addChild(entity); entities[object.id] = entity }
                 entityRoles[object.id] = object.role
                 entity.orientation = model.presentation.actorRotation(reconstruction: model.profile.reconstruction, role: object.role)
-                entity.position = [object.x, object.y, object.z]
+                let position = SIMD3<Float>(object.x, object.y, object.z)
+                entityPositions[object.id] = position
+                entity.position = model.presentation.objectPosition(position, reconstruction: model.profile.reconstruction,
+                    role: object.role, id: object.id, wallFront: reliefFront)
                 if geometry[object.id] != object.geometry_hash || colors[object.id] != object.color_rgba {
                     do {
                         let mesh: MeshResource
@@ -306,6 +323,7 @@ struct DioramaView: UIViewRepresentable {
             for id in Array(entities.keys) where !live.contains(id) {
                 entities.removeValue(forKey: id)?.removeFromParent(); geometry.removeValue(forKey: id); colors.removeValue(forKey: id)
                 entityRoles.removeValue(forKey: id)
+                entityPositions.removeValue(forKey: id)
             }
         }
         private static func mesh(_ boxes: [ADBox]) throws -> MeshResource {
