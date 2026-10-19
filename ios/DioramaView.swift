@@ -311,7 +311,7 @@ struct DioramaView: UIViewRepresentable {
                             if meshCache.count >= 512 { meshCache.removeAll(keepingCapacity: true) }
                             meshCache[object.geometry_hash] = mesh
                         }
-                        let material: any Material
+                        let material: any RealityKit.Material
                         let c = object.color_rgba
                         let color = UIColor(red: CGFloat(c & 255) / 255, green: CGFloat((c >> 8) & 255) / 255,
                                             blue: CGFloat((c >> 16) & 255) / 255, alpha: 1)
