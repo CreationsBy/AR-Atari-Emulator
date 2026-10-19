@@ -345,7 +345,9 @@ import QuartzCore
                 let welcome = try RoomCodec.read(RoomWelcome.self, data)
                 try welcome.presentation.validate()
                 guard welcome.title.count <= 256, ["joystick", "paddles"].contains(welcome.controller),
-                      (8000...96000).contains(welcome.sampleRate), welcome.profile.rules.count <= 128 else {
+                      (8000...96000).contains(welcome.sampleRate), welcome.profile.rules.count <= 128,
+                      welcome.profile.schemaVersion == 1, (0..<1).contains(welcome.profile.hudTop),
+                      (0..<1).contains(welcome.profile.hudBottom), welcome.profile.hudTop + welcome.profile.hudBottom < 1 else {
                     throw MultiplayerError.invalid("Invalid host game description.")
                 }
                 remoteController = welcome.controller; profile = welcome.profile

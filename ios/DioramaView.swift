@@ -79,8 +79,8 @@ struct DioramaView: UIViewRepresentable {
             view.addGestureRecognizer(tap); view.addGestureRecognizer(pinch); view.addGestureRecognizer(rotate)
             model.$snapshot.compactMap { $0 }.sink { [weak self] in self?.render($0) }.store(in: &observations)
             model.$settings.sink { [weak self] in self?.configure($0) }.store(in: &observations)
-            model.$sharedPresentation.sink { [weak self] _ in
-                guard let self else { return }; self.configure(self.model.settings)
+            model.$sharedPresentation.sink { [weak self] presentation in
+                guard let self else { return }; self.configure(self.model.settings, shared: presentation)
             }.store(in: &observations)
             model.$sharedWorldMap.sink { [weak self] data in
                 guard let self, self.model.isGuest, self.isAR else { return }
@@ -194,8 +194,8 @@ struct DioramaView: UIViewRepresentable {
             model.settings.rotation = rotationStart - Float(gesture.rotation) * 180 / .pi
         }
         func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool { true }
-        private func configure(_ settings: AppSettings) {
-            let presentation = model.isGuest ? model.presentation : SharedPresentation(settings)
+        private func configure(_ settings: AppSettings, shared: SharedPresentation? = nil) {
+            let presentation = model.isGuest ? (shared ?? model.presentation) : SharedPresentation(settings)
             world.scale = SIMD3<Float>(repeating: presentation.width)
             world.orientation = simd_quatf(angle: presentation.rotation * .pi / 180, axis: [0, 1, 0]) *
                 simd_quatf(angle: presentation.tilt * .pi / 180, axis: [1, 0, 0])

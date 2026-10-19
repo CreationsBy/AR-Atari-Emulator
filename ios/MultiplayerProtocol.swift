@@ -98,7 +98,7 @@ enum RoomCodec {
             guard body.count == size else { throw MultiplayerError.invalid("Truncated network message.") }
             return (type, body)
         }
-        guard size > 0 else { throw MultiplayerError.invalid("Empty compressed message.") }
+        guard size > 0, !body.isEmpty else { throw MultiplayerError.invalid("Empty compressed message.") }
         var output = Data(count: size)
         let count = output.withUnsafeMutableBytes { dst in
             body.withUnsafeBytes { src in

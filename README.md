@@ -2,7 +2,7 @@
 
 A working Windows native-emulation prototype, plus native iOS application source for a tabletop Atari 2600 diorama. A real Stella core runs the cartridge. A separate renderer reconstructs its pixels into individual volumetric objects.
 
-**Current status: 12 hosted native tests pass, and the Swift/iOS app successfully archives with Xcode 16.4. An arm64 unsigned IPA is available and requires re-signing before installation. iPhone operation and AR remain untested.** The commercial game profiles are explicit, unvalidated experiments. See [compatibility and milestone results](docs/COMPATIBILITY.md).
+**Current status: 16 native tests pass. The user reports that the earlier build's AR works with the test cartridge and their own Atari ROMs on their iPhone. Private Wi-Fi multiplayer is implemented and undergoing hosted verification; its two-phone AR behavior still needs device testing.** The commercial game profiles remain explicit experiments rather than independently certified compatibility results. See [compatibility and milestone results](docs/COMPATIBILITY.md).
 
 [Successful unsigned build #1](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39179809317) · [Download IPA and matching source artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39179809317/artifacts/12155528893). The hosted artifact expires November 1, 2026 at 7:15 PM EST; later pushes can produce a fresh build. Its [verification record](docs/evidence/ios-build.json) identifies the exact built commit and IPA checksum.
 
@@ -33,6 +33,7 @@ On a different Windows computer, install Python 3.12+, then use `scripts/Build-W
 - RealityKit meshes with per-object updates and cached geometry. ARKit horizontal-plane preview, tap placement, world anchor, physical camera view, pinch/rotation, size presets, tilt and virtual inspection cameras.
 - Original audio through a bounded native ring and AVAudioSourceNode; pause/resume; ROM/core/profile/controller-bound save files; scene reconstruction after restore.
 - A GitHub Actions workflow for native tests, hosted Apple compilation, archive logging, unsigned IPA packaging or signed export, and matching-source publication.
+- Private room-code multiplayer for two iPhones on the same Wi-Fi: host-only ROM/emulation, a separate Player 2 controller, synchronized geometry/framebuffer/original audio, and AR world-map sharing for independent camera perspectives. See [the host/join walkthrough](docs/LOCAL_MULTIPLAYER.md). The test cartridge's red actor becomes controllable by Player 2 upon their first input.
 
 ## Verify locally
 

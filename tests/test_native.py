@@ -8,6 +8,17 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 from native_api import *
 from assemble_homebrew import assemble
 
+class GuestWithoutCartridge(unittest.TestCase):
+    def test_received_audio_plays_without_initializing_or_loading_a_rom(self):
+        lib=load_library();lib.ad_shutdown();lib.ad_audio_streaming(False)
+        output=(C.c_float*8)();lib.ad_audio_read(output,4)
+        self.assertFalse(lib.ad_current_frame())
+        samples=(C.c_int16*4)(16384,-16384,8192,-8192)
+        lib.ad_audio_receive(samples,2)
+        self.assertEqual(lib.ad_audio_read(output,4),2)
+        self.assertEqual(list(output),[0.5,-0.5,0.25,-0.25,0,0,0,0])
+        self.assertFalse(lib.ad_current_frame())
+
 class NativeIntegration(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

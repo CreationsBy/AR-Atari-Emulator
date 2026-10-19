@@ -35,7 +35,11 @@ import Security
     init(interface: NWInterface.InterfaceType = .wifi) { self.interface = interface }
     var listenerPort: NWEndpoint.Port? { listener?.port }
     var connectionToken: UUID { generation }
-    var acceptingGuest: Bool { role == .host && listener != nil && connection == nil }
+    var acceptingGuest: Bool {
+        guard role == .host, connection == nil, let listener, let port = listener.port, port.rawValue != 0 else { return false }
+        if case .ready = listener.state { return true }
+        return false
+    }
 
     private func parameters(code: String? = nil) -> NWParameters {
         let tcp = NWProtocolTCP.Options(); tcp.noDelay = true
@@ -52,11 +56,9 @@ import Security
                 tls_ciphersuite_t(rawValue: TLS_PSK_WITH_AES_128_GCM_SHA256)!)
             parameters = NWParameters(tls: tls, tcp: tcp)
         } else { parameters = NWParameters(tls: nil, tcp: tcp) }
-        if interface == .loopback {
-            // Local TCP paths may bypass the interface-type matcher. Bind the
-            // hosted test endpoints to 127.0.0.1 instead of requiring that type.
-            parameters.requiredLocalEndpoint = .hostPort(host: "127.0.0.1", port: .any)
-        } else { parameters.requiredInterfaceType = interface }
+        // The hosted harness connects directly to 127.0.0.1 with default IP
+        // parameters. The app's .wifi requirement is never relaxed in its UI.
+        if interface != .loopback { parameters.requiredInterfaceType = interface }
         parameters.includePeerToPeer = false
         parameters.allowLocalEndpointReuse = true
         return parameters

@@ -2,6 +2,12 @@
 
 Recorded 2026-10-18. This is a development prototype, not a completed or certified iOS emulator release.
 
+## Wi-Fi multiplayer update
+
+The user reports successful AR operation of the earlier build with the included test ROM and their own Atari ROMs on their phone. No device model, performance log or exact commercial ROM identities were supplied, so the detailed acceptance rows and commercial-profile certification remain open.
+
+Private Wi-Fi multiplayer now implements room-code joining, host-only emulation, independent Player 2 joystick/paddle inputs, scene/original-pixel/audio streaming and shared-table ARWorldMap alignment. The native suite now has 16 passing methods, including independent joystick-port/button probes, an independent network audio tap and guest playback, and the updated homebrew's Player 2 actor. Hosted network/build verification is tracked separately from physical two-phone testing. See [LOCAL_MULTIPLAYER.md](LOCAL_MULTIPLAYER.md) and [the pending two-phone acceptance checks](DEVICE_TESTING.md#two-phone-multiplayer-acceptance-pending).
+
 ## Executed tests
 
 Windows x64, portable Zig 0.13.0, Python 3.13.13 from the existing Blender installation. The pinned Stella tree contains 286 verified files; the native build compiles 100 sources. Twelve tests execute against the real compiled DLL:

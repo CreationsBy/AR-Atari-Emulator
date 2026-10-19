@@ -1,5 +1,6 @@
 import Foundation
 import Network
+import Combine
 
 enum TestFailure: Error { case failed(String) }
 func expect(_ condition: @autoclosure () -> Bool, _ message: String) throws {
@@ -56,6 +57,7 @@ func rejects(_ body: () throws -> Void) throws {
         try expect(coalesced.count == 2, "Coalesced TCP messages")
         var shortHeader = TCPMessages()
         try rejects { _ = try shortHeader.append(Data([255, 255, 255, 127])) }
+        try rejects { _ = try RoomCodec.unpack(Data([1, RoomMessage.frame.rawValue, 1, 1, 0, 0, 0])) }
         try rejects { _ = try SharedFrame.decode(bytes.dropLast()) }
         var broken = snapshot; broken.objects[0].box_count = 24001
         try rejects { _ = try SharedFrame.decode(SharedFrame(snapshot: broken, paused: false, presentation: SharedPresentation(settings)).encode()) }
@@ -67,9 +69,12 @@ func rejects(_ body: () throws -> Void) throws {
     }
     @MainActor static func transportTests() async throws {
         let host = LocalSession(interface: .loopback), guest = LocalSession(interface: .loopback)
+        let observations = [host.$status.sink { print("HOST: \($0)") }, guest.$status.sink { print("GUEST: \($0)") }]
+        defer { observations.forEach { $0.cancel() } }
         defer { guest.stop(); host.stop() }
         host.host()
-        try await wait("host listener") { host.listenerPort != nil }
+        try await wait("host listener ready with an assigned port") { host.acceptingGuest }
+        print("Loopback listener port: \(host.listenerPort!.rawValue)")
         let endpoint = NWEndpoint.hostPort(host: "127.0.0.1", port: host.listenerPort!)
         let wrong = LocalSession(interface: .loopback)
         defer { wrong.stop() }
