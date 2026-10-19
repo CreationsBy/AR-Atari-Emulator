@@ -30,6 +30,8 @@ def load_library():
       'reset':(None,[]),'state_size':(C.c_size_t,[]),'save_state':(C.c_bool,[C.POINTER(C.c_uint8),C.c_size_t]),
       'load_state':(C.c_bool,[C.POINTER(C.c_uint8),C.c_size_t]),'audio_read':(C.c_size_t,[C.POINTER(C.c_float),C.c_size_t]),
       'audio_dropped':(C.c_uint64,[]),'tia_writes':(C.POINTER(TIAWrite),[C.POINTER(C.c_uint32),C.POINTER(C.c_uint32)]),
+      'audio_streaming':(None,[C.c_bool]),'audio_stream_read':(C.c_size_t,[C.POINTER(C.c_int16),C.c_size_t]),
+      'audio_receive':(None,[C.POINTER(C.c_int16),C.c_size_t]),'audio_clear':(None,[]),
       'reconstruct':(C.POINTER(Scene),[C.POINTER(Frame),C.POINTER(Profile)]),'reset_reconstruction':(None,[])}
     for name,(result,args) in signatures.items():
         fn=getattr(lib,'ad_'+name);fn.restype=result;fn.argtypes=args

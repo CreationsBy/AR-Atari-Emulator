@@ -3,6 +3,7 @@ import RealityKit
 import ARKit
 import AVFoundation
 import Combine
+import QuartzCore
 
 struct DioramaView: UIViewRepresentable {
     @ObservedObject var model: AppModel
@@ -39,6 +40,11 @@ struct DioramaView: UIViewRepresentable {
         private var frameCount = 0
         private var scanningHit = false
         private var floor: ModelEntity?
+        private var mapSharePending = false
+        private var mapCaptureBusy = false
+        private var mapRetryTime: TimeInterval = 0
+        private var expectedSharedAnchor: UUID?
+        private var waitingForRelocalization = false
         init(model: AppModel) { self.model = model }
 
         func setup(_ view: ARView, isAR: Bool) {
@@ -59,6 +65,7 @@ struct DioramaView: UIViewRepresentable {
                 view.environment.background = .color(UIColor(red: 0.035, green: 0.047, blue: 0.063, alpha: 1))
                 model.placementMessage = "3D viewer · switch to Free AR to place on a table"
                 model.placed = true
+                if model.isGuest { model.guestAligned() }
                 if model.settings.view == "Free AR" { model.toast = "AR world tracking is unavailable on this device. Showing the 3D viewer." }
             } else {
                 world.isEnabled = false
@@ -72,6 +79,20 @@ struct DioramaView: UIViewRepresentable {
             view.addGestureRecognizer(tap); view.addGestureRecognizer(pinch); view.addGestureRecognizer(rotate)
             model.$snapshot.compactMap { $0 }.sink { [weak self] in self?.render($0) }.store(in: &observations)
             model.$settings.sink { [weak self] in self?.configure($0) }.store(in: &observations)
+            model.$sharedPresentation.sink { [weak self] _ in
+                guard let self else { return }; self.configure(self.model.settings)
+            }.store(in: &observations)
+            model.$sharedWorldMap.sink { [weak self] data in
+                guard let self, self.model.isGuest, self.isAR else { return }
+                if let data { self.applySharedMap(data) }
+                else {
+                    self.expectedSharedAnchor = nil; self.waitingForRelocalization = false
+                    self.world.isEnabled = false; self.model.placed = false
+                }
+            }.store(in: &observations)
+            model.$shareMapToken.dropFirst().sink { [weak self] _ in
+                self?.mapSharePending = true; self?.mapRetryTime = 0
+            }.store(in: &observations)
             model.$resetTrackingToken.sink { [weak self] token in
                 guard let self, self.lastReset != token else { return }; self.lastReset = token; self.runSession(reset: true)
             }.store(in: &observations)
@@ -104,11 +125,17 @@ struct DioramaView: UIViewRepresentable {
             config.planeDetection = [.horizontal]
             config.environmentTexturing = .automatic
             config.isLightEstimationEnabled = true
+            if model.isGuest, let data = model.sharedWorldMap { applySharedMap(data); return }
             if reset { beginPlacement() }
             view?.session.run(config, options: reset ? [.resetTracking, .removeExistingAnchors] : [])
         }
         private func beginPlacement() {
             guard isAR, let view else { return }
+            if model.isGuest { model.requestSharedMap(); return }
+            if model.isHosting {
+                model.network.send(.placementPending); mapSharePending = false
+                model.spatialStatus = "Place the diorama, then scan the table to share it"
+            }
             if let arAnchor { view.session.remove(anchor: arAnchor) }; arAnchor = nil
             anchor.removeFromParent()
             anchor = AnchorEntity(world: .zero); view.scene.addAnchor(anchor); anchor.addChild(world)
@@ -118,6 +145,21 @@ struct DioramaView: UIViewRepresentable {
         private func update(delta: TimeInterval) {
             frameCount += 1; lastFPS += delta
             if lastFPS >= 1 { model.arFPS = Double(frameCount) / lastFPS; lastFPS = 0; frameCount = 0 }
+            if model.isHosting, mapSharePending, !mapCaptureBusy, CACurrentMediaTime() >= mapRetryTime {
+                captureSharedMap()
+            }
+            if model.isGuest, isAR {
+                if waitingForRelocalization, let frame = view?.session.currentFrame,
+                   case .normal = frame.camera.trackingState,
+                   let fixed = frame.anchors.first(where: { $0.identifier == expectedSharedAnchor }) {
+                    anchor.removeFromParent(); anchor = AnchorEntity(anchor: fixed)
+                    view?.scene.addAnchor(anchor); anchor.addChild(world); world.isEnabled = true
+                    waitingForRelocalization = false
+                    model.placementMessage = "Shared table anchored · walk around to change your view"
+                    model.guestAligned()
+                }
+                return
+            }
             guard isAR, !model.placed, let view else { return }
             let point = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
             if let hit = view.raycast(from: point, allowing: .existingPlaneGeometry, alignment: .horizontal).first {
@@ -130,7 +172,7 @@ struct DioramaView: UIViewRepresentable {
             }
         }
         @objc private func place(_ gesture: UITapGestureRecognizer) {
-            guard isAR, !model.placed, let view,
+            guard !model.isGuest, isAR, !model.placed, let view,
                   let hit = view.raycast(from: gesture.location(in: view), allowing: .existingPlaneGeometry, alignment: .horizontal).first else { return }
             let fixed = ARAnchor(name: "AtariDiorama", transform: hit.worldTransform)
             view.session.add(anchor: fixed); arAnchor = fixed
@@ -138,24 +180,28 @@ struct DioramaView: UIViewRepresentable {
             view.scene.addAnchor(anchor); anchor.addChild(world); world.isEnabled = true
             model.placed = true; model.placementMessage = "Anchored · walk around your miniature world"
             model.setPaused(false)
+            if model.isHosting { mapSharePending = true; mapRetryTime = 0 }
             if model.settings.haptics { UIImpactFeedbackGenerator(style: .medium).impactOccurred() }
         }
         @objc private func pinch(_ gesture: UIPinchGestureRecognizer) {
+            guard !model.isGuest else { return }
             if gesture.state == .began { pinchWidth = model.settings.worldWidth }
             model.settings.worldWidth = min(1.5, max(0.08, pinchWidth * Float(gesture.scale)))
         }
         @objc private func rotate(_ gesture: UIRotationGestureRecognizer) {
+            guard !model.isGuest else { return }
             if gesture.state == .began { rotationStart = model.settings.rotation }
             model.settings.rotation = rotationStart - Float(gesture.rotation) * 180 / .pi
         }
         func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool { true }
         private func configure(_ settings: AppSettings) {
-            world.scale = SIMD3<Float>(repeating: settings.worldWidth)
-            world.orientation = simd_quatf(angle: settings.rotation * .pi / 180, axis: [0, 1, 0]) *
-                simd_quatf(angle: settings.tilt * .pi / 180, axis: [1, 0, 0])
+            let presentation = model.isGuest ? model.presentation : SharedPresentation(settings)
+            world.scale = SIMD3<Float>(repeating: presentation.width)
+            world.orientation = simd_quatf(angle: presentation.rotation * .pi / 180, axis: [0, 1, 0]) *
+                simd_quatf(angle: presentation.tilt * .pi / 180, axis: [1, 0, 0])
             view?.environment.lighting.intensityExponent = settings.ambient * 2 - 1
             if let camera {
-                let size = settings.worldWidth
+                let size = presentation.width
                 let side = model.profile.perspective == "sideView"
                 let target = SIMD3<Float>(0, side ? 0.30 * size : 0.025 * size, 0)
                 let offset: SIMD3<Float>
@@ -166,6 +212,45 @@ struct DioramaView: UIViewRepresentable {
                 }
                 camera.look(at: target, from: offset * size, relativeTo: nil)
             }
+        }
+        private func captureSharedMap() {
+            guard isAR, model.isHosting, model.network.connected, model.placed, let view else { return }
+            mapRetryTime = CACurrentMediaTime() + 2
+            guard let frame = view.session.currentFrame,
+                  frame.worldMappingStatus == .mapped || frame.worldMappingStatus == .extending else {
+                model.spatialStatus = "Scan around the table so Player 2 can align"
+                return
+            }
+            mapCaptureBusy = true
+            view.session.getCurrentWorldMap { [weak self] map, _ in
+                Task { @MainActor in
+                    guard let self else { return }; self.mapCaptureBusy = false
+                    guard self.model.isHosting, self.model.network.connected, let map,
+                          let id = self.arAnchor?.identifier, map.anchors.contains(where: { $0.identifier == id }) else { return }
+                    do {
+                        let data = try NSKeyedArchiver.archivedData(withRootObject: map, requiringSecureCoding: true)
+                        self.model.network.send(.worldMap, data); self.mapSharePending = false
+                        self.model.spatialStatus = "Map sent · Player 2 should scan this same table"
+                    } catch { self.model.spatialStatus = "Could not share the table map. Try Share table again." }
+                }
+            }
+        }
+        private func applySharedMap(_ data: Data) {
+            guard isAR, AVCaptureDevice.authorizationStatus(for: .video) == .authorized else { return }
+            do {
+                guard let map = try NSKeyedUnarchiver.unarchivedObject(ofClass: ARWorldMap.self, from: data),
+                      let fixed = map.anchors.first(where: { $0.name == "AtariDiorama" }) else {
+                    throw DioramaError.message("The host's map has no diorama anchor. Ask the host to place it again.")
+                }
+                expectedSharedAnchor = fixed.identifier; waitingForRelocalization = true
+                world.isEnabled = false; model.placed = false; model.setPaused(true)
+                let config = ARWorldTrackingConfiguration()
+                config.initialWorldMap = map; config.planeDetection = [.horizontal]
+                config.environmentTexturing = .automatic; config.isLightEstimationEnabled = true
+                view?.session.run(config, options: [.resetTracking, .removeExistingAnchors])
+                model.placementMessage = "Aim at the same table the host scanned · move slowly to align"
+                model.spatialStatus = "Aligning with the host's table…"
+            } catch { model.error = error.localizedDescription }
         }
         private func render(_ snapshot: FrameSnapshot) {
             if lastScene != snapshot.sceneID {

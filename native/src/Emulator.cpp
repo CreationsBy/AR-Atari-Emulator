@@ -30,6 +30,8 @@ constexpr uint64_t audioCapacity=32768;
 std::array<float,audioCapacity*2> audio{};
 std::atomic<uint64_t> audioHead{0},audioTail{0},audioDropped{0};
 std::atomic<bool> flushAudio{false};
+bool streamAudio=false;
+std::vector<int16_t> streamSamples;
 void logMessage(retro_log_level level,const char *fmt,...) {
     if(level<RETRO_LOG_WARN)return;
     char buffer[2048];va_list args;va_start(args,fmt);vsnprintf(buffer,sizeof(buffer),fmt,args);va_end(args);
@@ -90,6 +92,12 @@ void video(const void *data,unsigned w,unsigned h,size_t pitch) {
     }
 }
 size_t audioBatch(const int16_t *data,size_t frames) {
+    if(streamAudio) {
+        constexpr size_t limit=8192*2;
+        size_t samples=std::min(frames*2,limit);
+        if(streamSamples.size()+samples>limit)streamSamples.clear();
+        streamSamples.insert(streamSamples.end(),data,data+samples);
+    }
     uint64_t head=audioHead.load(std::memory_order_relaxed),tail=audioTail.load(std::memory_order_acquire);
     size_t writable=std::min(frames,size_t(audioCapacity-(head-tail)));
     for(size_t i=0;i<writable;++i) {
@@ -180,6 +188,15 @@ extern "C" size_t ad_audio_read(float *output,size_t frames) {
     std::fill(output+count*2,output+frames*2,0.0f);audioTail.store(tail+count,std::memory_order_release);return count;
 }
 extern "C" uint64_t ad_audio_dropped(){return audioDropped.load();}
+extern "C" void ad_audio_streaming(bool enabled){streamAudio=enabled;streamSamples.clear();streamSamples.reserve(8192*2);}
+extern "C" size_t ad_audio_stream_read(int16_t *output,size_t frames){
+    if(!output)return 0;
+    size_t n=std::min(frames,streamSamples.size()/2);
+    std::copy_n(streamSamples.begin(),n*2,output);
+    streamSamples.erase(streamSamples.begin(),streamSamples.begin()+n*2);return n;
+}
+extern "C" void ad_audio_receive(const int16_t *data,size_t frames){if(data && frames<=8192)audioBatch(data,frames);}
+extern "C" void ad_audio_clear(){flushAudio.store(true,std::memory_order_release);}
 extern "C" const ADTIAWrite *ad_tia_writes(uint32_t *count,uint32_t *dropped) {
     if(count)*count=traceCount;if(dropped)*dropped=traceDropped;return trace.data();
 }

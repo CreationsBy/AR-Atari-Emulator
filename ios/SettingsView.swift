@@ -14,26 +14,30 @@ struct SettingsView: View {
                         ForEach(Array(zip(["Tiny", "Small", "Medium", "Large"], [Float(0.12), 0.25, 0.45, 0.8])), id: \.0) { title, width in
                             Button(title) { model.settings.worldWidth = width }.font(.caption.bold()).frame(maxWidth: .infinity)
                         }
+                    }.disabled(model.isGuest)
+                    slider("Width", value: $model.settings.worldWidth, range: 0.08...1.5, unit: "m").disabled(model.isGuest)
+                    slider("Rotation", value: $model.settings.rotation, range: -180...180, unit: "°").disabled(model.isGuest)
+                    slider("Tilt", value: $model.settings.tilt, range: -60...60, unit: "°").disabled(model.isGuest)
+                    if model.isGuest { Text("The host controls the shared world's size and position.").font(.caption).foregroundStyle(.secondary) }
+                    Button(model.isGuest ? "Align with the host again" : "Reposition on a surface") {
+                        if model.isGuest { model.requestSharedMap() } else { model.repositionToken += 1 }; dismiss()
                     }
-                    slider("Width", value: $model.settings.worldWidth, range: 0.08...1.5, unit: "m")
-                    slider("Rotation", value: $model.settings.rotation, range: -180...180, unit: "°")
-                    slider("Tilt", value: $model.settings.tilt, range: -60...60, unit: "°")
-                    Button("Reposition on a surface") { model.repositionToken += 1; dismiss() }
                     Button("Reset AR tracking") { model.resetTrackingToken += 1; dismiss() }
                     Text("Free AR uses your physical camera viewpoint. The other views use a virtual camera for inspecting the same 3D geometry.").font(.caption).foregroundStyle(.secondary)
                 }
                 Section("3D appearance") {
-                    slider("Voxel depth", value: $model.settings.depth, range: 0.2...3, unit: "×")
+                    slider("Voxel depth", value: $model.settings.depth, range: 0.2...3, unit: "×").disabled(model.isGuest)
                     slider("Lighting", value: $model.settings.ambient, range: 0...1, unit: "")
-                    Picker("Geometry budget", selection: $model.settings.quality) { Text("Low").tag(0); Text("High").tag(1) }
+                    Picker("Geometry budget", selection: $model.settings.quality) { Text("Low").tag(0); Text("High").tag(1) }.disabled(model.isGuest)
                     Text("Colors come directly from Stella. Mesh faces retain sharp pixel edges. Quality limits geometry; diagnostics report any dropped objects.").font(.caption).foregroundStyle(.secondary)
                 }
                 Section("Controller") {
                     Picker("Type", selection: $model.settings.controller) {
                         Text("Automatic").tag("auto"); Text("Joystick").tag("joystick"); Text("Paddles").tag("paddles")
-                    }.onChange(of: model.settings.controller) { _ in model.releaseInput() }
+                    }.onChange(of: model.settings.controller) { _ in model.releaseInput() }.disabled(model.isMultiplayer)
                     Picker("Touch player", selection: $model.settings.player) { Text("Player 1").tag(0); Text("Player 2").tag(1) }
-                        .onChange(of: model.settings.player) { _ in model.releaseInput() }
+                        .onChange(of: model.settings.player) { _ in model.releaseInput() }.disabled(model.isMultiplayer)
+                    if model.isMultiplayer { Text(model.isGuest ? "This phone controls Player 2." : "This phone controls Player 1. The guest controls Player 2.").font(.caption).foregroundStyle(.mint) }
                     Toggle("Swap left and right controls", isOn: $model.settings.leftHanded)
                     Toggle("Haptic feedback", isOn: $model.settings.haptics)
                     slider("Size", value: $model.settings.controlSize, range: 0.7...1.4, unit: "×")
@@ -49,9 +53,9 @@ struct SettingsView: View {
                     Toggle("Left difficulty A", isOn: $model.settings.difficultyLeftA)
                     Toggle("Right difficulty A", isOn: $model.settings.difficultyRightA)
                     Toggle("Black and white", isOn: $model.settings.monochrome)
-                }
+                }.disabled(model.isGuest)
                 Section("Original audio") { slider("Volume", value: $model.settings.volume, range: 0...1, unit: "") }
-                if model.activeGame != nil {
+                if model.activeGame != nil && !model.isGuest {
                     Section("Save states") {
                         Button("Save to slot 1") { model.save() }
                         Button("Load slot 1") { model.loadSave(); dismiss() }.disabled(!model.hasSave)

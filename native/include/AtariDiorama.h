@@ -77,6 +77,12 @@ AD_API size_t ad_state_size(void);
 AD_API bool ad_save_state(uint8_t *data, size_t size);
 AD_API bool ad_load_state(const uint8_t *data, size_t size);
 AD_API size_t ad_audio_read(float *stereo, size_t frames);
+// Network tap: emulator queue only, independent of the realtime output consumer.
+AD_API void ad_audio_streaming(bool enabled);
+AD_API size_t ad_audio_stream_read(int16_t *stereo, size_t frames);
+// Guest playback uses the normal bounded audio ring without loading a cartridge.
+AD_API void ad_audio_receive(const int16_t *stereo, size_t frames);
+AD_API void ad_audio_clear(void);
 AD_API uint64_t ad_audio_dropped(void);
 AD_API const ADTIAWrite *ad_tia_writes(uint32_t *count, uint32_t *dropped);
 AD_API const ADScene *ad_reconstruct(const ADFrame *frame, const ADProfile *profile);

@@ -78,11 +78,11 @@ struct ControllerOverlay: View {
             if model.editControls { moveHandle(stick: true) }
             if model.controller == "paddles" {
                 VStack(alignment: .leading, spacing: 6) {
-                    Text("PADDLE \(model.settings.player + 1)").font(.system(size: 10, weight: .bold, design: .monospaced))
+                    Text("PADDLE \(model.localPlayer + 1)").font(.system(size: 10, weight: .bold, design: .monospaced))
                     Slider(value: $paddle, in: -1...1).tint(.mint)
                         .onChange(of: paddle) { model.setPaddle($0) }
                         .onAppear { paddle = model.paddlePosition }
-                        .onChange(of: model.settings.player) { _ in paddle = model.paddlePosition }
+                        .onChange(of: model.localPlayer) { _ in paddle = model.paddlePosition }
                 }
                 .padding(16).frame(width: 210 * CGFloat(model.settings.controlSize))
                 .background(.black.opacity(0.65), in: RoundedRectangle(cornerRadius: 20))

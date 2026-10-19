@@ -8,7 +8,7 @@ import UniformTypeIdentifiers
         WindowGroup {
             ContentView(model: model)
                 .preferredColorScheme(.dark)
-                .onChange(of: scenePhase) { phase in if phase != .active { model.setPaused(true) } }
+                .onChange(of: scenePhase) { phase in if phase == .background { model.applicationInactive() } else if phase == .inactive { model.setPaused(true) } }
         }
     }
 }
@@ -33,6 +33,8 @@ struct ContentView: View {
         .tint(.mint)
         .sheet(isPresented: $model.showSettings) { SettingsView(model: model) }
         .sheet(isPresented: $model.showInspector) { InspectorView(model: model) }
+        .sheet(isPresented: $model.showMultiplayer) { MultiplayerView(model: model) }
+        .onChange(of: model.showMultiplayer) { if $0 { model.releaseInput() } }
         .onChange(of: model.showSettings) { if $0 { model.setPaused(true) } }
         .onChange(of: model.showInspector) { if $0 { model.setPaused(true) } }
         .fileImporter(isPresented: $importing, allowedContentTypes: [.data], allowsMultipleSelection: false) { result in
@@ -74,6 +76,11 @@ struct ContentView: View {
                     }
                     .padding(24)
                     .background(LinearGradient(colors: [Color(red: 0.07, green: 0.13, blue: 0.15), Color(red: 0.05, green: 0.07, blue: 0.10)], startPoint: .topLeading, endPoint: .bottomTrailing), in: RoundedRectangle(cornerRadius: 25))
+                    HStack {
+                        Button { model.showMultiplayer = true } label: {
+                            Label("Local multiplayer · join as Player 2", systemImage: "person.2.fill").font(.subheadline.bold())
+                        }
+                    }
                     HStack {
                         Text("Your cartridges").font(.title3.bold())
                         Spacer()
@@ -124,13 +131,16 @@ struct ContentView: View {
                         Text(model.profile.badge).font(.system(size: 7, weight: .bold, design: .monospaced)).foregroundStyle(.orange)
                     }
                     Spacer(minLength: 0)
-                    Button { model.setPaused(!model.paused) } label: { Image(systemName: model.paused ? "play.fill" : "pause.fill").padding(10) }
+                    Button { model.setPaused(!model.paused) } label: { Image(systemName: model.paused ? "play.fill" : "pause.fill").padding(10) }.disabled(model.hostIsPaused)
                         .accessibilityLabel(model.paused ? "Resume" : "Pause")
                     Menu {
-                        Button("Save state", systemImage: "square.and.arrow.down") { model.save() }
+                        Button("Local multiplayer", systemImage: "person.2.fill") { model.showMultiplayer = true }
+                        Button("Save state", systemImage: "square.and.arrow.down") { model.save() }.disabled(model.isGuest)
                         Button("Load state", systemImage: "arrow.counterclockwise") { model.loadSave() }.disabled(!model.hasSave)
                         Button(model.showOriginal ? "Hide original view" : "Compare original view", systemImage: "rectangle.on.rectangle") { model.showOriginal.toggle() }
-                        Button("Reposition world", systemImage: "move.3d") { model.repositionToken += 1 }
+                        Button(model.isGuest ? "Align shared table again" : "Reposition world", systemImage: "move.3d") {
+                            if model.isGuest { model.requestSharedMap() } else { model.repositionToken += 1 }
+                        }
                         Button("Inspect scene", systemImage: "waveform.path.ecg") { model.showInspector = true }
                         Button("Settings", systemImage: "slider.horizontal.3") { model.showSettings = true }
                     } label: { Image(systemName: "ellipsis").padding(12) }.accessibilityLabel("Game menu")
@@ -141,6 +151,16 @@ struct ContentView: View {
                     Text(model.placementMessage).font(.caption2).lineLimit(2)
                     Spacer(minLength: 0)
                 }.padding(.horizontal, 12).padding(.vertical, 7).background(.black.opacity(0.55), in: Capsule())
+                if model.isMultiplayer {
+                    Button { model.showMultiplayer = true } label: {
+                        HStack(spacing: 6) {
+                            Image(systemName: "person.2.fill")
+                            Text(model.isHosting ? "P1 · " + RoomCode.display(model.network.code) : "P2 · " + model.network.status)
+                            Spacer(minLength: 0)
+                            if !model.spatialStatus.isEmpty { Text(model.spatialStatus).lineLimit(2) }
+                        }.font(.caption2).padding(10).background(.black.opacity(0.65), in: RoundedRectangle(cornerRadius: 12))
+                    }.buttonStyle(.plain)
+                }
                 if let s = model.snapshot {
                     if model.showOriginal {
                         PixelFrame(snapshot: s).aspectRatio(4/3, contentMode: .fit)
@@ -151,16 +171,22 @@ struct ContentView: View {
                 }
                 Spacer(minLength: 0)
                 if model.paused && model.placed {
-                    Button { model.setPaused(false) } label: {
-                        Label("Resume game", systemImage: "play.fill").font(.headline).foregroundStyle(.black).padding(16).background(.mint, in: Capsule())
+                    if model.hostIsPaused {
+                        Text("Host paused the game").font(.headline).padding(16).background(.black.opacity(0.65), in: Capsule())
+                    } else {
+                        Button { model.setPaused(false) } label: {
+                            Label(model.isGuest ? "Resume my controls" : "Resume game", systemImage: "play.fill").font(.headline).foregroundStyle(.black).padding(16).background(.mint, in: Capsule())
+                        }
                     }
                     Spacer(minLength: 0)
                 }
                 HStack(spacing: 14) {
-                    HoldControl(onHold: { model.setConsole(2, held: $0) }) { Text("SELECT").font(.system(size: 10, weight: .bold, design: .monospaced)).padding(12).background(.black.opacity(0.65), in: Capsule()) }
-                    HoldControl(onHold: { model.setConsole(3, held: $0) }) { Text("RESET").font(.system(size: 10, weight: .bold, design: .monospaced)).padding(12).background(.black.opacity(0.65), in: Capsule()) }
+                    if !model.isGuest {
+                        HoldControl(onHold: { model.setConsole(2, held: $0) }) { Text("SELECT").font(.system(size: 10, weight: .bold, design: .monospaced)).padding(12).background(.black.opacity(0.65), in: Capsule()) }
+                        HoldControl(onHold: { model.setConsole(3, held: $0) }) { Text("RESET").font(.system(size: 10, weight: .bold, design: .monospaced)).padding(12).background(.black.opacity(0.65), in: Capsule()) }
+                    }
                     Spacer()
-                    Text("P\(model.settings.player + 1)").font(.system(size: 10, weight: .bold, design: .monospaced)).padding(12).background(.black.opacity(0.65), in: Circle())
+                    Text("P\(model.localPlayer + 1)").font(.system(size: 10, weight: .bold, design: .monospaced)).padding(12).background(.black.opacity(0.65), in: Circle())
                 }.padding(.horizontal, 12)
                 if model.editControls {
                     Button("Done moving controls") { model.editControls = false }

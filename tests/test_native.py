@@ -30,6 +30,41 @@ class NativeIntegration(unittest.TestCase):
         data,_=assemble((ROOT/'homebrew/TabletopTest.asm').read_text())
         self.assertEqual(data,(ROOT/'ios/Resources/TabletopTest.a26').read_bytes())
         self.assertIn(hashlib.sha256(data).hexdigest(),json.loads((ROOT/'profiles/tabletop-test.json').read_text())['sha256'])
+    def test_multiplayer_audio_tap_is_independent_and_guest_playback_preserves_state(self):
+        self.lib.ad_audio_streaming(True)
+        try:
+            self.lib.ad_set_input(0,1,0,0)
+            self.lib.ad_run_frame()
+            tap=(C.c_int16*(8192*2))()
+            count=self.lib.ad_audio_stream_read(tap,8192)
+            normal=self.lib.ad_audio_read(self.audio,2048)
+            self.assertGreater(count,0);self.assertEqual(normal,count)
+            self.assertTrue(any(tap[i] for i in range(count*2)))
+            for i in range(count*2):self.assertAlmostEqual(self.audio[i],tap[i]/32768,places=6)
+            self.assertEqual(self.lib.ad_audio_stream_read(tap,8192),0)
+            before=bytes(self.lib.ad_current_frame().contents.ram[:128])
+            self.lib.ad_audio_clear();self.lib.ad_audio_read(self.audio,2048)
+            self.lib.ad_audio_streaming(False)
+            self.lib.ad_audio_receive(tap,count)
+            self.assertEqual(self.lib.ad_audio_read(self.audio,2048),count)
+            self.assertEqual(before,bytes(self.lib.ad_current_frame().contents.ram[:128]))
+            for i in range(count*2):self.assertAlmostEqual(self.audio[i],tap[i]/32768,places=6)
+        finally:self.lib.ad_audio_streaming(False)
+    def test_two_joystick_ports_and_fire_buttons_are_independent(self):
+        source=(ROOT/'homebrew/PaddleProbe.asm').read_text()
+        source=source.replace('LDA $08\n    STA $80','LDA $0C\n    STA $80').replace('LDA $09\n    STA $81','LDA $0D\n    STA $81')
+        probe,_=assemble(source);load_rom(self.lib,probe)
+        for port in (0,1):self.lib.ad_set_controller(port,0)
+        self.lib.ad_set_input(0,(1<<7)|1,0,0)
+        self.lib.ad_set_input(1,(1<<6)|1,0,0)
+        for _ in range(4):self.step()
+        ram=self.lib.ad_current_frame().contents.ram
+        self.assertEqual(ram[2],0x7B) # P1 right and P2 left, active low SWCHA
+        self.assertEqual((ram[0]&128,ram[1]&128),(0,0))
+        self.lib.ad_set_input(1,0,0,0)
+        for _ in range(4):self.step()
+        ram=self.lib.ad_current_frame().contents.ram
+        self.assertEqual(ram[2],0x7F);self.assertEqual((ram[0]&128,ram[1]&128),(0,128))
     def test_real_core_frame_ram_and_tia(self):
         f=self.lib.ad_current_frame().contents
         self.assertEqual(f.width,160);self.assertGreaterEqual(f.height,192)

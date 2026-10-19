@@ -11,6 +11,8 @@ struct FrameSnapshot {
     var sceneID: UInt64
     var fps, analysisMS: Double
     var traceCount, traceDropped, droppedObjects: UInt32
+    var pcm = Data()
+    var sampleRate: Double = 31400
 }
 
 // All libretro/core calls and borrowed-pointer reads stay on this queue.
@@ -23,6 +25,13 @@ final class EmulationEngine {
     private var deadline: CFTimeInterval = 0
     private var loaded = false
     private var stateFrames: UInt64 = 0
+
+    func streamAudio(_ enabled: Bool) { queue.async { ad_audio_streaming(enabled) } }
+    func receiveAudio(_ data: Data) {
+        queue.async {
+            data.withUnsafeBytes { raw in ad_audio_receive(raw.bindMemory(to: Int16.self).baseAddress, raw.count / 4) }
+        }
+    }
 
     func load(data: Data, filename: String, profile: GameProfile, controller: String,
               completion: @escaping (Result<Double, Error>) -> Void) {
@@ -75,12 +84,16 @@ final class EmulationEngine {
             }
             var writes: UInt32 = 0, dropped: UInt32 = 0
             _ = ad_tia_writes(&writes, &dropped)
-            let snapshot = FrameSnapshot(number: self.stateFrames, width: Int(frame.width), height: Int(frame.height),
+            var snapshot = FrameSnapshot(number: self.stateFrames, width: Int(frame.width), height: Int(frame.height),
                 pixels: Data(bytes: frame.rgba!, count: Int(frame.width * frame.height * 4)), ram: ram,
                 objects: Array(UnsafeBufferPointer(start: scene.objects, count: Int(scene.object_count))),
                 boxes: Array(UnsafeBufferPointer(start: scene.boxes, count: Int(scene.box_count))), sceneID: scene.scene_id,
                 fps: frame.fps, analysisMS: scene.analysis_ms, traceCount: writes, traceDropped: dropped,
                 droppedObjects: scene.dropped_objects)
+            var samples = [Int16](repeating: 0, count: 8192 * 2)
+            let countPCM = samples.withUnsafeMutableBufferPointer { ad_audio_stream_read($0.baseAddress, 8192) }
+            snapshot.pcm = samples.withUnsafeBytes { Data($0.prefix(countPCM * 4)) }
+            snapshot.sampleRate = frame.sample_rate
             DispatchQueue.main.async { completion(snapshot) }
         }
     }

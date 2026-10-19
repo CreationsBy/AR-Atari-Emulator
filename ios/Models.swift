@@ -1,7 +1,7 @@
 import Foundation
 import CryptoKit
 
-struct ConversionRule: Decodable {
+struct ConversionRule: Codable {
     var name: String
     var colorIndex: Int32?
     var role: Int32
@@ -22,7 +22,7 @@ struct ConversionRule: Decodable {
 
 // Bounded runtime profile instructions. Read-only RAM conditions can override the
 // visual rules for a room/state. They never write RAM or drive emulator inputs.
-struct ProfileInstruction: Decodable {
+struct ProfileInstruction: Codable {
     var ramOffset: Int
     var mask: UInt8
     var equals: UInt8
@@ -31,7 +31,7 @@ struct ProfileInstruction: Decodable {
     var elevation: Float?
 }
 
-struct GameProfile: Decodable, Identifiable {
+struct GameProfile: Codable, Identifiable {
     var schemaVersion: Int
     var id, title: String
     var sha256, md5: [String]
