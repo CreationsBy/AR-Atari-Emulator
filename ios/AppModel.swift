@@ -357,11 +357,11 @@ import QuartzCore
                 showMultiplayer = false; spatialStatus = "Waiting for the host's table map"
                 applyGuestPause(); network.send(.mapRequest)
             case .frame where isGuest:
-                let code = network.code
+                let token = network.connectionToken
                 remoteDecodeQueue.async {
                     let result = Result { try SharedFrame.decode(data) }
                     DispatchQueue.main.async {
-                        guard self.isGuest, self.network.connected, self.network.code == code else { return }
+                        guard self.isGuest, self.network.connected, self.network.connectionToken == token else { return }
                         do {
                             let frame = try result.get()
                             self.snapshot = frame.snapshot; self.sharedPresentation = frame.presentation

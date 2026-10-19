@@ -2,7 +2,8 @@
 ; 4K NTSC. Real 6507/TIA/RIOT code, not a frontend animation.
 ; D-pad moves blue sprite. Fire plays a TIA tone and enables missile 0.
 ; Select changes room/wall color. Reset restores initial state.
-; Red sprite moves autonomously. Hardware P0/playfield collision is copied to RAM.
+; Red sprite moves autonomously until P2 moves/fires, then P2 controls it until Reset.
+; Hardware P0/playfield collision is copied to RAM.
 VSYNC=$00
 VBLANK=$01
 WSYNC=$02
@@ -20,8 +21,11 @@ RESP1=$11
 RESM0=$12
 RESBL=$14
 AUDC0=$15
+AUDC1=$16
 AUDF0=$17
+AUDF1=$18
 AUDV0=$19
+AUDV1=$1A
 GRP0=$1B
 GRP1=$1C
 ENAM0=$1D
@@ -33,6 +37,7 @@ HMOVE=$2A
 CXCLR=$2C
 CXP0FB=$02
 INPT4=$0C
+INPT5=$0D
 SWCHA=$0280
 SWCHB=$0282
 INTIM=$0284
@@ -47,6 +52,9 @@ Collision=$86
 Temp0=$87
 Temp1=$88
 SelectHeld=$89
+Player2Active=$8A
+EnemyY=$8B
+Fire2=$8C
 
 .org $F000
 Reset:
@@ -65,6 +73,8 @@ Clear:
     STA PlayerY
     LDA #$78
     STA EnemyX
+    LDA #$28
+    STA EnemyY
     LDA #$84
     STA COLUP0
     LDA #$46
@@ -73,8 +83,11 @@ Clear:
     STA CTRLPF
     LDA #$04
     STA AUDC0
+    STA AUDC1
     LDA #$10
     STA AUDF0
+    LDA #$18
+    STA AUDF1
 
 Frame:
     LDA #$02
@@ -145,11 +158,76 @@ YLowOK:
     LDA #$4C
 YHighOK:
     STA PlayerY
+    LDA Player2Active
+    BNE SecondPlayer
+    LDA SWCHA
+    AND #$0F
+    CMP #$0F
+    BNE ActivateSecond
+    LDA INPT5
+    AND #$80
+    BEQ ActivateSecond
     LDA Counter
     AND #$1F
     CLC
     ADC #$68
     STA EnemyX
+    JMP SecondSound
+ActivateSecond:
+    INC Player2Active
+SecondPlayer:
+    LDA SWCHA
+    AND #$08
+    BNE NoRight2
+    INC EnemyX
+NoRight2:
+    LDA SWCHA
+    AND #$04
+    BNE NoLeft2
+    DEC EnemyX
+NoLeft2:
+    LDA SWCHA
+    AND #$02
+    BNE NoDown2
+    INC EnemyY
+NoDown2:
+    LDA SWCHA
+    AND #$01
+    BNE NoUp2
+    DEC EnemyY
+NoUp2:
+    LDA EnemyX
+    CMP #$20
+    BCS XLowOK2
+    LDA #$20
+XLowOK2:
+    CMP #$89
+    BCC XHighOK2
+    LDA #$88
+XHighOK2:
+    STA EnemyX
+    LDA EnemyY
+    CMP #$0C
+    BCS YLowOK2
+    LDA #$0C
+YLowOK2:
+    CMP #$4D
+    BCC YHighOK2
+    LDA #$4C
+YHighOK2:
+    STA EnemyY
+SecondSound:
+    LDA INPT5
+    EOR #$80
+    AND #$80
+    STA Fire2
+    BEQ Quiet2
+    LDA #$06
+    BNE Volume2
+Quiet2:
+    LDA #$00
+Volume2:
+    STA AUDV1
     LDA INPT4
     EOR #$80
     AND #$80
@@ -207,7 +285,7 @@ DrawP0:
     STA GRP0
     TYA
     SEC
-    SBC #$28
+    SBC EnemyY
     CMP #$08
     BCS EmptyP1
     TAX

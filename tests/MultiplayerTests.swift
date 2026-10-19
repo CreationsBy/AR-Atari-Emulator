@@ -99,6 +99,8 @@ func rejects(_ body: () throws -> Void) throws {
         guest.send(.frameAck)
         try await wait("latest frame replaces backlog") { receivedFrame?.snapshot.number == 99 }
         try expect(frameCount == 2, "Backpressure did not coalesce old scenes")
+        try expect((receivedFrame?.snapshot.pcm.count ?? 0) > fixture().pcm.count && (receivedFrame?.snapshot.pcm.count ?? 0) <= 8192 * 4,
+            "Coalescing dropped audio or exceeded its latency budget")
         let third = LocalSession(interface: .loopback)
         defer { third.stop() }
         third.join(host.code, endpoint: endpoint)

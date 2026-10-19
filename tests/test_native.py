@@ -65,6 +65,18 @@ class NativeIntegration(unittest.TestCase):
         for _ in range(4):self.step()
         ram=self.lib.ad_current_frame().contents.ram
         self.assertEqual(ram[2],0x7F);self.assertEqual((ram[0]&128,ram[1]&128),(0,128))
+    def test_demo_second_player_takes_over_red_actor(self):
+        before=self.lib.ad_current_frame().contents.ram[2]
+        self.lib.ad_set_input(0,1<<7,0,0)
+        self.lib.ad_set_input(1,(1<<6)|1,0,0)
+        for _ in range(8):self.step()
+        ram=self.lib.ad_current_frame().contents.ram
+        self.assertEqual(ram[0],76);self.assertEqual(ram[2],before-8)
+        self.assertEqual(ram[10],1);self.assertEqual(ram[12],128)
+        self.lib.ad_set_input(1,0,0,0)
+        for _ in range(5):self.step()
+        ram=self.lib.ad_current_frame().contents.ram
+        self.assertEqual(ram[2],before-8);self.assertEqual(ram[12],0)
     def test_real_core_frame_ram_and_tia(self):
         f=self.lib.ad_current_frame().contents
         self.assertEqual(f.width,160);self.assertGreaterEqual(f.height,192)

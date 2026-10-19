@@ -34,6 +34,7 @@ import Security
 
     init(interface: NWInterface.InterfaceType = .wifi) { self.interface = interface }
     var listenerPort: NWEndpoint.Port? { listener?.port }
+    var connectionToken: UUID { generation }
 
     private func parameters(code: String? = nil) -> NWParameters {
         let tcp = NWProtocolTCP.Options(); tcp.noDelay = true
@@ -64,16 +65,20 @@ import Security
             self.listener = listener
             listener.service = NWListener.Service(name: RoomCode.serviceName(code), type: Self.serviceType)
             listener.stateUpdateHandler = { [weak self, weak listener] state in
+                Task { @MainActor in
                 guard let self, self.listener === listener else { return }
                 switch state {
                 case .ready: self.status = "Waiting for Player 2 · same Wi-Fi"
                 case .failed(let error): self.fail("Cannot host. Allow Local Network access in Settings and connect to Wi-Fi. \(error.localizedDescription)", stopRoom: true)
                 default: break
                 }
+                }
             }
             listener.newConnectionHandler = { [weak self] incoming in
+                Task { @MainActor in
                 guard let self, self.connection == nil else { incoming.cancel(); return }
                 self.attach(incoming)
+                }
             }
             listener.start(queue: .main)
             startTimer()
@@ -91,12 +96,15 @@ import Security
         let browser = NWBrowser(for: .bonjour(type: Self.serviceType, domain: "local."), using: parameters())
         self.browser = browser
         browser.stateUpdateHandler = { [weak self, weak browser] state in
+            Task { @MainActor in
             guard let self, self.browser === browser else { return }
             if case .failed = state {
                 self.fail("Discovery failed. Allow Local Network access and connect both phones to the same Wi-Fi.", stopRoom: true)
             }
+            }
         }
         browser.browseResultsChangedHandler = { [weak self] results, _ in
+            Task { @MainActor in
             guard let self, self.connection == nil else { return }
             for result in results {
                 if case .service(let name, _, _, _) = result.endpoint, name == RoomCode.serviceName(self.code) {
@@ -104,6 +112,7 @@ import Security
                     self.attach(NWConnection(to: result.endpoint, using: self.parameters(code: self.code)))
                     break
                 }
+            }
             }
         }
         browser.start(queue: .main)
@@ -113,6 +122,7 @@ import Security
         self.connection = connection; messages = TCPMessages(); connectionStarted = Date()
         status = "Connecting securely…"
         connection.stateUpdateHandler = { [weak self, weak connection] state in
+            Task { @MainActor in
             guard let self, let connection, self.connection === connection else { return }
             switch state {
             case .ready:
@@ -127,12 +137,14 @@ import Security
                 break
             default: break
             }
+            }
         }
         connection.start(queue: .main)
     }
 
     private func receive(_ connection: NWConnection) {
         connection.receive(minimumIncompleteLength: 1, maximumLength: 65536) { [weak self, weak connection] data, _, complete, error in
+            Task { @MainActor in
             guard let self, let connection, self.connection === connection else { return }
             if let data, !data.isEmpty {
                 do {
@@ -165,6 +177,7 @@ import Security
             }
             if complete || error != nil { self.fail("The other player disconnected.") }
             else { self.receive(connection) }
+            }
         }
     }
 
@@ -181,15 +194,23 @@ import Security
     }
     private func write(_ data: Data, on connection: NWConnection) {
         connection.send(content: data, completion: .contentProcessed { [weak self, weak connection] error in
+            Task { @MainActor in
             guard let self, self.connection === connection else { return }
             if let error { self.fail("Wi-Fi send failed: " + error.localizedDescription) }
+            }
         })
     }
     func offer(_ frame: SharedFrame) {
         guard connected, role == .host else { return }
         // One frame in flight, one latest replacement. An application-level ACK
         // bounds latency even when TCP's socket send buffer has free space.
-        latestFrame = frame; flushFrame()
+        var newest = frame
+        if let pending = latestFrame, !frame.paused {
+            // Coalesce visuals, but preserve the original audio from skipped
+            // scenes. Cap retained audio at 260 ms to recover from slow Wi-Fi.
+            newest.snapshot.pcm = Data((pending.snapshot.pcm + frame.snapshot.pcm).suffix(8192 * 4))
+        }
+        latestFrame = newest; flushFrame()
     }
     private func flushFrame() {
         guard !frameOutstanding, let frame = latestFrame, let connection, connected else { return }
@@ -205,6 +226,7 @@ import Security
     }
     private func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+            Task { @MainActor in
             guard let self else { return }
             let now = Date()
             if self.connected {
@@ -215,6 +237,7 @@ import Security
                 self.fail("Could not connect. Check the room code and try again.")
             } else if self.role == .guest && now > self.searchDeadline {
                 self.fail("Room not found. Check the code, Wi-Fi and Local Network permission. Guest Wi-Fi may block connections.", stopRoom: true)
+            }
             }
         }
         if let timer { RunLoop.main.add(timer, forMode: .common) }
