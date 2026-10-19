@@ -78,6 +78,7 @@ func rejects(_ body: () throws -> Void) throws {
         wrong.join(host.code == "ABCDEFGH" ? "ABCDEFGJ" : "ABCDEFGH", endpoint: endpoint)
         try await wait("wrong code rejected") { wrong.status.contains("rejected") || wrong.status.contains("Could not connect") }
         try expect(!wrongConnected && !host.connected, "Incorrect code authenticated")
+        try await wait("host releases rejected handshake") { host.acceptingGuest }
         var input: RemoteInput?, receivedFrame: SharedFrame?, mapReceived = false
         var frameCount = 0
         host.onMessage = { type, data in if type == .input { input = try? RoomCodec.read(RemoteInput.self, data) } }
@@ -86,7 +87,8 @@ func rejects(_ body: () throws -> Void) throws {
             if type == .worldMap { mapReceived = data == Data(repeating: 17, count: 200_000) }
         }
         guest.join(host.code, endpoint: endpoint)
-        try await wait("encrypted peer connection") { host.connected && guest.connected }
+        do { try await wait("encrypted peer connection") { host.connected && guest.connected } }
+        catch { throw TestFailure.failed("TLS host: \(host.status); guest: \(guest.status); accepting: \(host.acceptingGuest)") }
         guest.send(.input, try RoomCodec.plist(RemoteInput(buttons: 0x81, paddle: 0.5, sequence: 1)))
         host.offer(SharedFrame(snapshot: fixture(), paused: false, presentation: SharedPresentation(AppSettings())))
         host.send(.worldMap, Data(repeating: 17, count: 200_000))

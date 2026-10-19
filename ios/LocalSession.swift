@@ -35,6 +35,7 @@ import Security
     init(interface: NWInterface.InterfaceType = .wifi) { self.interface = interface }
     var listenerPort: NWEndpoint.Port? { listener?.port }
     var connectionToken: UUID { generation }
+    var acceptingGuest: Bool { role == .host && listener != nil && connection == nil }
 
     private func parameters(code: String? = nil) -> NWParameters {
         let tcp = NWProtocolTCP.Options(); tcp.noDelay = true
@@ -51,7 +52,11 @@ import Security
                 tls_ciphersuite_t(rawValue: TLS_PSK_WITH_AES_128_GCM_SHA256)!)
             parameters = NWParameters(tls: tls, tcp: tcp)
         } else { parameters = NWParameters(tls: nil, tcp: tcp) }
-        parameters.requiredInterfaceType = interface
+        if interface == .loopback {
+            // Local TCP paths may bypass the interface-type matcher. Bind the
+            // hosted test endpoints to 127.0.0.1 instead of requiring that type.
+            parameters.requiredLocalEndpoint = .hostPort(host: "127.0.0.1", port: .any)
+        } else { parameters.requiredInterfaceType = interface }
         parameters.includePeerToPeer = false
         parameters.allowLocalEndpointReuse = true
         return parameters
@@ -129,10 +134,10 @@ import Security
                 self.connected = true; self.lastReceived = Date(); self.searchDeadline = .distantFuture
                 self.status = self.role == .host ? "Player 2 connected" : "Connected as Player 2"
                 self.receive(connection); self.onConnected?()
-            case .failed:
-                self.fail("Connection lost or room code rejected. Check Wi-Fi and join again.")
-            case .waiting:
-                self.status = "Waiting for Wi-Fi connection…"
+            case .failed(let error):
+                self.fail("Connection lost or room code rejected. Check Wi-Fi and join again. " + error.localizedDescription)
+            case .waiting(let error):
+                self.status = "Waiting for Wi-Fi connection… " + error.localizedDescription
             case .cancelled:
                 break
             default: break
