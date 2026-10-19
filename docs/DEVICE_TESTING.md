@@ -56,9 +56,11 @@ Use the new build and the exact cartridge hashes in [ICE_HOCKEY.md](ICE_HOCKEY.m
 | Existing preferences | Updating preserves volume, selected player and other settings; world initially remains Tabletop | Pending |
 | Vertical placement | On a horizontal table anchor, Vertical stands the scene on its bottom edge; rotation/tilt/size and switching back work while paused and playing | Pending |
 | Existing side-view profile | A profile with an already-upright pixel plane is not rotated twice | Pending |
-| Ice Hockey profile | Importing/reopening the supplied ROM selects `ice-hockey-ntsc-v1`; ice, board edges, two goals, four colored skaters and visible puck match the original frame | Pending |
+| Ice Hockey profile | Reopening selects `ice-hockey-ntsc-v2`; original rink/goal openings, skater silhouettes, sticks and visible puck match source pixels; no added boards/posts/nets or pedestal | Pending |
 | Poses and scoring | Play a complete match with both teams, falls, overlaps and goals; record disappearing/merged parts against the original-frame comparison | Pending |
-| Vertical skaters | Skater silhouettes stay upright when the rink changes between Tabletop and Vertical; no stale actor rotations remain after Reset or save/load | Pending |
+| Complete artwork | Both scores, timer and Activision logo appear as live world geometry in original positions, with no separate score overlay; changing digits remove their old pixels | Pending |
+| Vertical artwork | Entire raster relief including skaters/text rotates together in Tabletop/Vertical; text stays readable from the front and source-plane positions stay intact | Pending |
+| Original colors | Ambient-light changes do not recolor Ice Hockey's unlit artwork; compare original frame and world colors | Pending |
 | Two-phone orientation | With the same updated build on both phones, the host's Vertical/Tabletop choice propagates while each phone retains its own camera view | Pending |
 | Ice Hockey two-player | Host selects game 2 or 4 and resets; each phone independently controls the correct team, including Fire, with no ROM in the guest library | Pending |
 

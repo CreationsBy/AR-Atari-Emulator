@@ -50,7 +50,7 @@ This means: when `(RAM[5] & 1) == 1`, change rule 3's height. Instructions run a
 
 ## Inspect a new ROM
 
-The [Ice Hockey profile](ICE_HOCKEY.md) uses `iceHockeyNTSCv1` for pixels and measured RAM slots. The [Adventure profile](ADVENTURE.md) uses `adventureNTSCv1` for visible pixels, the room/display cache and graphics read privately from the user's cartridge. Both adapters are restricted to measured hashes by the validator. No cartridge bytes are sent to a multiplayer guest; it receives geometry. Other profiles use generic segmentation.
+The [Ice Hockey profile](ICE_HOCKEY.md) uses `iceHockeyNTSCv2` for a complete original-frame voxel relief, including its score/timer/logo. It preserves visible pixel footprints/colors and adds only depth; no RAM grouping or authored rink details remain. The [Adventure profile](ADVENTURE.md) uses `adventureNTSCv1` for visible pixels, the room/display cache and graphics read privately from the user's cartridge. Both adapters are restricted to measured hashes. No cartridge bytes are sent to a guest; it receives geometry. Other profiles use generic segmentation.
 
 1. Import your own legally obtained ROM. Keep the default generic label.
 2. Inspect the original raster and scene side by side. Record exact ROM hashes and the core revision.

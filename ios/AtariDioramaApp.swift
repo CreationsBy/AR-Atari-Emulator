@@ -165,7 +165,7 @@ struct ContentView: View {
                     if model.showOriginal {
                         PixelFrame(snapshot: s).aspectRatio(4/3, contentMode: .fit)
                             .frame(maxWidth: 300, maxHeight: 210).background(.black).clipShape(RoundedRectangle(cornerRadius: 8))
-                    } else if model.profile.hudTop > 0 {
+                    } else if model.profile.showsSeparateHUD {
                         PixelFrame(snapshot: s, fraction: Double(model.profile.hudTop)).frame(width: 200, height: 34).background(.black.opacity(0.6))
                     }
                 }

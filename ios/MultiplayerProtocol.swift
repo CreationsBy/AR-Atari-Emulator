@@ -40,10 +40,9 @@ struct SharedPresentation: Codable, Equatable {
         upright && !nativeUpright ? -worldRotation(nativeUpright: false).act(SIMD3<Float>(0,0,0.375)) * width : .zero
     }
     func actorRotation(reconstruction: String?, role: Int32) -> simd_quatf {
-        // Semantic skaters already stand above their foot anchor. In a vertical
-        // rink their silhouettes should stand in the screen plane, not lie on it.
-        let standing = reconstruction == "iceHockeyNTSCv1" && role == 2 ||
-            reconstruction == "adventureNTSCv1" && (role == 2 || role == 5)
+        // Adventure silhouettes already stand above their foot anchor. The
+        // faithful Ice Hockey relief stays in its original raster plane.
+        let standing = reconstruction == "adventureNTSCv1" && (role == 2 || role == 5)
         return upright && standing ?
             simd_quatf(angle: -.pi / 2, axis: [1,0,0]) : simd_quatf()
     }

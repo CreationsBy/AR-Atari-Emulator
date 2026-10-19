@@ -18,11 +18,12 @@ def main():
         assert p['controller'] in ['joystick','paddles'];assert p['perspective'] in ['topDown','sideView']
         if 'reconstruction' in p:
             adapters={
-                'iceHockeyNTSCv1':('fc8b861d9cf9c9d5f7f7677f22b39d512d249697b69c1e7dcf238c5dc8f44b60','a4c08c4994eb9d24fb78be1793e82e26'),
+                'iceHockeyNTSCv2':('fc8b861d9cf9c9d5f7f7677f22b39d512d249697b69c1e7dcf238c5dc8f44b60','a4c08c4994eb9d24fb78be1793e82e26'),
                 'adventureNTSCv1':('b0326b45e5cab066b2d03f1e683708d82de3ffe60b2e968bf88c5494237f0a96','157bddb7192754a45372be196797f284')}
             assert p['reconstruction'] in adapters
             sha,md5=adapters[p['reconstruction']]
             assert p['sha256']==[sha] and p['md5']==[md5]
+            if p['reconstruction']=='iceHockeyNTSCv2':assert p['hudTop']==0 and p['hudBottom']==0
         assert -1<=p['backgroundIndex']<256;assert -1<=p['sceneRAMOffset']<128
         assert 0<=p['hudTop']<1 and 0<=p['hudBottom']<1 and p['hudTop']+p['hudBottom']<1
         assert 0<p['defaultHeight']<=.5 and len(p['rules'])<=128

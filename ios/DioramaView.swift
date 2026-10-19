@@ -31,6 +31,8 @@ struct DioramaView: UIViewRepresentable {
         private var colors: [UInt64: UInt32] = [:]
         private var meshCache: [UInt64: MeshResource] = [:]
         private var materialCache: [UInt32: SimpleMaterial] = [:]
+        private var unlitMaterialCache: [UInt32: UnlitMaterial] = [:]
+        private var lastRasterWorld = false
         private var observations = Set<AnyCancellable>()
         private var updateSubscription: (any Combine.Cancellable)?
         private var camera: PerspectiveCamera?
@@ -203,6 +205,7 @@ struct DioramaView: UIViewRepresentable {
             world.scale = SIMD3<Float>(repeating: presentation.width)
             world.orientation = presentation.worldRotation(nativeUpright: nativeUpright)
             world.position = presentation.worldOffset(nativeUpright: nativeUpright)
+            floor?.isEnabled = !model.profile.originalRasterWorld
             for (id, entity) in entities {
                 entity.orientation = presentation.actorRotation(reconstruction: model.profile.reconstruction, role: entityRoles[id] ?? 0)
                 if let position = entityPositions[id] {
@@ -272,10 +275,12 @@ struct DioramaView: UIViewRepresentable {
             } catch { model.error = error.localizedDescription }
         }
         private func render(_ snapshot: FrameSnapshot) {
-            if lastScene != snapshot.sceneID {
+            if lastScene != snapshot.sceneID || lastRasterWorld != model.profile.originalRasterWorld {
                 entities.values.forEach { $0.removeFromParent() }
                 entities.removeAll(); entityRoles.removeAll(); entityPositions.removeAll(); geometry.removeAll(); colors.removeAll(); lastScene = snapshot.sceneID
+                lastRasterWorld = model.profile.originalRasterWorld
             }
+            floor?.isEnabled = !model.profile.originalRasterWorld
             reliefFront = 0
             for object in snapshot.objects where object.role == 1 {
                 let first = Int(object.first_box), end = first + Int(object.box_count)
@@ -306,14 +311,22 @@ struct DioramaView: UIViewRepresentable {
                             if meshCache.count >= 512 { meshCache.removeAll(keepingCapacity: true) }
                             meshCache[object.geometry_hash] = mesh
                         }
-                        let material: SimpleMaterial
-                        if let cached = materialCache[object.color_rgba] { material = cached }
-                        else {
-                            let c = object.color_rgba
-                            let color = UIColor(red: CGFloat(c & 255) / 255, green: CGFloat((c >> 8) & 255) / 255,
-                                                blue: CGFloat((c >> 16) & 255) / 255, alpha: 1)
-                            material = SimpleMaterial(color: color, roughness: 0.8, isMetallic: false)
-                            materialCache[c] = material
+                        let material: any Material
+                        let c = object.color_rgba
+                        let color = UIColor(red: CGFloat(c & 255) / 255, green: CGFloat((c >> 8) & 255) / 255,
+                                            blue: CGFloat((c >> 16) & 255) / 255, alpha: 1)
+                        if model.profile.originalRasterWorld {
+                            if let cached = unlitMaterialCache[c] { material = cached }
+                            else {
+                                let unlit = UnlitMaterial(color: color)
+                                unlitMaterialCache[c] = unlit; material = unlit
+                            }
+                        } else {
+                            if let cached = materialCache[c] { material = cached }
+                            else {
+                                let lit = SimpleMaterial(color: color, roughness: 0.8, isMetallic: false)
+                                materialCache[c] = lit; material = lit
+                            }
                         }
                         entity.model = ModelComponent(mesh: mesh, materials: [material])
                         geometry[object.id] = object.geometry_hash; colors[object.id] = object.color_rgba

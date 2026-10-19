@@ -83,8 +83,13 @@ func rejects(_ body: () throws -> Void) throws {
         let top = pose.worldRotation(nativeUpright: false).act(SIMD3<Float>(0,0,-0.375)) * pose.width + pose.worldOffset(nativeUpright: false)
         try expect(simd_length(bottom) < 0.0001 && top.y > 0.25, "Upright world is not standing on its bottom edge")
         try expect(abs(pose.worldRotation(nativeUpright: true).angle) < 0.0001, "Side-view profile rotated twice")
-        let skaterHead = pose.worldRotation(nativeUpright: false).act(pose.actorRotation(reconstruction: "iceHockeyNTSCv1", role: 2).act(SIMD3<Float>(0,0.07,0)))
-        try expect(skaterHead.y > 0.069 && abs(skaterHead.z) < 0.001, "Vertical skater silhouette lies sideways on the rink")
+        let iceProfile = try JSONDecoder().decode(GameProfile.self, from: Data(contentsOf: URL(fileURLWithPath: "profiles/ice-hockey-ntsc.json")))
+        try expect(iceProfile.originalRasterWorld && !iceProfile.showsSeparateHUD && iceProfile.hudTop == 0 && iceProfile.hudBottom == 0, "Ice Hockey artwork is still split into an overlay")
+        let iceAdapter = iceProfile.withNative(ram: [], depth: 1, quality: 1) { $0.adapter }
+        try expect(iceAdapter == 1, "Ice Hockey relief adapter was not selected")
+        for role in [Int32(2), Int32(5)] {
+            try expect(abs(pose.actorRotation(reconstruction: iceProfile.reconstruction, role: role).angle) < 0.0001, "Ice Hockey pixels were moved out of their raster plane")
+        }
         for role in [Int32(2), Int32(5)] {
             let head = pose.worldRotation(nativeUpright: false).act(pose.actorRotation(reconstruction: "adventureNTSCv1", role: role).act(SIMD3<Float>(0,0.07,0)))
             try expect(head.y > 0.069 && abs(head.z) < 0.001, "Vertical Adventure creature/item lies sideways")
