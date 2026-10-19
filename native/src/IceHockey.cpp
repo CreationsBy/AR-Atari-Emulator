@@ -83,7 +83,10 @@ extern "C" const ADScene *ad_reconstruct_ice_hockey(const ADFrame *f,const ADPro
             if(d<distance){distance=d;best=int(j);}
         }
         if(best>=0){o.id=previous[best].id;used[best]=true;}else o.id=nextID++;
-        float height=c.color==0 && c.role!=AD_PROJECTILE?.001f:c.role==AD_PLATFORM?.003f:thickness;
+        // Original glyphs have one-pixel holes. Keep their relief shallow so
+        // side faces do not bury those holes when viewing the world at an angle.
+        float textHeight=std::clamp(thickness*.1f,.0012f,.002f);
+        float height=c.color==0 && c.role!=AD_PROJECTILE?.001f:c.role==AD_PLATFORM?.003f:c.role==AD_SCENERY?textHeight:thickness;
         o.first_box=uint32_t(boxes.size());
         for(auto r:rectangles)boxes.push_back({(r.x+r.w*.5f)/w,height*.5f,.75f*(r.y+r.h*.5f)/h,float(r.w)/w,height,.75f*r.h/h});
         o.box_count=uint32_t(rectangles.size());uint64_t geometry=pattern;

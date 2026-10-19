@@ -53,6 +53,7 @@ class IceHockeyGeometry(unittest.TestCase):
         self.assertTrue(any(o.role==5 and o.pixel_y<28 for o in objects))
         self.assertTrue(any(o.role==5 and o.pixel_y>=188 for o in objects))
         self.assertFalse(any(o.role==1 for o in objects)) # no invented boards or posts
+        self.assertTrue(all(0<b.height<=.00201 for o in objects if o.role==5 for b in s.boxes[o.first_box:o.first_box+o.box_count]))
         self.assertTrue(any(o.role==3 and o.pixel_x==42 for o in objects));self.assertEqual(s.dropped_objects,0)
         # Goal voids, thin pixel lines and glyph holes were checked by the exact
         # independent projection above, not inferred from rectangle counts.
