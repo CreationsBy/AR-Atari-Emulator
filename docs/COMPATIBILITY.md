@@ -21,6 +21,14 @@ Windows x64, portable Zig 0.13.0, Python 3.13.13 from the existing Blender insta
 
 See [the saved runner output](evidence/native-tests.txt) and [the machine-readable capture](evidence/validation-report.json). Headless throughput and reconstruction timings measure this Windows process, including Python capture overhead. They are not iPhone or AR frame-rate claims.
 
+### Hosted build verified October 18, 2026 (America/New_York)
+
+[GitHub Actions run #1](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39179809317) passed for commit `f8a9bdda02981891afbccfe0e8dc22a050fc2229`. Ubuntu 24.04 built the 100-source native core, verified all 286 vendor files and passed all 12 tests. The `macos-15` job used Xcode 16.4 (16F6), the iPhoneOS 18.5 SDK and an iOS 16.0 deployment target to build the native arm64 library and archive the Swift application. The first Apple build succeeded without source fixes.
+
+The downloaded IPA passed ZIP CRC checks and `scripts/verify_ipa.py` again on Windows: arm64 Mach-O, iPhoneOS platform, original homebrew cartridge, five conversion profiles and unsigned status. Its SHA-256 matches the hosted manifest. Every one of the 357 files in the matching source ZIP equals the built commit's Git blob. See [the build verification record](evidence/ios-build.json) and [the original artifact manifest](evidence/ios-artifact-manifest.json).
+
+Xcode reported two nonblocking warnings: skipped AppIntents metadata extraction because that framework is unused, and the interface-orientation/full-screen warning. No Swift compile errors were reported. Signing, installation, runtime audio/input and physical AR acceptance have not been tested.
+
 ## ROM status
 
 | Cartridge | Identification | Emulation tested here | 3D interpretation | iPhone/AR |
@@ -39,18 +47,18 @@ The emulator's broad cartridge support is inherited from Stella; only the origin
 
 | Milestone | Result |
 |---|---|
-| 1. iOS emulator with ROM import, controls and audio | Native core/inputs/audio tested on Windows. SwiftUI and audio source implemented; Apple build/device acceptance pending. |
+| 1. iOS emulator with ROM import, controls and audio | Native core/inputs/audio tested on Windows and hosted Linux. SwiftUI/audio source Apple-compiled; device acceptance pending. |
 | 2. Graphics analysis and TIA capture | Implemented and host-tested. TIA layer attribution and game-specific semantic trace interpretation remain future work. |
 | 3. Homebrew 3D prototype | Real ROM -> Stella -> separated volumetric geometry works on host. Offline mesh render inspected; live local viewer endpoint verified. Browser rendering could not be inspected in this session. |
 | 4. Complete real-game profile | Not achieved. Experimental JSON candidates exist; a user-supplied ROM and gameplay testing are required. |
-| 5. Tabletop AR | Native placement/anchor/camera/gesture source implemented; not Apple-compiled or device-tested. |
+| 5. Tabletop AR | Native placement/anchor/camera/gesture source Apple-compiled; device testing pending. |
 | 6. Additional profiles | Four experimental candidates, zero validated commercial full-support profiles. |
-| 7. Automated IPA | Workflow and scripts implemented; actionlint validation passed. The user supplied an empty public GitHub repository; authentication, first push/build run and signing remain pending, so no IPA exists yet. |
+| 7. Automated IPA | Source published; hosted native tests and unsigned device archive passed. IPA and matching source downloaded and verified. Re-signing and device installation remain pending. |
 | 8. Physical testing and optimization | Test procedure supplied; no phone measurements or results claimed. |
 
 ## Remaining implementation and acceptance work
 
-- Run and fix the first hosted Xcode compile, then verify audio pacing, state restoration, UIKit/SwiftUI gestures and lifecycle on an actual supported iPhone.
+- Re-sign the verified unsigned IPA, then verify audio pacing, state restoration, UIKit/SwiftUI gestures and lifecycle on an actual supported iPhone.
 - Validate at least one real-game profile against a user-provided ROM and author semantic object/room rules before marking it fully supported.
 - Improve segmentation for flicker, multicolor actors, overlaps and same-color brick boundaries; add precise per-pixel TIA object provenance if necessary.
 - Add profile-specific HUD extraction, richer geometry/animation mappings, smooth room transitions, optional rewind and validated game-speed controls. Rewind and speed changes are currently not exposed.

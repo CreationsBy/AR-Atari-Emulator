@@ -1,6 +1,6 @@
 # Windows editing, hosted iOS builds and sideloading
 
-No local Mac, Xcode or local VM is needed. Source edits and native validation happen on Windows. Apple's device compilation happens on a hosted Mac. The iOS workflow is configured but has not been executed yet.
+No local Mac, Xcode or local VM is needed. Source edits and native validation happen on Windows. Apple's device compilation happens on a hosted Mac. [Unsigned build #1 passed](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39179809317) with Xcode 16.4 and the iPhoneOS 18.5 SDK.
 
 ## 1. Open and validate the project
 
@@ -25,22 +25,18 @@ The compiler must already have been extracted for that direct build command. Its
 
 ## 2. Connect your GitHub repository
 
-The project repository is [CreationsBy/AR-Atari-Emulator](https://github.com/CreationsBy/AR-Atari-Emulator). It was confirmed public and empty when supplied. Authenticate GitHub access before the first push. GitHub-hosted macOS usage follows your account's Actions limits; consult the account's Actions billing settings.
+The source and workflow are published at [CreationsBy/AR-Atari-Emulator](https://github.com/CreationsBy/AR-Atari-Emulator). This workspace already has `origin` configured and `main` tracks `origin/main`. The upload used the connected GitHub plugin; the terminal GitHub CLI remains unauthenticated. Authenticate terminal Git separately if using it for future pushes. GitHub-hosted macOS usage follows your account's Actions limits; consult the account's Actions billing settings.
 
-Install [Git for Windows](https://git-scm.com/downloads/win), then reopen the VS Code terminal so Git appears on PATH. From this project folder, replacing the remote URL with the one GitHub gives you:
+For a new checkout, install [Git for Windows](https://git-scm.com/downloads/win), reopen the terminal and clone the repository:
 
 ```powershell
-git init
-git add .
-git commit -m "Add Stella-based Atari Diorama prototype"
-git branch -M main
-git remote add origin https://github.com/CreationsBy/AR-Atari-Emulator.git
-git push -u origin main
+git clone https://github.com/CreationsBy/AR-Atari-Emulator.git
+cd AR-Atari-Emulator
 ```
 
 Git may request your name/email and browser sign-in during first use. Complete those using your own account. Never paste Apple passwords, private keys or signing files into chat or commit them. The project's `.gitignore` excludes normal build caches and signing containers.
 
-If you prefer a GUI, [GitHub Desktop](https://desktop.github.com/) can create a repository from this folder, commit it and publish it. Keep all source directories, `.github`, the original test ROM and the vendored source. Do not upload the ZIP as the repository's only file; Actions needs the extracted `.github/workflows/ios.yml` path.
+If you prefer a GUI, [GitHub Desktop](https://desktop.github.com/) can clone the existing repository and publish later commits. Keep all source directories, `.github`, the original test ROM and the vendored source. Actions needs the extracted `.github/workflows/ios.yml` path.
 
 ## 3. Run the first unsigned build
 
@@ -60,7 +56,7 @@ No signing secrets are required for `unsigned`. Its filename is **AtariDiorama-U
 
 On a green run, open the run's **Artifacts** section and download `AtariDiorama-unsigned`. Extract the downloaded artifact ZIP to find the `.ipa`. On failure, download `ios-build-logs` and inspect `xcode-archive.log`, `native-ios.log` and the result bundle. `pipefail` prevents a successful `tee` command from concealing an Xcode failure.
 
-The first Apple compilation has not been run in this workspace. It may reveal Swift type/API or Apple toolchain issues that need correction before a green build and downloadable IPA are available.
+The first Apple compilation succeeded without source fixes. [Download the verified unsigned artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39179809317/artifacts/12155528893) before its November 1, 2026, 7:15 PM EST expiration, or run the workflow again. A local verified copy is at `build/deliverables/AtariDiorama-UNSIGNED-requires-resigning.ipa`, alongside `artifact-manifest.json` and the matching `AtariDiorama-source.zip`. The complete original downloads and logs are under `build/github-run-1/`. Build details and checksum are recorded in [the verification record](evidence/ios-build.json).
 
 ## 4. Install with a free Apple account from Windows
 

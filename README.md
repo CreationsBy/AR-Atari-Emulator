@@ -2,7 +2,9 @@
 
 A working Windows native-emulation prototype, plus native iOS application source for a tabletop Atari 2600 diorama. A real Stella core runs the cartridge. A separate renderer reconstructs its pixels into individual volumetric objects.
 
-**Current status: 12 native tests pass. The Swift/iOS app, ARKit placement and IPA workflow have not yet been run on a Mac or tested on an iPhone. No installable IPA is claimed.** The commercial game profiles are explicit, unvalidated experiments. See [compatibility and milestone results](docs/COMPATIBILITY.md).
+**Current status: 12 hosted native tests pass, and the Swift/iOS app successfully archives with Xcode 16.4. An arm64 unsigned IPA is available and requires re-signing before installation. iPhone operation and AR remain untested.** The commercial game profiles are explicit, unvalidated experiments. See [compatibility and milestone results](docs/COMPATIBILITY.md).
+
+[Successful unsigned build #1](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39179809317) · [Download IPA and matching source artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39179809317/artifacts/12155528893). The hosted artifact expires November 1, 2026 at 7:15 PM EST; later pushes can produce a fresh build. Its [verification record](docs/evidence/ios-build.json) identifies the exact built commit and IPA checksum.
 
 ## Run the working prototype now
 
@@ -47,7 +49,7 @@ Evidence includes raw framebuffer PNG, original audio WAV, register trace CSV, g
 
 ## Build for iPhone from Windows
 
-Follow [the repository, hosted build and sideloading walkthrough](docs/BUILD_WINDOWS.md). The repository is [CreationsBy/AR-Atari-Emulator](https://github.com/CreationsBy/AR-Atari-Emulator). No personal Mac, local Xcode or local VM is needed. The default build is unsigned and must be re-signed before installation. Authenticated GitHub access is still needed to push and launch the first remote build.
+Follow [the repository, hosted build and sideloading walkthrough](docs/BUILD_WINDOWS.md). The source is published at [CreationsBy/AR-Atari-Emulator](https://github.com/CreationsBy/AR-Atari-Emulator), and the first remote build passed. No personal Mac, local Xcode or local VM is needed. The default build is unsigned and must be re-signed before installation.
 
 The [profile authoring guide](docs/PROFILES.md), [architecture](docs/ARCHITECTURE.md) and [physical-device test procedure](docs/DEVICE_TESTING.md) explain the next stages. No commercial profile is labelled full support.
 

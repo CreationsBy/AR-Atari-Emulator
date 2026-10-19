@@ -1,0 +1,71 @@
+{
+  "verifiedDate": "2026-10-18",
+  "timezone": "America/New_York",
+  "repository": "CreationsBy/AR-Atari-Emulator",
+  "run": {
+    "id": 39179809317,
+    "number": 1,
+    "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39179809317",
+    "commit": "f8a9bdda02981891afbccfe0e8dc22a050fc2229",
+    "tree": "89d783e39848460ef65b309d6aca7a0fefb64695",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "native": {
+    "runner": "ubuntu-24.04",
+    "sourcesCompiled": 100,
+    "vendorFilesVerified": 286,
+    "testsPassed": 12
+  },
+  "ios": {
+    "runner": "macos-15",
+    "xcode": "16.4",
+    "xcodeBuild": "16F6",
+    "sdk": "iPhoneOS 18.5",
+    "deploymentTarget": "16.0",
+    "architecture": "arm64",
+    "archiveSucceeded": true,
+    "compileFixesNeeded": false,
+    "nonblockingWarnings": [
+      "AppIntents metadata extraction skipped: no AppIntents.framework dependency.",
+      "All interface orientations must be supported unless the app requires full screen."
+    ]
+  },
+  "localVerification": {
+    "ipaCRC": "passed",
+    "ipaVerifier": "scripts/verify_ipa.py --signing unsigned",
+    "ipaSha256": "ce86039e85bc5bc2d76b19d6ec4ce4bf13201b8d9b3a7ef9c0f2f39b97293c06",
+    "sourceZipCRC": "passed",
+    "sourceFilesComparedToCommit": 357,
+    "sourceFilesDifferent": 0,
+    "artifactArchiveDigestsMatched": true
+  },
+  "artifacts": [
+    {
+      "id": 12155638545,
+      "name": "ios-build-logs",
+      "sha256": "1913c04d03c46e6fd172e363b883dc4ab8f1ef7bcd806fed80f3550288420307",
+      "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39179809317/artifacts/12155638545",
+      "expiresAt": "2026-10-26T00:15:32Z"
+    },
+    {
+      "id": 12155528893,
+      "name": "AtariDiorama-unsigned",
+      "sha256": "e9cc13ae03220367133ba54e5489facce282d434ff695228c24b550840056e51",
+      "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39179809317/artifacts/12155528893",
+      "expiresAt": "2026-11-02T00:15:31Z"
+    },
+    {
+      "id": 12155309485,
+      "name": "native-validation",
+      "sha256": "bc4733c97af74ea2e8ea45214f0a380d9380cebf61975d808c23de1510ecc203",
+      "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39179809317/artifacts/12155309485",
+      "expiresAt": "2027-01-17T00:13:32Z"
+    }
+  ],
+  "requiresResigning": true,
+  "signedExportTested": false,
+  "iPhoneTested": false,
+  "ARTested": false
+}
