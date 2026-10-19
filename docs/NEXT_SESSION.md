@@ -1,58 +1,56 @@
-# Resume with the two-iPhone multiplayer device test
+# Resume with physical Vertical / Ice Hockey and two-iPhone tests
 
-## Completed October 18, 2026 (America/New_York)
+## Completed October 19, 2026 (America/New_York)
 
-Private, same-Wi-Fi multiplayer is implemented and built. Player 1 hosts the ROM and runs Stella; Player 2 enters a private eight-character code, receives scene/original pixels/original audio, and controls the second joystick or paddle without a ROM. Bonjour discovery and TLS-PSK use Wi-Fi only; no server, cellular route, Bluetooth transport or ROM transfer is used.
+The user clarified that vertical means an **upright 3D world**, not portrait app orientation. Settings → Miniature world → World orientation offers Tabletop / Vertical. Vertical pivots on the bottom edge on the existing horizontal table/floor anchor, including yaw/tilt. Side-view profiles are not rotated twice; Ice Hockey skater silhouettes stay upright. Saved preferences migrate without loss; Tabletop remains default. The host shares orientation with Player 2. Install the same new build on both phones (wire protocol version 2).
 
-ARWorldMap sharing aligns the same physical diorama while each phone renders from its own camera. The host controls shared placement/size/rotation/tilt. Input heartbeats, a 500 ms input timeout, bounded frame/audio queues, disconnect handling and room rejoining are implemented.
+The first measured commercial profile targets the supplied 4 KB Ice Hockey NTSC ROM:
+- SHA-256: `fc8b861d9cf9c9d5f7f7677f22b39d512d249697b69c1e7dcf238c5dc8f44b60`
+- MD5: `a4c08c4994eb9d24fb78be1793e82e26`
+- Profile `ice-hockey-ntsc-v1`; native adapter `iceHockeyNTSCv1`.
 
-The included Tabletop Test ROM now lets Player 2 take over the red actor on their first input; Player 1 controls blue. Each player's Fire produces its own original TIA tone. Reset returns the red actor to autonomous movement until another P2 input.
+It reads original pixels and RIOT skater-position slots to reconstruct a thin ice surface with goal openings, raised boards, goal frames/nets, standing multicolor skaters and visible puck candidates. It never changes game state. The profile is experimental: overlaps, falls, hidden pucks, complete matches and physical iPhone results need coverage. See [ICE_HOCKEY.md](ICE_HOCKEY.md). Import/reopen the ROM to select it automatically.
+
+Earlier same-Wi-Fi multiplayer remains implemented: P1 owns ROM/emulation; P2 joins by private code, receives geometry/original pixels/audio and controls port 2 without a ROM. Bonjour + encrypted TLS-PSK use Wi-Fi only. ARWorldMap sharing aligns the physical diorama with independent camera views. For Ice Hockey two-player play, select game 2 or 4 and Reset.
 
 ## Verified build
 
-- GitHub Actions run #5 passed: https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963.
-- Built commit: `e14eb626c5e9b11c9852c9763ba2d8e113e737ad`.
-- All 16 native tests pass on Windows and hosted Ubuntu, including both joystick ports, both paddle channels/buttons, the network audio tap, guest playback with no initialized core/ROM, and real 6507 P2 demo gameplay.
-- Hosted Mac tests passed: room-code/protocol bounds, actual encrypted two-endpoint TLS, wrong-code rejection, bidirectional input/geometry/pixels/PCM/map blobs, ACK backpressure, retained audio bounds, third-peer rejection and disconnect/rejoin.
-- Xcode 16.4 (16F6), iPhoneOS 18.5 SDK, iOS 16 deployment target: arm64 iPhone archive and unsigned packaging passed.
-- Downloaded all artifacts, verified their SHA-256 digests and IPA CRC/structure/device executable/resources/local-network permissions, and confirmed all 365 matching-source ZIP files equal the built commit's Git blobs.
-- Full verification: `docs/evidence/multiplayer-build.json`.
+- [GitHub Actions run #7](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39293266183) passed.
+- Built commit: `2d0aa5b26db9d01fc798c6567aa4aa59c3ede368`.
+- Twenty local native tests pass including the supplied ROM and reconstruction save-byte invariance. Hosted Ubuntu passes 19 and skips the private commercial-ROM test. Native build: 101 sources; 286 pinned vendor files verify.
+- A 3,600-frame real-ROM host run with both ports active produced zero geometry drops; four head components appeared in 3,588 frames, fewer in nine ambiguous frames, none in three startup frames. These counts are not perfect recognition or iPhone performance.
+- Hosted Swift tests pass: settings migration, vertical bottom edge/tilt, side-view handling, upright skaters, wire roundtrip/version rejection and existing real TLS-PSK endpoint regressions.
+- Xcode 16.4 (16F6), iPhoneOS 18.5 SDK, iOS 16 deployment target: arm64 archive and unsigned packaging passed.
+- Artifact download digests and IPA/source CRCs pass. All 374 source files match built Git blobs. Six profiles, original fixture and camera/network keys verify; no commercial ROM is bundled.
+- Full record: [evidence/ice-hockey-build.json](evidence/ice-hockey-build.json).
+- Offline renders inspected: `build/ice-hockey/tabletop/reconstruction-3d.png` and `build/ice-hockey/vertical/reconstruction-3d.png`. They show captured geometry, not AR screenshots.
 
-The user reports the earlier single-device build's AR worked with the test ROM and their Atari ROMs on their phone. That does not validate this new multiplayer build's real Wi-Fi discovery, shared-table alignment, latency or audio quality. Those require two physical iPhones.
+The user reported earlier single-device AR working with the test ROM and their Atari ROMs. The new Vertical/Ice Hockey features and two-phone discovery/alignment/latency/audio have not been physically tested. Do not claim those acceptance results or full commercial-profile support.
 
 ## Deliverables
 
 - Latest IPA: `build/deliverables/AtariDiorama-UNSIGNED-requires-resigning.ipa`
-- Latest manifest: `build/deliverables/artifact-manifest.json`
-- Exact matching source for build #5: `build/deliverables/AtariDiorama-source.zip`
-- Complete downloads, extracted Apple/test logs and native evidence: `build/github-run-5/`
-- Earlier build #1 remains under `build/github-run-1/` for comparison.
+- Manifest: `build/deliverables/artifact-manifest.json`
+- Exact matching source for build #7: `build/deliverables/AtariDiorama-source.zip`
+- Downloads, Apple/test logs and native evidence: `build/github-run-7/`
+- Older builds: `build/github-run-5/` and `build/github-run-1/`.
+- IPA SHA-256: `b6213c24a3c6b98fe82fb7beae07f167c15f334cc26e6cd94eb340207f850051`.
 
-IPA SHA-256: `d5a479768921ef092e5b9eaf1cfe465db845f13ee1ad85d4a8a53bb97e6359dc`.
-
-IPA/source artifact: https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963/artifacts/12157618280.
-It expires November 1, 2026, 8:25 PM EST (2026-11-02T01:25:18Z). The local copy remains available. Later documentation evidence commits are separate from the matching source ZIP.
+[IPA/source artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39293266183/artifacts/12205723611) expires November 2, 2026 at 12:24 PM EST (2026-11-02T17:24:32Z). Local copies remain available. Later documentation-only evidence commits are separate from the matching-source ZIP.
 
 ## Next action
 
-Re-sign and install the same new build on both iPhones. Follow `docs/LOCAL_MULTIPLAYER.md` and the two-phone checks in `docs/DEVICE_TESTING.md`. Only the host needs the cartridge. Both phones must allow Camera and Local Network access and use Wi-Fi without client isolation. Have the host place and scan a textured table, then have Player 2 aim at the same area until alignment finishes.
+Re-sign/install the IPA, reopen Ice Hockey and try Tabletop / Vertical while playing and paused. Check falls, overlaps, goals and save/load against original pixels. Then install the same build on both phones and follow [DEVICE_TESTING.md](DEVICE_TESTING.md) and [LOCAL_MULTIPLAYER.md](LOCAL_MULTIPLAYER.md). Only the host needs the cartridge; both need Camera/Local Network access and the same Wi-Fi without client isolation.
 
-Never claim the unsigned IPA can launch without re-signing, or that physical multiplayer/AR acceptance passed without results. Do not label the commercial JSON profiles fully validated based on the user's general smoke report.
+Keep supplied commercial cartridges in ignored `roms/`; never upload them or bundle them in app/source packages.
 
 ## Workspace and tools
 
 Root: `C:\Users\spagh\OneDrive\Documents\Ai projects\games\AR Atari 2600`.
 Portable Git: `.tools/mingit/cmd/git.exe`; portable GitHub CLI: `.tools/gh/bin/gh.exe`.
 Python: `C:\Program Files\Blender Foundation\Blender 5.2\5.2\python\bin\python.exe`.
+Blender: `C:\Program Files\Blender Foundation\Blender 5.2\blender.exe`.
 
-The GitHub plugin is connected and supports source writes, run inspection and artifact downloads. Terminal GitHub CLI is still unauthenticated. Do not extract credentials. Publish through the connector, and use public Git fetches to synchronize local `main`, which tracks `origin/main`. The original local pre-upload history remains at `local-before-github-upload`.
+The GitHub plugin handles source writes, runs and artifact downloads. CLI GitHub remains unauthenticated; do not extract credentials. Publish through the connector and public Git fetch to sync main. Original history remains on `local-before-github-upload`. Git metadata writes may require escalation; use per-command safe.directory for this exact workspace only.
 
-Git metadata writes may require sandbox escalation. Use a per-command `-c safe.directory=<this exact workspace>` if needed, not a global ownership bypass.
-
-The old preview server was stopped to unlock its DLL; the native library was rebuilt and tested. Restart with `scripts/Start-Preview.ps1` if needed.
-
-## Build debugging notes
-
-The initial networking compile needed explicit main-actor hops from Network.framework Sendable callbacks. Hosted transport testing needed default IP parameters with a direct loopback endpoint, plus waiting for a ready listener with an assigned nonzero port; using a loopback interface requirement prevented connections. The app still constructs the transport with a strict Wi-Fi interface requirement. These fixes and all tests are in the successful built commit.
-
-Do not repeat broad native checks unless new changes/failures justify them. Device acceptance is the next milestone.
+The preview server is stopped so the native DLL can rebuild. Restart with `scripts/Start-Preview.ps1` if needed. Capture with `scripts/capture_ice_hockey.py`. Blender evidence script accepts --input / --output / --upright after its -- separator. Do not repeat passing broad tests unless new changes or failures justify them.

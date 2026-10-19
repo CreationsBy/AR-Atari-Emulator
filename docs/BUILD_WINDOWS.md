@@ -1,6 +1,6 @@
 # Windows editing, hosted iOS builds and sideloading
 
-No local Mac, Xcode or local VM is needed. Source edits and native validation happen on Windows. Apple's device compilation happens on a hosted Mac. [Multiplayer build #5 passed](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963) with Xcode 16.4 and the iPhoneOS 18.5 SDK. Install the same multiplayer build on both phones and follow [the Wi-Fi host/join walkthrough](LOCAL_MULTIPLAYER.md).
+No local Mac, Xcode or local VM is needed. Source edits and native validation happen on Windows. Apple's device compilation happens on a hosted Mac. [Vertical/Ice Hockey build #7 passed](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39293266183) with Xcode 16.4 and the iPhoneOS 18.5 SDK. Install the same multiplayer build on both phones and follow [the Wi-Fi host/join walkthrough](LOCAL_MULTIPLAYER.md).
 
 ## 1. Open and validate the project
 
@@ -45,7 +45,7 @@ The push to `main` starts **Build and verify iOS prototype**. You can also selec
 The workflow:
 
 1. Verifies vendored source and original-ROM hashes on Linux.
-2. Builds the native core, runs sixteen test methods and captures evidence.
+2. Builds the native core, runs twenty test methods (the private Ice Hockey ROM test is skipped on public CI) and captures evidence.
 3. Starts a GitHub-hosted `macos-15` runner and records its Xcode/SDK versions.
 4. Installs XcodeGen if needed and generates `ios/AtariDiorama.xcodeproj` from the checked-in YAML.
 5. Cross-compiles an arm64 iOS static core with the selected SDK and iOS 16 minimum deployment target.
@@ -58,7 +58,7 @@ No signing secrets are required for `unsigned`. Its filename is **AtariDiorama-U
 
 On a green run, open the run's **Artifacts** section and download `AtariDiorama-unsigned`. Extract the downloaded artifact ZIP to find the `.ipa`. On failure, download `ios-build-logs` and inspect `xcode-archive.log`, `native-ios.log` and the result bundle. `pipefail` prevents a successful `tee` command from concealing an Xcode failure.
 
-The multiplayer Apple archive and all automated tests passed. [Download the verified unsigned artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963/artifacts/12157618280) before its November 1, 2026, 8:25 PM EST expiration, or run the workflow again. A local verified copy is at `build/deliverables/AtariDiorama-UNSIGNED-requires-resigning.ipa`, alongside `artifact-manifest.json` and the matching `AtariDiorama-source.zip`. The complete downloads and logs are under `build/github-run-5/`; the earlier build is retained in `build/github-run-1/`. Build details and checksum are recorded in [the verification record](evidence/multiplayer-build.json). Physical two-phone multiplayer testing remains pending.
+The Vertical/Ice Hockey Apple archive and hosted tests passed (19 native methods pass; the private-ROM method is skipped). [Download the verified unsigned artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39293266183/artifacts/12205723611) before its November 2, 2026, 12:24 PM EST expiration, or run the workflow again. A local verified copy is at `build/deliverables/AtariDiorama-UNSIGNED-requires-resigning.ipa`, alongside `artifact-manifest.json` and the matching `AtariDiorama-source.zip`. The complete downloads and logs are under `build/github-run-7/`; the earlier build is retained in `build/github-run-1/`. Build details and checksum are recorded in [the verification record](evidence/ice-hockey-build.json). Physical Vertical/Ice Hockey and two-phone multiplayer testing remain pending.
 
 ## 4. Install with a free Apple account from Windows
 

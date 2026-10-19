@@ -1,0 +1,105 @@
+{
+  "romSHA256": "fc8b861d9cf9c9d5f7f7677f22b39d512d249697b69c1e7dcf238c5dc8f44b60",
+  "romMD5": "a4c08c4994eb9d24fb78be1793e82e26",
+  "profileID": "ice-hockey-ntsc-v1",
+  "framesExecuted": 3600,
+  "scenario": "Game 2 selected, Reset, scripted movement and Fire on both ports; no game-state writes",
+  "headComponentHistogram": {
+    "0": 3,
+    "4": 3588,
+    "3": 8,
+    "2": 1
+  },
+  "framesWithVisiblePuckCandidate": 3416,
+  "geometryDrops": 0,
+  "analysisMedianMS": 0.0863,
+  "analysisP95MS": 0.1356,
+  "captures": [
+    {
+      "frame": 30,
+      "objects": 19,
+      "boxes": 167,
+      "heads": 4,
+      "puckComponents": 1
+    },
+    {
+      "frame": 125,
+      "objects": 19,
+      "boxes": 167,
+      "heads": 4,
+      "puckComponents": 1
+    },
+    {
+      "frame": 240,
+      "objects": 19,
+      "boxes": 174,
+      "heads": 4,
+      "puckComponents": 1
+    },
+    {
+      "frame": 399,
+      "objects": 19,
+      "boxes": 162,
+      "heads": 4,
+      "puckComponents": 1
+    },
+    {
+      "frame": 499,
+      "objects": 19,
+      "boxes": 166,
+      "heads": 4,
+      "puckComponents": 1
+    },
+    {
+      "frame": 700,
+      "objects": 19,
+      "boxes": 167,
+      "heads": 4,
+      "puckComponents": 1
+    },
+    {
+      "frame": 900,
+      "objects": 19,
+      "boxes": 162,
+      "heads": 4,
+      "puckComponents": 1
+    },
+    {
+      "frame": 1199,
+      "objects": 19,
+      "boxes": 170,
+      "heads": 4,
+      "puckComponents": 1
+    },
+    {
+      "frame": 1799,
+      "objects": 19,
+      "boxes": 157,
+      "heads": 4,
+      "puckComponents": 1
+    },
+    {
+      "frame": 2399,
+      "objects": 19,
+      "boxes": 163,
+      "heads": 4,
+      "puckComponents": 1
+    },
+    {
+      "frame": 2999,
+      "objects": 19,
+      "boxes": 164,
+      "heads": 4,
+      "puckComponents": 1
+    },
+    {
+      "frame": 3599,
+      "objects": 19,
+      "boxes": 164,
+      "heads": 4,
+      "puckComponents": 1
+    }
+  ],
+  "iPhoneProfileTested": false,
+  "note": "Host evidence, not full profile certification; overlaps/falls can make color attribution ambiguous."
+}

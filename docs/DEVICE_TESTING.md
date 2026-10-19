@@ -46,3 +46,18 @@ Follow [LOCAL_MULTIPLAYER.md](LOCAL_MULTIPLAYER.md) on two iPhones with the same
 | Room isolation | A third phone cannot replace Player 2; a newly created room uses a new code | Pending |
 | Lifecycle and routes | Background either app closes its connection; same-Wi-Fi recovery works; different Wi-Fi/cellular does not silently route online | Pending |
 | Sustained performance | Measure AR FPS, input latency, audio quality and thermal behavior on both phones for 15 minutes | Pending |
+
+## Vertical world and Ice Hockey acceptance (pending)
+
+Use the new build and the exact cartridge hashes in [ICE_HOCKEY.md](ICE_HOCKEY.md). The local real-ROM capture and offline renders do not establish these physical results.
+
+| Test | Acceptance condition | Current result |
+|---|---|---|
+| Existing preferences | Updating preserves volume, selected player and other settings; world initially remains Tabletop | Pending |
+| Vertical placement | On a horizontal table anchor, Vertical stands the scene on its bottom edge; rotation/tilt/size and switching back work while paused and playing | Pending |
+| Existing side-view profile | A profile with an already-upright pixel plane is not rotated twice | Pending |
+| Ice Hockey profile | Importing/reopening the supplied ROM selects `ice-hockey-ntsc-v1`; ice, board edges, two goals, four colored skaters and visible puck match the original frame | Pending |
+| Poses and scoring | Play a complete match with both teams, falls, overlaps and goals; record disappearing/merged parts against the original-frame comparison | Pending |
+| Vertical skaters | Skater silhouettes stay upright when the rink changes between Tabletop and Vertical; no stale actor rotations remain after Reset or save/load | Pending |
+| Two-phone orientation | With the same updated build on both phones, the host's Vertical/Tabletop choice propagates while each phone retains its own camera view | Pending |
+| Ice Hockey two-player | Host selects game 2 or 4 and resets; each phone independently controls the correct team, including Fire, with no ROM in the guest library | Pending |

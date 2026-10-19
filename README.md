@@ -2,9 +2,9 @@
 
 A working Windows native-emulation prototype, plus native iOS application source for a tabletop Atari 2600 diorama. A real Stella core runs the cartridge. A separate renderer reconstructs its pixels into individual volumetric objects.
 
-**Current status: 16 native tests, encrypted two-endpoint multiplayer tests and the iPhone archive all pass. The user reports that the earlier build's AR works with the test cartridge and their own Atari ROMs on their iPhone. The new Wi-Fi multiplayer build still needs testing on two physical iPhones.** The commercial game profiles remain explicit experiments rather than independently certified compatibility results. See [compatibility and milestone results](docs/COMPATIBILITY.md).
+**Current status: Vertical world orientation and the first Ice Hockey 3D profile are implemented. All 20 local native tests pass; hosted native, Swift orientation/network tests and the unsigned iPhone archive pass.** The user reports earlier single-device AR worked on their phone. The new Vertical/Ice Hockey features and two-phone multiplayer still need physical acceptance. The Ice Hockey profile is experimental; see [profile details](docs/ICE_HOCKEY.md) and [compatibility results](docs/COMPATIBILITY.md).
 
-[Successful multiplayer build #5](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963) · [Download IPA and matching source artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963/artifacts/12157618280). Re-sign and install the same new build on both iPhones. The hosted artifact expires November 1, 2026 at 8:25 PM EST; later pushes can produce a fresh build. Its [verification record](docs/evidence/multiplayer-build.json) identifies the exact built commit and IPA checksum.
+[Successful build #7](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39293266183) · [Download IPA and matching source artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39293266183/artifacts/12205723611). Re-sign before installing; use the same updated build on both phones for multiplayer. The artifact expires November 2, 2026 at 12:24 PM EST. The [verification record](docs/evidence/ice-hockey-build.json) identifies the built commit and checksums.
 
 ## Run the working prototype now
 
@@ -30,6 +30,8 @@ On a different Windows computer, install Python 3.12+, then use `scripts/Build-W
 - Hash-selected JSON profiles; connected-component segmentation; exact pixel-mask matching; nearest-component tracking; rectangular run merging that preserves holes; per-object heights, elevations and upright/tabletop geometry.
 - An original 4 KB cartridge with joystick movement, an autonomous actor, playfield obstacles, hardware collision feedback, a Fire missile, TIA sound and room-color transitions. Its source and reproducible assembler are included.
 - SwiftUI library, Files import, touch joystick/Fire, console switches, two-player selection, paddle slider, Bluetooth gamepad mapping, settings and a diagnostic inspector.
+- An experimental exact-hash Ice Hockey profile with a thin rink, raised boards, goal frames/nets, standing multicolor skaters and visible puck candidates. Your commercial ROM stays local.
+- Settings → Miniature world → World orientation → **Vertical** stands the game world upright on its bottom edge; **Tabletop** restores the horizontal view. The host shares this choice with Player 2.
 - RealityKit meshes with per-object updates and cached geometry. ARKit horizontal-plane preview, tap placement, world anchor, physical camera view, pinch/rotation, size presets, tilt and virtual inspection cameras.
 - Original audio through a bounded native ring and AVAudioSourceNode; pause/resume; ROM/core/profile/controller-bound save files; scene reconstruction after restore.
 - A GitHub Actions workflow for native tests, hosted Apple compilation, archive logging, unsigned IPA packaging or signed export, and matching-source publication.

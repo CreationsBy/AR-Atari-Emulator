@@ -1,0 +1,191 @@
+{
+  "verifiedDate": "2026-10-19",
+  "timezone": "America/New_York",
+  "repository": "CreationsBy/AR-Atari-Emulator",
+  "run": {
+    "id": 39293266183,
+    "number": 7,
+    "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39293266183",
+    "commit": "2d0aa5b26db9d01fc798c6567aa4aa59c3ede368",
+    "tree": "ec723ce785096944172cd8deccc97afb8f2d4590",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "native": {
+    "windowsTestsPassed": 20,
+    "hostedUbuntuTestsPassed": 19,
+    "hostedUbuntuTestsSkipped": 1,
+    "skipReason": "Commercial user ROM is kept local and not supplied to CI",
+    "sourcesCompiled": 101,
+    "vendorFilesVerified": 286
+  },
+  "swift": {
+    "hostedMacTestsPassed": true,
+    "checks": [
+      "Legacy settings migration",
+      "Vertical bottom-edge pivot and tilt",
+      "No double rotation of side-view profiles",
+      "Semantic hockey skater counterrotation",
+      "Vertical presentation wire roundtrip",
+      "Protocol version 1 rejected",
+      "Encrypted TLS-PSK two-endpoint regression tests"
+    ]
+  },
+  "ios": {
+    "runner": "macos-15",
+    "xcode": "16.4",
+    "xcodeBuild": "16F6",
+    "sdk": "iPhoneOS 18.5",
+    "deploymentTarget": "16.0",
+    "architecture": "arm64",
+    "archiveSucceeded": true
+  },
+  "artifacts": [
+    {
+      "id": 12205934724,
+      "name": "ios-build-logs",
+      "sha256": "424bf253377566feafea6c0ad93fa7084033692683367e1e8c4d8fa10b1378bc",
+      "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39293266183/artifacts/12205934724",
+      "expiresAt": "2026-10-26T17:24:33Z"
+    },
+    {
+      "id": 12205723611,
+      "name": "AtariDiorama-unsigned",
+      "sha256": "1d9f9497782dadf06026a5a0b247edff2176547c909269f908c4d73053b8502c",
+      "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39293266183/artifacts/12205723611",
+      "expiresAt": "2026-11-02T17:24:32Z"
+    },
+    {
+      "id": 12205414640,
+      "name": "native-validation",
+      "sha256": "404026b74b29445ceb7206597af4124a623dd8354be9b5c3c35e5985faac7cc2",
+      "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39293266183/artifacts/12205414640",
+      "expiresAt": "2027-01-17T17:20:26Z"
+    }
+  ],
+  "requiresResigning": true,
+  "physicalVerticalAndIceHockeyTested": false,
+  "physicalTwoPhoneWiFiTested": false,
+  "signedExportTested": false,
+  "localVerification": {
+    "artifactArchiveDigestsMatched": true,
+    "ipaZipCRC": "passed",
+    "sourceZipCRC": "passed",
+    "sourceFilesMatchedToCommit": 374,
+    "sourceCommit": "2d0aa5b26db9d01fc798c6567aa4aa59c3ede368",
+    "ipaBytes": 670263,
+    "ipaSha256": "b6213c24a3c6b98fe82fb7beae07f167c15f334cc26e6cd94eb340207f850051",
+    "sourceSha256": "1c2c44bf984710b14bf13112d1a94ef4e78474207f19950501d5910462067d5e",
+    "bonjourAndLocalNetworkPlistKeys": true,
+    "cameraPermissionPresent": true,
+    "twoPlayerHomebrewMatchesSource": true,
+    "profileCount": 6,
+    "iceHockeyProfileMatchesBuiltSource": true,
+    "commercialROMsExcluded": true
+  },
+  "iceHockey": {
+    "romSHA256": "fc8b861d9cf9c9d5f7f7677f22b39d512d249697b69c1e7dcf238c5dc8f44b60",
+    "romMD5": "a4c08c4994eb9d24fb78be1793e82e26",
+    "profileID": "ice-hockey-ntsc-v1",
+    "framesExecuted": 3600,
+    "scenario": "Game 2 selected, Reset, scripted movement and Fire on both ports; no game-state writes",
+    "headComponentHistogram": {
+      "0": 3,
+      "2": 1,
+      "3": 8,
+      "4": 3588
+    },
+    "framesWithVisiblePuckCandidate": 3416,
+    "geometryDrops": 0,
+    "analysisMedianMS": 0.0863,
+    "analysisP95MS": 0.1356,
+    "captures": [
+      {
+        "frame": 30,
+        "objects": 19,
+        "boxes": 167,
+        "heads": 4,
+        "puckComponents": 1
+      },
+      {
+        "frame": 125,
+        "objects": 19,
+        "boxes": 167,
+        "heads": 4,
+        "puckComponents": 1
+      },
+      {
+        "frame": 240,
+        "objects": 19,
+        "boxes": 174,
+        "heads": 4,
+        "puckComponents": 1
+      },
+      {
+        "frame": 399,
+        "objects": 19,
+        "boxes": 162,
+        "heads": 4,
+        "puckComponents": 1
+      },
+      {
+        "frame": 499,
+        "objects": 19,
+        "boxes": 166,
+        "heads": 4,
+        "puckComponents": 1
+      },
+      {
+        "frame": 700,
+        "objects": 19,
+        "boxes": 167,
+        "heads": 4,
+        "puckComponents": 1
+      },
+      {
+        "frame": 900,
+        "objects": 19,
+        "boxes": 162,
+        "heads": 4,
+        "puckComponents": 1
+      },
+      {
+        "frame": 1199,
+        "objects": 19,
+        "boxes": 170,
+        "heads": 4,
+        "puckComponents": 1
+      },
+      {
+        "frame": 1799,
+        "objects": 19,
+        "boxes": 157,
+        "heads": 4,
+        "puckComponents": 1
+      },
+      {
+        "frame": 2399,
+        "objects": 19,
+        "boxes": 163,
+        "heads": 4,
+        "puckComponents": 1
+      },
+      {
+        "frame": 2999,
+        "objects": 19,
+        "boxes": 164,
+        "heads": 4,
+        "puckComponents": 1
+      },
+      {
+        "frame": 3599,
+        "objects": 19,
+        "boxes": 164,
+        "heads": 4,
+        "puckComponents": 1
+      }
+    ],
+    "iPhoneProfileTested": false,
+    "note": "Host evidence, not full profile certification; overlaps/falls can make color attribution ambiguous."
+  }
+}

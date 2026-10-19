@@ -1,8 +1,14 @@
 # Compatibility and milestone results
 
-Recorded 2026-10-18. This is a development prototype, not a completed or certified iOS emulator release.
+Updated 2026-10-19. This is a development prototype, not a completed or certified iOS emulator release.
 
-## Wi-Fi multiplayer update
+## Vertical world and Ice Hockey update
+
+[Build #7](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39293266183) passed for commit `2d0aa5b26db9d01fc798c6567aa4aa59c3ede368`. The 101-source native build passes all 20 local tests, including the supplied Ice Hockey ROM; hosted Ubuntu passes 19 and skips that private-ROM test. Hosted Swift tests cover legacy settings migration, upright bottom-edge placement/tilt, side-view profiles, skater orientation and synchronized presentation, plus the existing encrypted transport regressions. Xcode 16.4 archives the arm64 iPhone app successfully. All 374 source files in the downloaded ZIP match the built commit; IPA CRC, digest, six profiles and commercial-ROM exclusion pass. See [the verification record](evidence/ice-hockey-build.json).
+
+Vertical mode stands the game world upright while keeping horizontal-surface AR placement. The exact-hash [Ice Hockey profile](ICE_HOCKEY.md) reconstructs a thin rink, raised boards, goal frames/nets, multicolor standing skaters and visible puck candidates. A 3,600-frame local run produced no dropped geometry; four head parts appeared in 3,588 frames. Overlaps, falls and hidden puck pixels remain ambiguous. Offline tabletop/vertical geometry renders were inspected; the new features have not yet been tested on an iPhone.
+
+## Earlier Wi-Fi multiplayer update
 
 The user reports successful AR operation of the earlier build with the included test ROM and their own Atari ROMs on their phone. No device model, performance log or exact commercial ROM identities were supplied, so the detailed acceptance rows and commercial-profile certification remain open.
 
@@ -12,7 +18,7 @@ Private Wi-Fi multiplayer now implements room-code joining, host-only emulation,
 
 ## Executed tests
 
-Windows x64, portable Zig 0.13.0, Python 3.13.13 from the existing Blender installation. The pinned Stella tree contains 286 verified files; the native build compiles 100 sources. Twelve tests execute against the real compiled DLL:
+Original baseline evidence below: Windows x64, portable Zig 0.13.0, Python 3.13.13 from the existing Blender installation. The pinned Stella tree contains 286 verified files; the native build compiles 100 sources. Twelve tests execute against the real compiled DLL:
 
 1. Original test ROM rebuild produces identical bytes and matches its profile hash.
 2. Real 160-pixel-wide video, RAM, expected TIA colors, requested cadence and 31,400 Hz audio metadata.
@@ -47,9 +53,10 @@ Xcode reported two nonblocking warnings: skipped AppIntents metadata extraction 
 | Combat NTSC | Stella database MD5 | No ROM supplied | Experimental maze/vehicle/projectile candidates | Pending |
 | Breakout NTSC | Two Stella database MD5s | No ROM supplied | Experimental paddle/ball/brick formations; adjacent bricks can merge | Pending |
 | Pitfall! NTSC | Stella database MD5 | No ROM supplied | Experimental upright layers; semantic objects/animation incomplete | Pending |
+| Ice Hockey NTSC | Exact supplied SHA-256 and Stella MD5 | Yes, 3,600 local frames and save-byte invariance | Experimental dedicated native adapter; rink, goals, standing skaters and puck candidates | New profile pending |
 | Unknown raw ROM | Computed SHA-256/MD5 | Depends on core/cart | Generic color components and heuristic depth, no accuracy guarantee | Pending |
 
-The emulator's broad cartridge support is inherited from Stella; only the original fixtures were exercised here. Its older baseline does not imply current Stella accuracy or compatibility with every modern homebrew cart. The frontend intentionally excludes streaming MovieCart and data over 1 MB. Generic output may lose same-color objects against backgrounds, split multicolor sprites, merge overlapping shapes, misclassify scenery or flicker with multiplexed sprites.
+The emulator's broad cartridge support is inherited from Stella; the original fixtures and the exact supplied Ice Hockey revision were exercised here. Its older baseline does not imply current Stella accuracy or compatibility with every modern homebrew cart. The frontend intentionally excludes streaming MovieCart and data over 1 MB. Generic output may lose same-color objects against backgrounds, split multicolor sprites, merge overlapping shapes, misclassify scenery or flicker with multiplexed sprites.
 
 ## Requested milestones
 
@@ -58,16 +65,16 @@ The emulator's broad cartridge support is inherited from Stella; only the origin
 | 1. iOS emulator with ROM import, controls and audio | Native core/inputs/audio tested on Windows and hosted Linux. SwiftUI/audio source Apple-compiled; device acceptance pending. |
 | 2. Graphics analysis and TIA capture | Implemented and host-tested. TIA layer attribution and game-specific semantic trace interpretation remain future work. |
 | 3. Homebrew 3D prototype | Real ROM -> Stella -> separated volumetric geometry works on host. Offline mesh render inspected; live local viewer endpoint verified. Browser rendering could not be inspected in this session. |
-| 4. Complete real-game profile | Not achieved. Experimental JSON candidates exist; a user-supplied ROM and gameplay testing are required. |
+| 4. Complete real-game profile | First measured Ice Hockey adapter implemented/tested with supplied ROM. Experimental; complete gameplay and iPhone acceptance remain open. |
 | 5. Tabletop AR | Native placement/anchor/camera/gesture source Apple-compiled; device testing pending. |
-| 6. Additional profiles | Four experimental candidates, zero validated commercial full-support profiles. |
+| 6. Additional profiles | Five experimental commercial profiles including the measured Ice Hockey adapter; zero full-support certifications. |
 | 7. Automated IPA | Source published; hosted native tests and unsigned device archive passed. IPA and matching source downloaded and verified. Re-signing and device installation remain pending. |
 | 8. Physical testing and optimization | Test procedure supplied; no phone measurements or results claimed. |
 
 ## Remaining implementation and acceptance work
 
 - Re-sign the verified unsigned IPA, then verify audio pacing, state restoration, UIKit/SwiftUI gestures and lifecycle on an actual supported iPhone.
-- Validate at least one real-game profile against a user-provided ROM and author semantic object/room rules before marking it fully supported.
+- Extend the measured Ice Hockey profile through complete matches, overlaps/falls, scoring and physical iPhone checks before considering full support; measure and author further games separately.
 - Improve segmentation for flicker, multicolor actors, overlaps and same-color brick boundaries; add precise per-pixel TIA object provenance if necessary.
 - Add profile-specific HUD extraction, richer geometry/animation mappings, smooth room transitions, optional rewind and validated game-speed controls. Rewind and speed changes are currently not exposed.
 - Measure device power, memory, input latency and render time, then adjust mesh budgets. Real table shadows, real-world occlusion, and optional visual filters remain unverified or unimplemented.
