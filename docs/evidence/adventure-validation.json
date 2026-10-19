@@ -1,0 +1,1286 @@
+{
+  "romSHA256": "b0326b45e5cab066b2d03f1e683708d82de3ffe60b2e968bf88c5494237f0a96",
+  "romMD5": "157bddb7192754a45372be196797f284",
+  "profileID": "adventure-ntsc-v2",
+  "framesExecuted": 4373,
+  "scenario": "Console Reset/Select and joystick-only route: yellow key pickup, castle gate approach/interior, room exploration and game variations; no state writes",
+  "roomFrames": {
+    "0": 123,
+    "17": 1010,
+    "18": 331,
+    "2": 1610,
+    "1": 1299
+  },
+  "semanticObjectFrames": {
+    "1": 4358,
+    "105": 118,
+    "1102": 118,
+    "2": 4235,
+    "101": 1005,
+    "111": 609,
+    "1026": 2227,
+    "2026": 1005,
+    "109": 671,
+    "1200": 1614,
+    "107": 884,
+    "1216": 1298,
+    "114": 316,
+    "1000": 411,
+    "108": 5,
+    "106": 960,
+    "113": 940
+  },
+  "genericFallbackFrames": 15,
+  "gameFrames": {
+    "1": 2279,
+    "2": 1053,
+    "3": 1041
+  },
+  "carriedOffsetFrames": {
+    "162": 4013,
+    "99": 354,
+    "81": 6
+  },
+  "geometryDrops": 0,
+  "analysisMedianMS": 0.3354,
+  "analysisP95MS": 0.6061,
+  "reconstructionSaveBytesUnchanged": true,
+  "captures": [
+    {
+      "label": "title",
+      "frame": 60,
+      "room": 0,
+      "player": [
+        158,
+        105
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 3,
+      "boxes": 10,
+      "ids": [
+        1,
+        105,
+        1102
+      ]
+    },
+    {
+      "label": "room-17-at-63",
+      "frame": 63,
+      "room": 17,
+      "player": [
+        80,
+        32
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 3,
+      "boxes": 15,
+      "ids": [
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "label": "yellow-castle",
+      "frame": 153,
+      "room": 17,
+      "player": [
+        80,
+        32
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 6,
+      "boxes": 68,
+      "ids": [
+        1,
+        2,
+        101,
+        111,
+        1026,
+        2026
+      ]
+    },
+    {
+      "label": "approach-key",
+      "frame": 207,
+      "room": 17,
+      "player": [
+        32,
+        32
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 6,
+      "boxes": 68,
+      "ids": [
+        1,
+        2,
+        101,
+        111,
+        1026,
+        2026
+      ]
+    },
+    {
+      "label": "pickup-key",
+      "frame": 243,
+      "room": 17,
+      "player": [
+        32,
+        59
+      ],
+      "carriedOffset": 99,
+      "game": 1,
+      "objects": 6,
+      "boxes": 68,
+      "ids": [
+        1,
+        2,
+        101,
+        111,
+        1026,
+        2026
+      ]
+    },
+    {
+      "label": "return-with-key",
+      "frame": 279,
+      "room": 17,
+      "player": [
+        32,
+        29
+      ],
+      "carriedOffset": 99,
+      "game": 1,
+      "objects": 6,
+      "boxes": 68,
+      "ids": [
+        1,
+        2,
+        101,
+        111,
+        1026,
+        2026
+      ]
+    },
+    {
+      "label": "approach-gate",
+      "frame": 333,
+      "room": 17,
+      "player": [
+        80,
+        29
+      ],
+      "carriedOffset": 99,
+      "game": 1,
+      "objects": 6,
+      "boxes": 58,
+      "ids": [
+        1,
+        2,
+        101,
+        111,
+        1026,
+        2026
+      ]
+    },
+    {
+      "label": "room-18-at-350",
+      "frame": 350,
+      "room": 18,
+      "player": [
+        80,
+        16
+      ],
+      "carriedOffset": 99,
+      "game": 1,
+      "objects": 19,
+      "boxes": 53,
+      "ids": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22
+      ]
+    },
+    {
+      "label": "open-gate",
+      "frame": 402,
+      "room": 18,
+      "player": [
+        80,
+        64
+      ],
+      "carriedOffset": 99,
+      "game": 1,
+      "objects": 5,
+      "boxes": 18,
+      "ids": [
+        1,
+        2,
+        109,
+        111,
+        1026
+      ]
+    },
+    {
+      "label": "castle-interior",
+      "frame": 482,
+      "room": 18,
+      "player": [
+        80,
+        100
+      ],
+      "carriedOffset": 99,
+      "game": 1,
+      "objects": 5,
+      "boxes": 18,
+      "ids": [
+        1,
+        2,
+        109,
+        111,
+        1026
+      ]
+    },
+    {
+      "label": "sword",
+      "frame": 597,
+      "room": 18,
+      "player": [
+        32,
+        37
+      ],
+      "carriedOffset": 81,
+      "game": 1,
+      "objects": 5,
+      "boxes": 18,
+      "ids": [
+        1,
+        2,
+        109,
+        111,
+        1026
+      ]
+    },
+    {
+      "label": "drop",
+      "frame": 600,
+      "room": 18,
+      "player": [
+        32,
+        37
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 5,
+      "boxes": 18,
+      "ids": [
+        1,
+        2,
+        109,
+        111,
+        1026
+      ]
+    },
+    {
+      "label": "exit-position",
+      "frame": 669,
+      "room": 18,
+      "player": [
+        80,
+        22
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 5,
+      "boxes": 18,
+      "ids": [
+        1,
+        2,
+        109,
+        111,
+        1026
+      ]
+    },
+    {
+      "label": "room-17-at-681",
+      "frame": 681,
+      "room": 17,
+      "player": [
+        80,
+        44
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 3,
+      "boxes": 24,
+      "ids": [
+        23,
+        24,
+        25
+      ]
+    },
+    {
+      "label": "room-2-at-714",
+      "frame": 714,
+      "room": 2,
+      "player": [
+        80,
+        105
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 13,
+      "boxes": 37,
+      "ids": [
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38
+      ]
+    },
+    {
+      "label": "below-castle",
+      "frame": 779,
+      "room": 2,
+      "player": [
+        80,
+        42
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 3,
+      "boxes": 5,
+      "ids": [
+        1,
+        2,
+        1200
+      ]
+    },
+    {
+      "label": "room-1-at-855",
+      "frame": 855,
+      "room": 1,
+      "player": [
+        158,
+        42
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 2,
+      "boxes": 4,
+      "ids": [
+        1,
+        1200
+      ]
+    },
+    {
+      "label": "explore-0-6",
+      "frame": 899,
+      "room": 1,
+      "player": [
+        119,
+        42
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 5,
+      "boxes": 32,
+      "ids": [
+        1,
+        2,
+        107,
+        1026,
+        1216
+      ]
+    },
+    {
+      "label": "explore-0-4",
+      "frame": 1019,
+      "room": 1,
+      "player": [
+        119,
+        99
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 5,
+      "boxes": 32,
+      "ids": [
+        1,
+        2,
+        107,
+        1026,
+        1216
+      ]
+    },
+    {
+      "label": "explore-0-7",
+      "frame": 1139,
+      "room": 1,
+      "player": [
+        122,
+        86
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 5,
+      "boxes": 30,
+      "ids": [
+        1,
+        2,
+        107,
+        1026,
+        1216
+      ]
+    },
+    {
+      "label": "explore-0-5",
+      "frame": 1259,
+      "room": 1,
+      "player": [
+        122,
+        86
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 5,
+      "boxes": 31,
+      "ids": [
+        1,
+        2,
+        107,
+        1026,
+        1216
+      ]
+    },
+    {
+      "label": "explore-1-6",
+      "frame": 1379,
+      "room": 1,
+      "player": [
+        122,
+        86
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 5,
+      "boxes": 30,
+      "ids": [
+        1,
+        2,
+        107,
+        1026,
+        1216
+      ]
+    },
+    {
+      "label": "explore-1-4",
+      "frame": 1499,
+      "room": 1,
+      "player": [
+        122,
+        86
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 5,
+      "boxes": 31,
+      "ids": [
+        1,
+        2,
+        107,
+        1026,
+        1216
+      ]
+    },
+    {
+      "label": "explore-1-7",
+      "frame": 1619,
+      "room": 1,
+      "player": [
+        122,
+        86
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 5,
+      "boxes": 30,
+      "ids": [
+        1,
+        2,
+        107,
+        1026,
+        1216
+      ]
+    },
+    {
+      "label": "explore-1-5",
+      "frame": 1739,
+      "room": 1,
+      "player": [
+        122,
+        86
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 5,
+      "boxes": 31,
+      "ids": [
+        1,
+        2,
+        107,
+        1026,
+        1216
+      ]
+    },
+    {
+      "label": "room-17-at-1740",
+      "frame": 1740,
+      "room": 17,
+      "player": [
+        80,
+        32
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 9,
+      "boxes": 34,
+      "ids": [
+        39,
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47
+      ]
+    },
+    {
+      "label": "explore-2-6",
+      "frame": 1907,
+      "room": 17,
+      "player": [
+        11,
+        32
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 5,
+      "boxes": 32,
+      "ids": [
+        1,
+        2,
+        101,
+        1026,
+        2026
+      ]
+    },
+    {
+      "label": "explore-2-4",
+      "frame": 2027,
+      "room": 17,
+      "player": [
+        11,
+        98
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 5,
+      "boxes": 32,
+      "ids": [
+        1,
+        2,
+        101,
+        1026,
+        2026
+      ]
+    },
+    {
+      "label": "explore-2-7",
+      "frame": 2147,
+      "room": 17,
+      "player": [
+        38,
+        95
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 5,
+      "boxes": 32,
+      "ids": [
+        1,
+        2,
+        101,
+        1026,
+        2026
+      ]
+    },
+    {
+      "label": "explore-2-5",
+      "frame": 2267,
+      "room": 17,
+      "player": [
+        38,
+        20
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 5,
+      "boxes": 32,
+      "ids": [
+        1,
+        2,
+        101,
+        1026,
+        2026
+      ]
+    },
+    {
+      "label": "room-0-at-2268",
+      "frame": 2268,
+      "room": 0,
+      "player": [
+        38,
+        105
+      ],
+      "carriedOffset": 162,
+      "game": 1,
+      "objects": 13,
+      "boxes": 37,
+      "ids": [
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60
+      ]
+    },
+    {
+      "label": "room-17-at-2298",
+      "frame": 2298,
+      "room": 17,
+      "player": [
+        80,
+        32
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 8,
+      "boxes": 26,
+      "ids": [
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68
+      ]
+    },
+    {
+      "label": "game-2-start",
+      "frame": 2360,
+      "room": 17,
+      "player": [
+        80,
+        32
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 6,
+      "boxes": 67,
+      "ids": [
+        1,
+        2,
+        101,
+        109,
+        1026,
+        2026
+      ]
+    },
+    {
+      "label": "room-2-at-2379",
+      "frame": 2379,
+      "room": 2,
+      "player": [
+        80,
+        105
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 31,
+      "boxes": 95,
+      "ids": [
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        95,
+        96,
+        97,
+        98,
+        99
+      ]
+    },
+    {
+      "label": "game-2-0-5",
+      "frame": 2480,
+      "room": 2,
+      "player": [
+        80,
+        18
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 5,
+      "boxes": 28,
+      "ids": [
+        1,
+        2,
+        109,
+        114,
+        1200
+      ]
+    },
+    {
+      "label": "room-1-at-2556",
+      "frame": 2556,
+      "room": 1,
+      "player": [
+        158,
+        21
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 2,
+      "boxes": 4,
+      "ids": [
+        1,
+        1200
+      ]
+    },
+    {
+      "label": "game-2-0-6",
+      "frame": 2600,
+      "room": 1,
+      "player": [
+        116,
+        21
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 4,
+      "boxes": 10,
+      "ids": [
+        1,
+        2,
+        1000,
+        1216
+      ]
+    },
+    {
+      "label": "game-2-0-4",
+      "frame": 2720,
+      "room": 1,
+      "player": [
+        116,
+        99
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 4,
+      "boxes": 10,
+      "ids": [
+        1,
+        2,
+        1000,
+        1216
+      ]
+    },
+    {
+      "label": "room-2-at-2763",
+      "frame": 2763,
+      "room": 2,
+      "player": [
+        3,
+        96
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 3,
+      "boxes": 8,
+      "ids": [
+        1,
+        1000,
+        1216
+      ]
+    },
+    {
+      "label": "game-2-0-7",
+      "frame": 2840,
+      "room": 2,
+      "player": [
+        78,
+        96
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 5,
+      "boxes": 20,
+      "ids": [
+        1,
+        2,
+        109,
+        114,
+        1200
+      ]
+    },
+    {
+      "label": "game-2-1-5",
+      "frame": 2960,
+      "room": 2,
+      "player": [
+        78,
+        18
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 5,
+      "boxes": 26,
+      "ids": [
+        1,
+        2,
+        109,
+        114,
+        1200
+      ]
+    },
+    {
+      "label": "room-1-at-3036",
+      "frame": 3036,
+      "room": 1,
+      "player": [
+        158,
+        21
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 2,
+      "boxes": 4,
+      "ids": [
+        1,
+        1200
+      ]
+    },
+    {
+      "label": "game-2-1-6",
+      "frame": 3080,
+      "room": 1,
+      "player": [
+        116,
+        21
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 4,
+      "boxes": 10,
+      "ids": [
+        1,
+        2,
+        1000,
+        1216
+      ]
+    },
+    {
+      "label": "game-2-1-4",
+      "frame": 3200,
+      "room": 1,
+      "player": [
+        116,
+        99
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 4,
+      "boxes": 10,
+      "ids": [
+        1,
+        2,
+        1000,
+        1216
+      ]
+    },
+    {
+      "label": "room-2-at-3243",
+      "frame": 3243,
+      "room": 2,
+      "player": [
+        3,
+        96
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 3,
+      "boxes": 18,
+      "ids": [
+        1,
+        1200,
+        1216
+      ]
+    },
+    {
+      "label": "game-2-1-7",
+      "frame": 3320,
+      "room": 2,
+      "player": [
+        78,
+        96
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 3,
+      "boxes": 5,
+      "ids": [
+        1,
+        2,
+        1200
+      ]
+    },
+    {
+      "label": "room-0-at-3321",
+      "frame": 3321,
+      "room": 0,
+      "player": [
+        78,
+        105
+      ],
+      "carriedOffset": 162,
+      "game": 2,
+      "objects": 5,
+      "boxes": 7,
+      "ids": [
+        100,
+        101,
+        102,
+        103,
+        104
+      ]
+    },
+    {
+      "label": "room-17-at-3352",
+      "frame": 3352,
+      "room": 17,
+      "player": [
+        80,
+        32
+      ],
+      "carriedOffset": 162,
+      "game": 3,
+      "objects": 9,
+      "boxes": 26,
+      "ids": [
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        113
+      ]
+    },
+    {
+      "label": "game-3-start",
+      "frame": 3413,
+      "room": 17,
+      "player": [
+        80,
+        32
+      ],
+      "carriedOffset": 162,
+      "game": 3,
+      "objects": 6,
+      "boxes": 79,
+      "ids": [
+        1,
+        2,
+        101,
+        106,
+        1026,
+        2026
+      ]
+    },
+    {
+      "label": "room-2-at-3433",
+      "frame": 3433,
+      "room": 2,
+      "player": [
+        80,
+        105
+      ],
+      "carriedOffset": 162,
+      "game": 3,
+      "objects": 32,
+      "boxes": 91,
+      "ids": [
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136,
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143,
+        144,
+        145
+      ]
+    },
+    {
+      "label": "game-3-0-5",
+      "frame": 3533,
+      "room": 2,
+      "player": [
+        83,
+        50
+      ],
+      "carriedOffset": 162,
+      "game": 3,
+      "objects": 5,
+      "boxes": 29,
+      "ids": [
+        1,
+        2,
+        106,
+        113,
+        1200
+      ]
+    },
+    {
+      "label": "game-3-0-6",
+      "frame": 3653,
+      "room": 2,
+      "player": [
+        83,
+        53
+      ],
+      "carriedOffset": 162,
+      "game": 3,
+      "objects": 5,
+      "boxes": 32,
+      "ids": [
+        1,
+        2,
+        106,
+        113,
+        1200
+      ]
+    },
+    {
+      "label": "game-3-0-4",
+      "frame": 3773,
+      "room": 2,
+      "player": [
+        83,
+        56
+      ],
+      "carriedOffset": 162,
+      "game": 3,
+      "objects": 5,
+      "boxes": 31,
+      "ids": [
+        1,
+        2,
+        106,
+        113,
+        1200
+      ]
+    },
+    {
+      "label": "game-3-0-7",
+      "frame": 3893,
+      "room": 2,
+      "player": [
+        83,
+        53
+      ],
+      "carriedOffset": 162,
+      "game": 3,
+      "objects": 5,
+      "boxes": 32,
+      "ids": [
+        1,
+        2,
+        106,
+        113,
+        1200
+      ]
+    },
+    {
+      "label": "game-3-1-5",
+      "frame": 4013,
+      "room": 2,
+      "player": [
+        83,
+        50
+      ],
+      "carriedOffset": 162,
+      "game": 3,
+      "objects": 5,
+      "boxes": 29,
+      "ids": [
+        1,
+        2,
+        106,
+        113,
+        1200
+      ]
+    },
+    {
+      "label": "game-3-1-6",
+      "frame": 4133,
+      "room": 2,
+      "player": [
+        83,
+        53
+      ],
+      "carriedOffset": 162,
+      "game": 3,
+      "objects": 5,
+      "boxes": 32,
+      "ids": [
+        1,
+        2,
+        106,
+        113,
+        1200
+      ]
+    },
+    {
+      "label": "game-3-1-4",
+      "frame": 4253,
+      "room": 2,
+      "player": [
+        83,
+        56
+      ],
+      "carriedOffset": 162,
+      "game": 3,
+      "objects": 5,
+      "boxes": 31,
+      "ids": [
+        1,
+        2,
+        106,
+        113,
+        1200
+      ]
+    },
+    {
+      "label": "game-3-1-7",
+      "frame": 4373,
+      "room": 2,
+      "player": [
+        83,
+        53
+      ],
+      "carriedOffset": 162,
+      "game": 3,
+      "objects": 5,
+      "boxes": 32,
+      "ids": [
+        1,
+        2,
+        106,
+        113,
+        1200
+      ]
+    }
+  ],
+  "iPhoneProfileTested": false,
+  "note": "Host captures and interpretation counts, not complete gameplay certification or iPhone FPS."
+}

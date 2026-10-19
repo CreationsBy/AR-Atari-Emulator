@@ -2,7 +2,15 @@
 
 Updated 2026-10-19. This is a development prototype, not a completed or certified iOS emulator release.
 
-## Vertical world and Ice Hockey update
+## Adventure update
+
+[Build #9](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39296849358) passed for commit `7bf94a0c4963b66e651923573a99f6f4b8f5f512`. Xcode 16.4 compiled the 102-source native library and archived the arm64 app. Hosted Swift presentation/adapter and encrypted-transport checks passed. The downloaded IPA passes digest/CRC/resource/device checks, and all 383 matching-source files equal the built commit. No commercial ROM is bundled. See [the build audit](evidence/adventure-build.json).
+
+The supplied NTSC ROM now selects the measured [Adventure profile](ADVENTURE.md). It separates the player, gates, creatures and items from visible walls using read-only RAM and graphics from the user cartridge. A 4,373-frame ordinary-input run exercised all three game selections across five room IDs, including key pickup, castle entry, sword pickup/drop and creature encounters. There were no geometry drops; 15 startup/transition frames used generic interpretation. Reconstruction preserved serialized emulator state. All 27 local native methods pass; hosted Ubuntu passes 25 and skips the two private-ROM methods. See [captured host measurements](evidence/adventure-validation.json).
+
+Tabletop, dragon and final vertical renders were inspected offline. Vertical mode moves gameplay silhouettes in front of castle relief so they stay visible. Physical Adventure acceptance, complete matches and real-game coverage of bridge/chalice/magnet remain pending. No commercial ROM or commercial sprite/room masks are bundled.
+
+## Earlier Vertical world and Ice Hockey update
 
 [Build #7](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39293266183) passed for commit `2d0aa5b26db9d01fc798c6567aa4aa59c3ede368`. The 101-source native build passes all 20 local tests, including the supplied Ice Hockey ROM; hosted Ubuntu passes 19 and skips that private-ROM test. Hosted Swift tests cover legacy settings migration, upright bottom-edge placement/tilt, side-view profiles, skater orientation and synchronized presentation, plus the existing encrypted transport regressions. Xcode 16.4 archives the arm64 iPhone app successfully. All 374 source files in the downloaded ZIP match the built commit; IPA CRC, digest, six profiles and commercial-ROM exclusion pass. See [the verification record](evidence/ice-hockey-build.json).
 
@@ -49,14 +57,14 @@ Xcode reported two nonblocking warnings: skipped AppIntents metadata extraction 
 |---|---|---|---|---|
 | Tabletop Test | Exact generated SHA-256 | Yes, real core | Development profile, native geometry inspected | Pending |
 | Paddle Probe | Original source assembled by test | Yes | Hardware-input fixture; no game profile | Pending |
-| Adventure NTSC | Stella database MD5 | No ROM supplied | Experimental size rules; semantic castles/dragons/items incomplete | Pending |
+| Adventure NTSC | Exact supplied SHA-256 and Stella MD5 | Yes, 4,373 frames and save-byte invariance | Experimental measured rooms/castles, gates, player, creatures/items; incomplete gameplay coverage | New profile pending |
 | Combat NTSC | Stella database MD5 | No ROM supplied | Experimental maze/vehicle/projectile candidates | Pending |
 | Breakout NTSC | Two Stella database MD5s | No ROM supplied | Experimental paddle/ball/brick formations; adjacent bricks can merge | Pending |
 | Pitfall! NTSC | Stella database MD5 | No ROM supplied | Experimental upright layers; semantic objects/animation incomplete | Pending |
 | Ice Hockey NTSC | Exact supplied SHA-256 and Stella MD5 | Yes, 3,600 local frames and save-byte invariance | Experimental dedicated native adapter; rink, goals, standing skaters and puck candidates | New profile pending |
 | Unknown raw ROM | Computed SHA-256/MD5 | Depends on core/cart | Generic color components and heuristic depth, no accuracy guarantee | Pending |
 
-The emulator's broad cartridge support is inherited from Stella; the original fixtures and the exact supplied Ice Hockey revision were exercised here. Its older baseline does not imply current Stella accuracy or compatibility with every modern homebrew cart. The frontend intentionally excludes streaming MovieCart and data over 1 MB. Generic output may lose same-color objects against backgrounds, split multicolor sprites, merge overlapping shapes, misclassify scenery or flicker with multiplexed sprites.
+The emulator's broad cartridge support is inherited from Stella; the original fixtures and exact supplied Ice Hockey and Adventure revisions were exercised here. Its older baseline does not imply current Stella accuracy or compatibility with every modern homebrew cart. The frontend intentionally excludes streaming MovieCart and data over 1 MB. Generic output may lose same-color objects against backgrounds, split multicolor sprites, merge overlapping shapes, misclassify scenery or flicker with multiplexed sprites.
 
 ## Requested milestones
 
@@ -65,16 +73,16 @@ The emulator's broad cartridge support is inherited from Stella; the original fi
 | 1. iOS emulator with ROM import, controls and audio | Native core/inputs/audio tested on Windows and hosted Linux. SwiftUI/audio source Apple-compiled; device acceptance pending. |
 | 2. Graphics analysis and TIA capture | Implemented and host-tested. TIA layer attribution and game-specific semantic trace interpretation remain future work. |
 | 3. Homebrew 3D prototype | Real ROM -> Stella -> separated volumetric geometry works on host. Offline mesh render inspected; live local viewer endpoint verified. Browser rendering could not be inspected in this session. |
-| 4. Complete real-game profile | First measured Ice Hockey adapter implemented/tested with supplied ROM. Experimental; complete gameplay and iPhone acceptance remain open. |
+| 4. Complete real-game profile | Measured Ice Hockey and Adventure adapters implemented/tested with supplied ROMs. Experimental; complete gameplay and iPhone acceptance remain open. |
 | 5. Tabletop AR | Native placement/anchor/camera/gesture source Apple-compiled; device testing pending. |
-| 6. Additional profiles | Five experimental commercial profiles including the measured Ice Hockey adapter; zero full-support certifications. |
+| 6. Additional profiles | Five experimental commercial profiles including measured Ice Hockey and Adventure adapters; zero full-support certifications. |
 | 7. Automated IPA | Source published; hosted native tests and unsigned device archive passed. IPA and matching source downloaded and verified. Re-signing and device installation remain pending. |
 | 8. Physical testing and optimization | Test procedure supplied; no phone measurements or results claimed. |
 
 ## Remaining implementation and acceptance work
 
 - Re-sign the verified unsigned IPA, then verify audio pacing, state restoration, UIKit/SwiftUI gestures and lifecycle on an actual supported iPhone.
-- Extend the measured Ice Hockey profile through complete matches, overlaps/falls, scoring and physical iPhone checks before considering full support; measure and author further games separately.
+- Extend Ice Hockey and Adventure through complete matches, remaining objects/rooms and physical iPhone checks before considering full support; measure and author further games separately.
 - Improve segmentation for flicker, multicolor actors, overlaps and same-color brick boundaries; add precise per-pixel TIA object provenance if necessary.
 - Add profile-specific HUD extraction, richer geometry/animation mappings, smooth room transitions, optional rewind and validated game-speed controls. Rewind and speed changes are currently not exposed.
 - Measure device power, memory, input latency and render time, then adjust mesh budgets. Real table shadows, real-world occlusion, and optional visual filters remain unverified or unimplemented.

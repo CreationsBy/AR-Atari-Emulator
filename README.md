@@ -2,9 +2,9 @@
 
 A working Windows native-emulation prototype, plus native iOS application source for a tabletop Atari 2600 diorama. A real Stella core runs the cartridge. A separate renderer reconstructs its pixels into individual volumetric objects.
 
-**Current status: Vertical world orientation and the first Ice Hockey 3D profile are implemented. All 20 local native tests pass; hosted native, Swift orientation/network tests and the unsigned iPhone archive pass.** The user reports earlier single-device AR worked on their phone. The new Vertical/Ice Hockey features and two-phone multiplayer still need physical acceptance. The Ice Hockey profile is experimental; see [profile details](docs/ICE_HOCKEY.md) and [compatibility results](docs/COMPATIBILITY.md).
+**Current status: Measured Adventure and Ice Hockey profiles plus Tabletop/Vertical world orientation are implemented. All 27 local native tests pass; hosted native, Swift presentation/network tests and the unsigned iPhone archive pass.** The user reports earlier single-device AR worked on their phone. These new profiles and two-phone multiplayer still need physical acceptance. Commercial profiles remain experimental; see [Adventure details](docs/ADVENTURE.md) and [compatibility results](docs/COMPATIBILITY.md).
 
-[Successful build #7](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39293266183) · [Download IPA and matching source artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39293266183/artifacts/12205723611). Re-sign before installing; use the same updated build on both phones for multiplayer. The artifact expires November 2, 2026 at 12:24 PM EST. The [verification record](docs/evidence/ice-hockey-build.json) identifies the built commit and checksums.
+[Successful Adventure build #9](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39296849358) · [Download IPA and matching source artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39296849358/artifacts/12209586721). Re-sign before installing; use the same updated build on both phones for shared presentation. The artifact expires November 2, 2026 at 12:48 PM EST. The [verification record](docs/evidence/adventure-build.json) identifies the built commit and checksums.
 
 ## Run the working prototype now
 
@@ -30,6 +30,7 @@ On a different Windows computer, install Python 3.12+, then use `scripts/Build-W
 - Hash-selected JSON profiles; connected-component segmentation; exact pixel-mask matching; nearest-component tracking; rectangular run merging that preserves holes; per-object heights, elevations and upright/tabletop geometry.
 - An original 4 KB cartridge with joystick movement, an autonomous actor, playfield obstacles, hardware collision feedback, a Fire missile, TIA sound and room-color transitions. Its source and reproducible assembler are included.
 - SwiftUI library, Files import, touch joystick/Fire, console switches, two-player selection, paddle slider, Bluetooth gamepad mapping, settings and a diagnostic inspector.
+- A measured exact-hash [Adventure profile](docs/ADVENTURE.md) with raised walls/castle masses, animated gates, a separate player, standing creatures/items and a bridge interpretation. Read-only cartridge graphics stay private; complete gameplay/device acceptance remains open.
 - An experimental exact-hash Ice Hockey profile with a thin rink, raised boards, goal frames/nets, standing multicolor skaters and visible puck candidates. Your commercial ROM stays local.
 - Settings → Miniature world → World orientation → **Vertical** stands the game world upright on its bottom edge; **Tabletop** restores the horizontal view. The host shares this choice with Player 2.
 - RealityKit meshes with per-object updates and cached geometry. ARKit horizontal-plane preview, tap placement, world anchor, physical camera view, pinch/rotation, size presets, tilt and virtual inspection cameras.
