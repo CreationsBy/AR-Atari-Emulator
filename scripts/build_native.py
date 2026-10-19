@@ -103,6 +103,12 @@ def main():
         common += ['-target', triple, '-isysroot', sdkpath, '-fPIC']
     elif sys.platform != 'win32':
         common += ['-fPIC']
+    # GCC requires the numeric threshold in -Werror= as well; Clang expects
+    # the warning group without that value. Check the actual host compiler.
+    clang_stack_flags = bool(args.zig) or apple
+    if not clang_stack_flags:
+        version = subprocess.check_output([os.environ.get('CXX', 'c++'), '--version'], text=True)
+        clang_stack_flags = 'clang' in version.lower()
     def compile_one(source):
         cpp = source.suffix in ['.cxx', '.cpp']
         command = [str(Path(args.zig).resolve()), 'c++' if cpp else 'cc'] if args.zig else [('clang++' if cpp else 'clang') if apple else os.environ.get('CXX' if cpp else 'CC', 'c++' if cpp else 'cc')]
@@ -111,7 +117,7 @@ def main():
         if source.parent == ROOT / 'native/src':
             # App-authored bridge/adapters run on an iOS background queue.
             # Catch large frame/aggregate temporaries on the actual target ABI.
-            flags += ['-Wframe-larger-than=65536', '-Werror=frame-larger-than']
+            flags += ['-Wframe-larger-than=65536', '-Werror=frame-larger-than' if clang_stack_flags else '-Werror=frame-larger-than=65536']
         stamp = obj.with_suffix('.command')
         digest = hashlib.sha256((' '.join(command + flags)).encode()).hexdigest()
         headers = list((ROOT / 'native/include').glob('*.h'))
