@@ -1,0 +1,17 @@
+{
+  "target": "aarch64-macos-none (Darwin ARM64 ABI)",
+  "compiler": "Zig 0.13.0 bundled Clang, -O2 -DNDEBUG",
+  "before": {
+    "resetFrameBytes": 605408,
+    "reconstructFrameBytes": 205008
+  },
+  "after": {
+    "resetFrameBytes": 0,
+    "reconstructFrameBytes": 3376
+  },
+  "appNativeFrameBudgetBytes": 65536,
+  "workerRegressionStackBytes": 524288,
+  "oldCodeRejectedByBudget": true,
+  "physicalIPhoneRetested": false,
+  "note": "Cross-compiler assembly evidence; hosted Apple build separately enforces the native frame budget."
+}

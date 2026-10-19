@@ -1,6 +1,6 @@
 # Windows editing, hosted iOS builds and sideloading
 
-No local Mac, Xcode or local VM is needed. Source edits and native validation happen on Windows. Apple's device compilation happens on a hosted Mac. [Adventure build #9 passed](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39296849358) with Xcode 16.4 and the iPhoneOS 18.5 SDK. Install the same multiplayer build on both phones and follow [the Wi-Fi host/join walkthrough](LOCAL_MULTIPLAYER.md).
+No local Mac, Xcode or local VM is needed. Source edits and native validation happen on Windows. Apple's device compilation happens on a hosted Mac. [ROM-opening crash-fix build #11 passed](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39299234767) with Xcode 16.4 and the iPhoneOS 18.5 SDK. Install the same multiplayer build on both phones and follow [the Wi-Fi host/join walkthrough](LOCAL_MULTIPLAYER.md).
 
 ## 1. Open and validate the project
 
@@ -45,7 +45,7 @@ The push to `main` starts **Build and verify iOS prototype**. You can also selec
 The workflow:
 
 1. Verifies vendored source and original-ROM hashes on Linux.
-2. Builds the native core, runs twenty-seven test methods (the private Adventure and Ice Hockey ROM methods are skipped on public CI) and captures evidence.
+2. Builds the native core, runs twenty-eight test methods, including a crash-isolated 512 KB worker regression (the private Adventure and Ice Hockey ROM methods are skipped on public CI) and captures evidence.
 3. Starts a GitHub-hosted `macos-15` runner and records its Xcode/SDK versions.
 4. Installs XcodeGen if needed and generates `ios/AtariDiorama.xcodeproj` from the checked-in YAML.
 5. Cross-compiles an arm64 iOS static core with the selected SDK and iOS 16 minimum deployment target.
@@ -58,7 +58,7 @@ No signing secrets are required for `unsigned`. Its filename is **AtariDiorama-U
 
 On a green run, open the run's **Artifacts** section and download `AtariDiorama-unsigned`. Extract the downloaded artifact ZIP to find the `.ipa`. On failure, download `ios-build-logs` and inspect `xcode-archive.log`, `native-ios.log` and the result bundle. `pipefail` prevents a successful `tee` command from concealing an Xcode failure.
 
-The Adventure Apple archive and hosted tests passed (25 native methods pass; two private-ROM methods are skipped). [Download the verified unsigned artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39296849358/artifacts/12209586721) before its November 2, 2026, 12:48 PM EST expiration, or run the workflow again. A local verified copy is at `build/deliverables/AtariDiorama-UNSIGNED-requires-resigning.ipa`, alongside `artifact-manifest.json` and the matching `AtariDiorama-source.zip`. The complete downloads and logs are under `build/github-run-9/`; the earlier build is retained in `build/github-run-1/`. Build details and checksum are recorded in [the verification record](evidence/adventure-build.json). Physical Adventure/Vertical/Ice Hockey and two-phone multiplayer testing remain pending.
+The corrected Apple archive and hosted tests passed (26 native methods pass; two private-ROM methods are skipped). The Mac also passes the actual Swift loading queue and constrained-stack native suites; the device build enforces a 64 KB frame budget for app-authored native code. [Download the verified unsigned artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39299234767/artifacts/12212140538) before its November 2, 2026, 1:05 PM EST expiration, or run the workflow again. A local verified copy is at `build/deliverables/AtariDiorama-UNSIGNED-requires-resigning.ipa`, alongside `artifact-manifest.json` and the matching `AtariDiorama-source.zip`. The complete downloads and logs are under `build/github-run-11/`; the earlier build is retained in `build/github-run-1/`. Build details and checksum are recorded in [the verification record](evidence/rom-opening-build.json). Physical Adventure/Vertical/Ice Hockey and two-phone multiplayer testing remain pending.
 
 ## 4. Install with a free Apple account from Windows
 

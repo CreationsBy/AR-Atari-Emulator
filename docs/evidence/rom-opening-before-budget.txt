@@ -1,0 +1,7 @@
+build/crash-fix/Adventure-before.cpp:62:17: error: stack frame size (605408) exceeds limit (65536) in 'ad_reset_adventure' [-Werror,-Wframe-larger-than]
+   62 | extern "C" void ad_reset_adventure(){objects.clear();boxes.clear();cached={};lastRoom=-1;lastFrame=0;++sceneID;}
+      |                 ^
+build/crash-fix/Adventure-before.cpp:63:27: error: stack frame size (205008) exceeds limit (65536) in 'ad_reconstruct_adventure' [-Werror,-Wframe-larger-than]
+   63 | extern "C" const ADScene *ad_reconstruct_adventure(const ADFrame *f,const ADProfile *p) {
+      |                           ^
+2 errors generated.

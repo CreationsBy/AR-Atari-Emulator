@@ -1,59 +1,43 @@
-# Resume with physical Adventure / Vertical / multiplayer testing
+# Resume with phone retest of corrected ROM-opening build
 
-## Completed October 19, 2026 (America/New_York)
+## Crash fix completed October 19, 2026 (America/New_York)
 
-The supplied Adventure ROM now has a measured `adventure-ntsc-v2` profile and native `adventureNTSCv1` adapter. Reopen/import the existing cartridge entry after updating to select it automatically. Its previous profile ID changed; older profile-bound saves may be rejected.
+The user reports that the Adventure build #9 crashed immediately when selecting any ROM, before the camera/game view. The unconditional `ad_reset_adventure` aggregate cache assignment generated a 605,408-byte Darwin ARM64 stack frame. It is called during common load/reset/restore even for demo/generic ROMs, exceeding a usual 512 KB secondary-thread stack. Windows optimized this away, so earlier tests missed it. Do not call build #9 device-working.
 
-- SHA-256: `b0326b45e5cab066b2d03f1e683708d82de3ffe60b2e968bf88c5494237f0a96`
-- MD5: `157bddb7192754a45372be196797f284`; size 4,096 bytes.
+The fix invalidates cache entries in place and reuses raster workspace outside the stack. Reused masks are explicitly cleared before capture. Cross-compiled ARM64 reset now has no explicit stack reservation; reconstruction falls from 205,008 to 3,376 bytes. This is compiler evidence, not a phone crash trace. App-authored native functions now have an enforced 64 KB stack-frame budget on host and actual iOS target builds (GCC/Clang-specific flags). See [ROM_LOADING_FIX.md](ROM_LOADING_FIX.md).
 
-Read-only pixels, RAM and graphics from the user's loaded cartridge produce visible room walls, taller castle masses, a separate player, animated portcullises, upright creatures/items and a raised bridge interpretation. Commercial graphics/masks are not copied into source. A measured doorway recess keeps the gate opening clear. Thin side barriers and the local dark-maze visibility window are interpreted. Unchanged observed sprites can persist for three multiplexed frames; changed positions/states/rooms invalidate them. No game-state writes, new physics or predicted motion.
+## Verified current build
 
-The user clarified that Vertical means an upright 3D world, not portrait orientation. Settings → Miniature world → World orientation offers Tabletop / Vertical. Vertical stands on the bottom edge at a horizontal AR anchor. Adventure's player/creatures/items move to a foreground layer derived from wall geometry so castle relief cannot bury them; standing silhouettes counterrotate. Tabletop positions stay unchanged. Both peers apply the same transforms to shared geometry.
+- [Build #11](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39299234767) passed.
+- Built commit: `1ce8b7674034bc6724178c5ab904bf989b011cc5`.
+- Local: 28 methods pass, including native suites in a child process with a 512 KB worker stack. Three load/reset/restore cycles also pass for demo, Adventure, Ice Hockey, Bowling, Boxing and Frogger on that worker.
+- Hosted Linux: 26 methods pass, two private-ROM tests skip. Hosted Mac: 25 native methods pass and two skip on a 512 KB worker; four actual Swift EmulationEngine queue load/reset/first-frame/save/restore cycles pass, as do presentation/protocol/TLS regressions.
+- Xcode 16.4, iPhoneOS 18.5 SDK, iOS 16 deployment target: ARM64 native frame budget, archive and unsigned IPA pass. The native library has 102 sources.
+- All artifact download digests and source/IPA CRCs pass. All 390 source files match built Git blobs; six profiles, original fixture and camera/network resources verify. Commercial ROMs are excluded.
+- Evidence: [evidence/rom-opening-build.json](evidence/rom-opening-build.json).
 
-Earlier Ice Hockey and private same-Wi-Fi multiplayer remain present. P1 runs the ROM; P2 joins by code, receives geometry/pixels/audio and uses port 2 without a ROM. ARWorldMap sharing supports independent physical camera views. Install the same current build on both phones (wire protocol 2). Stock Adventure itself is single-player; its guest can spectate but no second adventurer was added. See [ADVENTURE.md](ADVENTURE.md), [ICE_HOCKEY.md](ICE_HOCKEY.md) and [LOCAL_MULTIPLAYER.md](LOCAL_MULTIPLAYER.md).
+## Deliverables and next action
 
-## Verified latest build
+- Corrected IPA: `build/deliverables/AtariDiorama-UNSIGNED-requires-resigning.ipa`
+- Matching source: `build/deliverables/AtariDiorama-source.zip`; manifest alongside.
+- Complete downloads/logs: `build/github-run-11/`. Older #9/#7/#5/#1 retained separately.
+- IPA SHA-256: `6e71f9dfbea06138fbdd8e71019c840ba4d40aa34074158d305d4a36f2894bce`.
 
-- [GitHub Actions run #9](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39296849358) passed.
-- Built commit: `7bf94a0c4963b66e651923573a99f6f4b8f5f512`.
-- All 27 local native methods pass. Hosted Ubuntu passes 25 and skips the two private-ROM methods. Native library compiles 102 sources; 286 pinned vendor files verify.
-- Adventure capture: 4,373 frames using normal console/joystick input only; all three game selections, five room IDs including title; yellow-key pickup, castle entry, sword pickup/drop and creature encounters. Zero geometry drops; 15 generic startup/transition frames. Serialized emulator state unchanged by reconstruction.
-- Original synthetic CI fixtures cover same-color separation, holes, translation/mesh reuse, bounded retention, room changes, dark visibility, item/bridge roles and budgets. A supplied-ROM assertion checks the doorway recess.
-- Hosted Swift checks pass: native adapter selection, vertical creature/item orientation, foreground placement, unchanged Tabletop/bridge transforms, prior settings/wire checks and real TLS-PSK endpoint regressions.
-- Xcode 16.4 (16F6), iPhoneOS 18.5 SDK, iOS 16 target: arm64 device archive and unsigned IPA passed.
-- Artifact download digests and IPA/source CRCs pass; all 383 matching-source files equal built Git blobs. Six profiles, original fixture and camera/network keys verify. No commercial ROM is bundled.
-- Full record: [evidence/adventure-build.json](evidence/adventure-build.json).
+[Corrected IPA/source artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39299234767/artifacts/12212140538) expires November 2, 2026 at 1:05 PM EST (2026-11-02T18:05:57Z). Local copies remain available. Documentation/evidence commits after the built commit are intentionally separate from the exact matching-source ZIP.
 
-Offline renders were inspected at `build/adventure/tabletop/reconstruction-3d.png`, `build/adventure/vertical/reconstruction-3d.png` and `build/adventure/dragon/reconstruction-3d.png`. They are actual captured geometry rendered offline, not iPhone/AR screenshots.
+Re-sign/install the corrected build over the existing app, preserving its library. Retest opening the demo and supplied cartridges on the user's phone first. Physical retest has NOT yet been reported. Do not claim device acceptance from the compiler/host checks. The earlier baseline single-device AR had worked according to the user, but build #9 regressed ROM opening.
 
-Adventure remains experimental: complete matches, all mazes/castles, bridge/chalice/magnet in actual gameplay, dragon states, bat theft, secrets, wraparound and overlaps need coverage. Dark-room synthetic tests do not establish full real-maze acceptance. Tall silhouettes can occlude small objects from some angles. Host timings are not iPhone FPS.
+## Features preserved
 
-## Deliverables
+Settings → Miniature world → World orientation offers Tabletop / Vertical (upright 3D world, not portrait orientation). Adventure's measured `adventure-ntsc-v2` adapter uses read-only visible pixels/RAM/private cartridge graphics for rooms/castles, player, gates, creatures and items. Vertical foreground placement keeps gameplay silhouettes visible; Tabletop positions remain unchanged. Ice Hockey retains its measured rink/skater/puck profile. Both are experimental pending broad gameplay and physical acceptance. See [ADVENTURE.md](ADVENTURE.md) and [ICE_HOCKEY.md](ICE_HOCKEY.md).
 
-- Latest IPA: `build/deliverables/AtariDiorama-UNSIGNED-requires-resigning.ipa`
-- Manifest: `build/deliverables/artifact-manifest.json`
-- Exact matching source for build #9: `build/deliverables/AtariDiorama-source.zip`
-- Downloads and full logs: `build/github-run-9/`; earlier #7, #5 and #1 remain in their own directories.
-- IPA SHA-256: `c917dcbb0905f427d02833c2d2b841b2f4ed06a4dfb4ace08ecdec2a9c256c40`.
+Private same-Wi-Fi multiplayer remains: P1 owns ROM/emulation; P2 joins by private code, receives geometry/pixels/audio and controls port 2 without a ROM. Shared ARWorldMap supports independent camera viewpoints. Install the same current build on both phones. Stock Adventure is single-player; its guest can spectate, not control a second adventurer. Physical discovery/alignment/latency/audio remain pending; see [DEVICE_TESTING.md](DEVICE_TESTING.md).
 
-[IPA/source artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39296849358/artifacts/12209586721) expires November 2, 2026 at 12:48 PM EST (2026-11-02T17:48:11Z). Local copies remain available. Later evidence/documentation commits are separate from the exact matching-source ZIP.
-
-## Next action
-
-Re-sign/install the new IPA and reopen Adventure. Follow [DEVICE_TESTING.md](DEVICE_TESTING.md), comparing original pixels with Tabletop and Vertical during key carrying, gate movement, creatures, room changes and save/load. Then test physical Wi-Fi discovery, shared-table alignment, latency and audio on two phones using the original two-player test ROM or a supported two-player cartridge.
-
-The user reported earlier single-device AR worked with the demo and their Atari ROMs. This does not validate the new Adventure/Ice Hockey/Vertical or two-phone features. Do not claim physical acceptance, full commercial-profile support or unsigned launch without re-signing.
-
-Keep commercial cartridges under ignored `roms/`; never upload them or include them in app/source packages.
-
-## Workspace and tools
+## Workspace / tools
 
 Root: `C:\Users\spagh\OneDrive\Documents\Ai projects\games\AR Atari 2600`.
-Portable Git: `.tools/mingit/cmd/git.exe`; GitHub CLI `.tools/gh/bin/gh.exe` remains unauthenticated.
-Python: `C:\Program Files\Blender Foundation\Blender 5.2\5.2\python\bin\python.exe`.
-Blender: `C:\Program Files\Blender Foundation\Blender 5.2\blender.exe`.
+Git: `.tools/mingit/cmd/git.exe`. Connected GitHub plugin handles writes/runs/downloads; CLI GitHub remains unauthenticated. Never extract credentials. Publish through connector, public Git fetch to sync main. Use per-command safe.directory for this exact root; Git metadata writes may require escalation. Original branch remains `local-before-github-upload`.
 
-The connected GitHub plugin handles writes, runs and downloads. Do not extract credentials. Publish through the connector and public Git fetch to sync main. Original history remains on `local-before-github-upload`. Git metadata writes may need escalation; use per-command safe.directory for this exact workspace only.
+Python: `C:\Program Files\Blender Foundation\Blender 5.2\5.2\python\bin\python.exe`. Native DLL rebuilt; preview is stopped. Restart `scripts/Start-Preview.ps1` if needed. Local crash investigation/evidence lives in ignored `build/crash-fix/`. The two direct worker invocations are `python -m unittest discover -s tests -v` and `python tests/test_worker_stack.py --worker`.
 
-The preview server is stopped so its DLL can rebuild. Restart with `scripts/Start-Preview.ps1` if needed. Capture Adventure with `scripts/capture_adventure.py`; Blender evidence accepts --input / --output / --upright after --. Do not repeat broad passing checks without new changes/failures.
+Keep supplied commercial cartridges in ignored `roms/`; never upload or bundle them. Do not repeat broad passing tests without new changes/failures.

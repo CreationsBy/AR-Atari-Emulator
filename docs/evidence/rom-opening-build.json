@@ -1,0 +1,140 @@
+{
+  "verifiedDate": "2026-10-19",
+  "timezone": "America/New_York",
+  "repository": "CreationsBy/AR-Atari-Emulator",
+  "reportedFailure": "Build #9 crashes immediately on opening any ROM, before the camera/game view",
+  "rootCause": "ARM64 aggregate temporary in unconditional Adventure cache reset exceeds a usual 512 KiB worker stack",
+  "run": {
+    "id": 39299234767,
+    "number": 11,
+    "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39299234767",
+    "commit": "1ce8b7674034bc6724178c5ab904bf989b011cc5",
+    "tree": "f5e77bfa55589106c6b6ad37710415f4c2b9dbd8",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "native": {
+    "windowsTestsPassed": 28,
+    "hostedUbuntuTestsPassed": 26,
+    "hostedUbuntuTestsSkipped": 2,
+    "hostedMacConstrainedTestsPassed": 25,
+    "hostedMacConstrainedTestsSkipped": 2,
+    "constrainedWorkerStackBytes": 524288,
+    "sourcesCompiled": 102,
+    "appNativeFrameBudgetBytes": 65536,
+    "actualIOSTargetStackBudgetPassed": true
+  },
+  "swift": {
+    "actualEmulationEngineQueueLoadResetFirstFrameSaveRestoreCyclesPassed": 4,
+    "presentationAndProtocolChecksPassed": true,
+    "encryptedTransportRegressionPassed": true
+  },
+  "ios": {
+    "xcode": "16.4",
+    "sdk": "iPhoneOS 18.5",
+    "deploymentTarget": "16.0",
+    "architecture": "arm64",
+    "archiveSucceeded": true
+  },
+  "artifacts": [
+    {
+      "id": 12212140538,
+      "name": "AtariDiorama-unsigned",
+      "sha256": "7e807cc79c27f7dbca335282c609810681197abdb434ac32b602e91fbde99ec2",
+      "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39299234767/artifacts/12212140538",
+      "expiresAt": "2026-11-02T18:05:57Z"
+    },
+    {
+      "id": 12211665636,
+      "name": "ios-build-logs",
+      "sha256": "e66629bfc55bab899ce69743177213824dce65a75b79ae1e292f455477035d74",
+      "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39299234767/artifacts/12211665636",
+      "expiresAt": "2026-10-26T18:05:59Z"
+    },
+    {
+      "id": 12209479402,
+      "name": "native-validation",
+      "sha256": "c177f839c4751fbc1085e101a956e7cd35869dbd2bcb4f8ad3e295f07054d15a",
+      "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39299234767/artifacts/12209479402",
+      "expiresAt": "2027-01-17T18:02:35Z"
+    }
+  ],
+  "requiresResigning": true,
+  "physicalIPhoneRetested": false,
+  "localVerification": {
+    "artifactArchiveDigestsMatched": true,
+    "ipaZipCRC": "passed",
+    "sourceZipCRC": "passed",
+    "sourceFilesMatchedToCommit": 390,
+    "sourceCommit": "1ce8b7674034bc6724178c5ab904bf989b011cc5",
+    "ipaBytes": 677082,
+    "ipaSha256": "6e71f9dfbea06138fbdd8e71019c840ba4d40aa34074158d305d4a36f2894bce",
+    "sourceSha256": "31f96fd7756da5ccc9a33f23b5f10986b74ddefdcaf172844a8bfc4616d80ea3",
+    "bonjourAndLocalNetworkPlistKeys": true,
+    "cameraPermissionPresent": true,
+    "twoPlayerHomebrewMatchesSource": true,
+    "profileCount": 6,
+    "adventureProfileMatchesBuiltSource": true,
+    "commercialROMsExcluded": true
+  },
+  "arm64CrossCompiler": {
+    "target": "aarch64-macos-none (Darwin ARM64 ABI)",
+    "compiler": "Zig 0.13.0 bundled Clang, -O2 -DNDEBUG",
+    "before": {
+      "resetFrameBytes": 605408,
+      "reconstructFrameBytes": 205008
+    },
+    "after": {
+      "resetFrameBytes": 0,
+      "reconstructFrameBytes": 3376
+    },
+    "appNativeFrameBudgetBytes": 65536,
+    "workerRegressionStackBytes": 524288,
+    "oldCodeRejectedByBudget": true,
+    "physicalIPhoneRetested": false,
+    "note": "Cross-compiler assembly evidence; hosted Apple build separately enforces the native frame budget."
+  },
+  "localAllROMWorker": {
+    "stackBytes": 524288,
+    "roms": [
+      {
+        "file": "TabletopTest.a26",
+        "profile": "tabletop-test",
+        "loadResetRestoreCycles": 3,
+        "passed": true
+      },
+      {
+        "file": "Adventure (USA).a26",
+        "profile": "adventure-experimental",
+        "loadResetRestoreCycles": 3,
+        "passed": true
+      },
+      {
+        "file": "Bowling (USA).a26",
+        "profile": "generic",
+        "loadResetRestoreCycles": 3,
+        "passed": true
+      },
+      {
+        "file": "Boxing (USA).a26",
+        "profile": "generic",
+        "loadResetRestoreCycles": 3,
+        "passed": true
+      },
+      {
+        "file": "Frogger (USA).a26",
+        "profile": "generic",
+        "loadResetRestoreCycles": 3,
+        "passed": true
+      },
+      {
+        "file": "Ice Hockey (USA).a26",
+        "profile": "ice-hockey-ntsc",
+        "loadResetRestoreCycles": 3,
+        "passed": true
+      }
+    ],
+    "errors": [],
+    "physicalIPhoneTested": false
+  }
+}

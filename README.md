@@ -2,9 +2,9 @@
 
 A working Windows native-emulation prototype, plus native iOS application source for a tabletop Atari 2600 diorama. A real Stella core runs the cartridge. A separate renderer reconstructs its pixels into individual volumetric objects.
 
-**Current status: Measured Adventure and Ice Hockey profiles plus Tabletop/Vertical world orientation are implemented. All 27 local native tests pass; hosted native, Swift presentation/network tests and the unsigned iPhone archive pass.** The user reports earlier single-device AR worked on their phone. These new profiles and two-phone multiplayer still need physical acceptance. Commercial profiles remain experimental; see [Adventure details](docs/ADVENTURE.md) and [compatibility results](docs/COMPATIBILITY.md).
+**ROM-opening crash fixed:** an ARM64 stack overflow in the common cache reset affected every ROM in build #9. The corrected build passes 28 local tests, constrained worker-stack tests on Linux/Mac, the actual Swift loading queue and the unsigned iPhone archive. Reinstall the corrected IPA and retest on your phone. Adventure/Ice Hockey profiles and physical two-phone acceptance remain experimental. See [the fix and regression coverage](docs/ROM_LOADING_FIX.md).
 
-[Successful Adventure build #9](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39296849358) · [Download IPA and matching source artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39296849358/artifacts/12209586721). Re-sign before installing; use the same updated build on both phones for shared presentation. The artifact expires November 2, 2026 at 12:48 PM EST. The [verification record](docs/evidence/adventure-build.json) identifies the built commit and checksums.
+[Successful crash-fix build #11](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39299234767) · [Download corrected IPA and matching source](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39299234767/artifacts/12212140538). Re-sign before installing; update the existing app without deleting its library. Use the same build on both phones. The artifact expires November 2, 2026 at 1:05 PM EST. The [verification record](docs/evidence/rom-opening-build.json) identifies the built source and checksums.
 
 ## Run the working prototype now
 

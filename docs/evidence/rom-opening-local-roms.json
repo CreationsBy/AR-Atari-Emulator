@@ -1,0 +1,43 @@
+{
+  "stackBytes": 524288,
+  "roms": [
+    {
+      "file": "TabletopTest.a26",
+      "profile": "tabletop-test",
+      "loadResetRestoreCycles": 3,
+      "passed": true
+    },
+    {
+      "file": "Adventure (USA).a26",
+      "profile": "adventure-experimental",
+      "loadResetRestoreCycles": 3,
+      "passed": true
+    },
+    {
+      "file": "Bowling (USA).a26",
+      "profile": "generic",
+      "loadResetRestoreCycles": 3,
+      "passed": true
+    },
+    {
+      "file": "Boxing (USA).a26",
+      "profile": "generic",
+      "loadResetRestoreCycles": 3,
+      "passed": true
+    },
+    {
+      "file": "Frogger (USA).a26",
+      "profile": "generic",
+      "loadResetRestoreCycles": 3,
+      "passed": true
+    },
+    {
+      "file": "Ice Hockey (USA).a26",
+      "profile": "ice-hockey-ntsc",
+      "loadResetRestoreCycles": 3,
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "physicalIPhoneTested": false
+}

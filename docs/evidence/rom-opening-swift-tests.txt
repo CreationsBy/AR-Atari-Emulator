@@ -1,0 +1,28 @@
+PASS: room codes, input authority, scene/audio roundtrip, compression, fragmented/coalesced TCP, malformed/oversized/version packets
+PASS: actual EmulationEngine dispatch-queue ROM load, reset, first frame and save/restore (4 cycles)
+HOST: Not connected
+GUEST: Not connected
+HOST: Not connected
+HOST: Starting room on Wi-Fi…
+HOST: Waiting for Player 2 · same Wi-Fi
+Loopback listener port: 59387
+HOST: Connecting securely…
+HOST: Connection lost or room code rejected. Check Wi-Fi and join again. The operation couldn’t be completed. (Network.NWError error -9846 - bad MAC)
+GUEST: Not connected
+GUEST: Finding room on your Wi-Fi…
+GUEST: Connecting securely…
+HOST: Connecting securely…
+HOST: Player 2 connected
+GUEST: Connected as Player 2
+GUEST: Not connected
+HOST: The other player disconnected.
+GUEST: Not connected
+GUEST: Finding room on your Wi-Fi…
+GUEST: Connecting securely…
+HOST: Connecting securely…
+HOST: Player 2 connected
+GUEST: Connected as Player 2
+PASS: real TLS-PSK loopback, wrong-code rejection, bidirectional input/scene/audio/map delivery, ACK backpressure, third-peer rejection, disconnect/rejoin
+GUEST: Not connected
+HOST: Not connected
+All multiplayer tests passed. Physical Wi-Fi and shared-AR alignment still require two iPhones.

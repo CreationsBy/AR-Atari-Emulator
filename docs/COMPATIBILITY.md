@@ -2,7 +2,15 @@
 
 Updated 2026-10-19. This is a development prototype, not a completed or certified iOS emulator release.
 
-## Adventure update
+## ROM-opening crash regression
+
+[Corrected build #11](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39299234767) passed for `1ce8b7674034bc6724178c5ab904bf989b011cc5`. The iOS ARM64 native stack budget and archive passed. All 390 source files match the built Git blobs; IPA digest/CRC, resources and commercial-ROM exclusion verify. See [the full verification record](evidence/rom-opening-build.json).
+
+The user reports build #9 crashed immediately on opening any ROM, before the camera/game view. The Adventure cache reset used a 605,408-byte ARM64 stack frame on the common load/reset/restore path, exceeding a usual 512 KB worker stack. Windows optimized that temporary away, and the earlier successful host tests/archive did not validate this startup path.
+
+The correction invalidates cache entries in place and reuses raster working storage outside the stack. A 64 KB native frame budget now guards the actual target compilation. All 28 local test methods pass, including the native suites on a 512 KB worker. Three load/reset/restore cycles passed for the demo and all five supplied ROMs on that worker. Hosted Linux passes 26 methods and skips the two private-ROM methods; hosted Mac constrained-stack suites and the real Swift loading queue pass. Physical phone retesting of the corrected build remains pending. See [root cause and regression coverage](ROM_LOADING_FIX.md).
+
+## Earlier Adventure update
 
 [Build #9](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39296849358) passed for commit `7bf94a0c4963b66e651923573a99f6f4b8f5f512`. Xcode 16.4 compiled the 102-source native library and archived the arm64 app. Hosted Swift presentation/adapter and encrypted-transport checks passed. The downloaded IPA passes digest/CRC/resource/device checks, and all 383 matching-source files equal the built commit. No commercial ROM is bundled. See [the build audit](evidence/adventure-build.json).
 

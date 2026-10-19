@@ -1,0 +1,13 @@
+[
+  {
+    "file": "AtariDiorama-UNSIGNED-requires-resigning.ipa",
+    "sha256": "6e71f9dfbea06138fbdd8e71019c840ba4d40aa34074158d305d4a36f2894bce",
+    "bundleID": "org.example.AtariDiorama",
+    "signingMode": "unsigned",
+    "signatureResourcesPresent": false,
+    "requiresResigning": true,
+    "signatureVerifiedOnMac": false,
+    "deviceTested": false,
+    "profileCount": 6
+  }
+]

@@ -1,0 +1,33 @@
+test_actor_translation_reuses_identity_and_local_mesh (test_adventure.AdventureGeometry.test_actor_translation_reuses_identity_and_local_mesh) ... ok
+test_dark_room_does_not_reveal_unrendered_playfield (test_adventure.AdventureGeometry.test_dark_room_does_not_reveal_unrendered_playfield) ... ok
+test_dark_surround_reveals_only_its_rendered_window (test_adventure.AdventureGeometry.test_dark_surround_reveals_only_its_rendered_window) ... ok
+test_items_and_bridge_have_distinct_roles_and_budget_bounds (test_adventure.AdventureGeometry.test_items_and_bridge_have_distinct_roles_and_budget_bounds) ... ok
+test_multiplex_hold_expires_and_room_transition_clears_cache (test_adventure.AdventureGeometry.test_multiplex_hold_expires_and_room_transition_clears_cache) ... ok
+test_same_color_player_and_creature_separate_from_walls (test_adventure.AdventureGeometry.test_same_color_player_and_creature_separate_from_walls) ... ok
+test_exact_rom_castle_key_and_read_only_reconstruction (test_adventure.AdventureSuppliedROM.test_exact_rom_castle_key_and_read_only_reconstruction) ... skipped 'User-supplied Adventure ROM is not distributed to CI'
+test_rink_nets_upright_multicolor_skaters_puck_and_hud (test_ice_hockey.IceHockeyGeometry.test_rink_nets_upright_multicolor_skaters_puck_and_hud) ... ok
+test_semantic_adapter_respects_geometry_budgets (test_ice_hockey.IceHockeyGeometry.test_semantic_adapter_respects_geometry_budgets) ... ok
+test_translation_retains_actor_identity_and_geometry (test_ice_hockey.IceHockeyGeometry.test_translation_retains_actor_identity_and_geometry) ... ok
+test_real_rom_scene_and_read_only_interpretation (test_ice_hockey.IceHockeySuppliedROM.test_real_rom_scene_and_read_only_interpretation) ... skipped 'User-supplied Ice Hockey ROM is not distributed to CI'
+test_received_audio_plays_without_initializing_or_loading_a_rom (test_native.GuestWithoutCartridge.test_received_audio_plays_without_initializing_or_loading_a_rom) ... ok
+test_demo_second_player_takes_over_red_actor (test_native.NativeIntegration.test_demo_second_player_takes_over_red_actor) ... ok
+test_hardware_playfield_collision_is_visible_in_ram (test_native.NativeIntegration.test_hardware_playfield_collision_is_visible_in_ram) ... ok
+test_joystick_simultaneous_fire_audio_and_geometry (test_native.NativeIntegration.test_joystick_simultaneous_fire_audio_and_geometry) ... ok
+test_multiplayer_audio_tap_is_independent_and_guest_playback_preserves_state (test_native.NativeIntegration.test_multiplayer_audio_tap_is_independent_and_guest_playback_preserves_state) ... ok
+test_original_rom_reproducible (test_native.NativeIntegration.test_original_rom_reproducible) ... ok
+test_paddle_capacitor_inputs_and_both_fire_buttons (test_native.NativeIntegration.test_paddle_capacitor_inputs_and_both_fire_buttons) ... ok
+test_real_core_frame_ram_and_tia (test_native.NativeIntegration.test_real_core_frame_ram_and_tia) ... ok
+test_reconstruction_does_not_change_game_state (test_native.NativeIntegration.test_reconstruction_does_not_change_game_state) ... ok
+test_repeated_rom_load_and_paddle_device (test_native.NativeIntegration.test_repeated_rom_load_and_paddle_device) ... ok
+test_room_transition_and_mesh_tracking (test_native.NativeIntegration.test_room_transition_and_mesh_tracking) ... ok
+test_save_restore_deterministic_replay (test_native.NativeIntegration.test_save_restore_deterministic_replay) ... ok
+test_two_joystick_ports_and_fire_buttons_are_independent (test_native.NativeIntegration.test_two_joystick_ports_and_fire_buttons_are_independent) ... ok
+test_budget_and_hud (test_native.Segmentation.test_budget_and_hud) ... ok
+test_holes_and_immediate_deletion (test_native.Segmentation.test_holes_and_immediate_deletion) ... ok
+test_side_view_volumetric_mesh (test_native.Segmentation.test_side_view_volumetric_mesh) ... ok
+test_load_reset_restore_and_profiles_on_512_kib_worker (test_worker_stack.WorkerStackRegression.test_load_reset_restore_and_profiles_on_512_kib_worker) ... ok
+
+----------------------------------------------------------------------
+Ran 28 tests in 1.678s
+
+OK (skipped=2)
