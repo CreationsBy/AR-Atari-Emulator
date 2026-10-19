@@ -1,0 +1,142 @@
+{
+  "romSHA256": "fc8b861d9cf9c9d5f7f7677f22b39d512d249697b69c1e7dcf238c5dc8f44b60",
+  "romMD5": "a4c08c4994eb9d24fb78be1793e82e26",
+  "profileID": "ice-hockey-ntsc-v2",
+  "framesExecuted": 3600,
+  "scenario": "Game 2 selected, Reset, scripted movement and Fire on both ports; no game-state writes",
+  "sourcePlaneFramesMatchedExactly": 3600,
+  "sourcePixelsChecked": 120960000,
+  "sourcePlaneMissingExtraOrOverlappingPixels": 0,
+  "framesWithScoreTimerGeometry": 3598,
+  "framesWithLogoGeometry": 3597,
+  "maximumObjects": 68,
+  "maximumBoxes": 389,
+  "framesWithVisiblePuckCandidate": 3597,
+  "geometryDrops": 0,
+  "analysisMedianMS": 0.58415,
+  "analysisP95MS": 1.0773,
+  "captures": [
+    {
+      "frame": 30,
+      "objects": 47,
+      "boxes": 320,
+      "sourceRGBA256": "d5f0d94b6a115e4010e03c41c7f66ae050f4b601d13bcb61dbae072809ec828a",
+      "projectedRGBA256": "d5f0d94b6a115e4010e03c41c7f66ae050f4b601d13bcb61dbae072809ec828a",
+      "sourcePlanePixelMatch": true,
+      "scoreTimerComponents": 1,
+      "logoComponents": 9
+    },
+    {
+      "frame": 125,
+      "objects": 59,
+      "boxes": 373,
+      "sourceRGBA256": "72966aa58715ebd48dfa9df9b7cada612171d7b945684310ed8bc1c5bb5bd69b",
+      "projectedRGBA256": "72966aa58715ebd48dfa9df9b7cada612171d7b945684310ed8bc1c5bb5bd69b",
+      "sourcePlanePixelMatch": true,
+      "scoreTimerComponents": 9,
+      "logoComponents": 9
+    },
+    {
+      "frame": 240,
+      "objects": 64,
+      "boxes": 383,
+      "sourceRGBA256": "00b41c8811cb4e5a514ea48865d3b21c3faa46c529ace625d09380434e9e075d",
+      "projectedRGBA256": "00b41c8811cb4e5a514ea48865d3b21c3faa46c529ace625d09380434e9e075d",
+      "sourcePlanePixelMatch": true,
+      "scoreTimerComponents": 9,
+      "logoComponents": 9
+    },
+    {
+      "frame": 399,
+      "objects": 56,
+      "boxes": 363,
+      "sourceRGBA256": "a10a10ec726c3c180eb45764be57e4fbc5a0f3d85f7731f119dc51de57731cb3",
+      "projectedRGBA256": "a10a10ec726c3c180eb45764be57e4fbc5a0f3d85f7731f119dc51de57731cb3",
+      "sourcePlanePixelMatch": true,
+      "scoreTimerComponents": 8,
+      "logoComponents": 9
+    },
+    {
+      "frame": 499,
+      "objects": 56,
+      "boxes": 375,
+      "sourceRGBA256": "de015218f081eced97bd34b87e78734766c8402aee466a3e1fff2f9d99a172ea",
+      "projectedRGBA256": "de015218f081eced97bd34b87e78734766c8402aee466a3e1fff2f9d99a172ea",
+      "sourcePlanePixelMatch": true,
+      "scoreTimerComponents": 8,
+      "logoComponents": 9
+    },
+    {
+      "frame": 700,
+      "objects": 57,
+      "boxes": 375,
+      "sourceRGBA256": "b1cda53ef4df327b6aada4c81a91c18564440d6d6b67957cd00e82ac6181ffc7",
+      "projectedRGBA256": "b1cda53ef4df327b6aada4c81a91c18564440d6d6b67957cd00e82ac6181ffc7",
+      "sourcePlanePixelMatch": true,
+      "scoreTimerComponents": 9,
+      "logoComponents": 9
+    },
+    {
+      "frame": 900,
+      "objects": 60,
+      "boxes": 357,
+      "sourceRGBA256": "5d56cb3852f90a377de51c3772d7d1b2ab4f305d0b73ff317e678e2a4f65884b",
+      "projectedRGBA256": "5d56cb3852f90a377de51c3772d7d1b2ab4f305d0b73ff317e678e2a4f65884b",
+      "sourcePlanePixelMatch": true,
+      "scoreTimerComponents": 10,
+      "logoComponents": 9
+    },
+    {
+      "frame": 1199,
+      "objects": 64,
+      "boxes": 378,
+      "sourceRGBA256": "61172f2d9263f312563e11be40a37f6bac0876217c9ef9dc336905fa43e3a25f",
+      "projectedRGBA256": "61172f2d9263f312563e11be40a37f6bac0876217c9ef9dc336905fa43e3a25f",
+      "sourcePlanePixelMatch": true,
+      "scoreTimerComponents": 10,
+      "logoComponents": 9
+    },
+    {
+      "frame": 1799,
+      "objects": 59,
+      "boxes": 352,
+      "sourceRGBA256": "912f871fd9ce622cc747a50aa6c259c2fe43dc4b2e4293d2ac8fd384f22278fa",
+      "projectedRGBA256": "912f871fd9ce622cc747a50aa6c259c2fe43dc4b2e4293d2ac8fd384f22278fa",
+      "sourcePlanePixelMatch": true,
+      "scoreTimerComponents": 11,
+      "logoComponents": 9
+    },
+    {
+      "frame": 2399,
+      "objects": 58,
+      "boxes": 368,
+      "sourceRGBA256": "5f2f17ac99d8879315b9a6dc8c2610d80c87bb3fcc9586746a2bed52977b346a",
+      "projectedRGBA256": "5f2f17ac99d8879315b9a6dc8c2610d80c87bb3fcc9586746a2bed52977b346a",
+      "sourcePlanePixelMatch": true,
+      "scoreTimerComponents": 10,
+      "logoComponents": 9
+    },
+    {
+      "frame": 2999,
+      "objects": 55,
+      "boxes": 357,
+      "sourceRGBA256": "e4599f593ef36d523b749a9d9ec5e5818689d542d16d96875eb600dee0036de6",
+      "projectedRGBA256": "e4599f593ef36d523b749a9d9ec5e5818689d542d16d96875eb600dee0036de6",
+      "sourcePlanePixelMatch": true,
+      "scoreTimerComponents": 8,
+      "logoComponents": 9
+    },
+    {
+      "frame": 3599,
+      "objects": 54,
+      "boxes": 362,
+      "sourceRGBA256": "dd7f005ae2aff018d3a40686d0708ac669ed9d8c9f7644f91f709ac0da9dbd80",
+      "projectedRGBA256": "dd7f005ae2aff018d3a40686d0708ac669ed9d8c9f7644f91f709ac0da9dbd80",
+      "sourcePlanePixelMatch": true,
+      "scoreTimerComponents": 8,
+      "logoComponents": 9
+    }
+  ],
+  "iPhoneProfileTested": false,
+  "note": "Exact source-plane shape/color verification on host. Depth is an interpretation of a 2D game; physical iPhone rendering is not established by this check."
+}

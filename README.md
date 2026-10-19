@@ -2,9 +2,9 @@
 
 A working Windows native-emulation prototype, plus native iOS application source for a tabletop Atari 2600 diorama. A real Stella core runs the cartridge. A separate renderer reconstructs its pixels into individual volumetric objects.
 
-**ROM-opening crash fixed:** an ARM64 stack overflow in the common cache reset affected every ROM in build #9. The corrected build passes 28 local tests, constrained worker-stack tests on Linux/Mac, the actual Swift loading queue and the unsigned iPhone archive. Reinstall the corrected IPA and retest on your phone. Adventure/Ice Hockey profiles and physical two-phone acceptance remain experimental. See [the fix and regression coverage](docs/ROM_LOADING_FIX.md).
+**Ice Hockey now uses the complete original artwork as 3D voxel geometry, including live scores, timer and Activision logo.** Added boards/nets/pedestal and the separate score overlay are removed. All 120,960,000 pixels in 3,600 captured frames matched their original source-plane positions/colors exactly. All 32 local tests and the unsigned iPhone build pass; physical phone acceptance remains pending. The previous ROM-opening stack fix is preserved. See [Ice Hockey details](docs/ICE_HOCKEY.md).
 
-[Successful crash-fix build #11](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39299234767) · [Download corrected IPA and matching source](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39299234767/artifacts/12212140538). Re-sign before installing; update the existing app without deleting its library. Use the same build on both phones. The artifact expires November 2, 2026 at 1:05 PM EST. The [verification record](docs/evidence/rom-opening-build.json) identifies the built source and checksums.
+[Successful original-art build #14](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39320563294) · [Download IPA and matching source](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39320563294/artifacts/12220630598). Re-sign before installing, then reopen Ice Hockey to select v2. Use the same build on both phones. The artifact expires November 2, 2026 at 3:38 PM EST. The [verification record](docs/evidence/ice-hockey-faithful-build.json) identifies the built source and checksums.
 
 ## Run the working prototype now
 
@@ -31,7 +31,7 @@ On a different Windows computer, install Python 3.12+, then use `scripts/Build-W
 - An original 4 KB cartridge with joystick movement, an autonomous actor, playfield obstacles, hardware collision feedback, a Fire missile, TIA sound and room-color transitions. Its source and reproducible assembler are included.
 - SwiftUI library, Files import, touch joystick/Fire, console switches, two-player selection, paddle slider, Bluetooth gamepad mapping, settings and a diagnostic inspector.
 - A measured exact-hash [Adventure profile](docs/ADVENTURE.md) with raised walls/castle masses, animated gates, a separate player, standing creatures/items and a bridge interpretation. Read-only cartridge graphics stay private; complete gameplay/device acceptance remains open.
-- An experimental exact-hash Ice Hockey profile with a thin rink, raised boards, goal frames/nets, standing multicolor skaters and visible puck candidates. Your commercial ROM stays local.
+- An exact-hash [Ice Hockey original-art relief](docs/ICE_HOCKEY.md): complete game pixels including live scores, timer and Activision logo are voxel geometry. No added boards/nets/pedestal or separate score UI. Captured source-plane footprints and colors match exactly; physical acceptance remains pending.
 - Settings → Miniature world → World orientation → **Vertical** stands the game world upright on its bottom edge; **Tabletop** restores the horizontal view. The host shares this choice with Player 2.
 - RealityKit meshes with per-object updates and cached geometry. ARKit horizontal-plane preview, tap placement, world anchor, physical camera view, pinch/rotation, size presets, tilt and virtual inspection cameras.
 - Original audio through a bounded native ring and AVAudioSourceNode; pause/resume; ROM/core/profile/controller-bound save files; scene reconstruction after restore.

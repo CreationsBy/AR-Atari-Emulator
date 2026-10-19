@@ -2,7 +2,15 @@
 
 Updated 2026-10-19. This is a development prototype, not a completed or certified iOS emulator release.
 
-## ROM-opening crash regression
+## Complete original-art Ice Hockey update
+
+[Build #14](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39320563294) passed for `8ac791b6c03a40c34937a09e2e87e52d5eead113`. Hosted Linux passes 30 methods and skips two private-ROM methods; hosted Mac passes the constrained-stack suites, actual loading queue, profile/presentation rules and encrypted transport. Xcode 16.4 compiled the unlit RealityKit renderer and archived ARM64 successfully. IPA/source CRC and digest checks pass; all 401 source files match the built commit and no commercial ROM is bundled. See [the build record](evidence/ice-hockey-faithful-build.json).
+
+The supplied ROM now selects `ice-hockey-ntsc-v2` / `iceHockeyNTSCv2`. The complete live frame, including both scores, timer and Activision logo, is voxel geometry in the world. Added boards, posts, nets, RAM-derived standing poses and presentation pedestal are removed. Original pixel shapes/positions/colors are retained, with depth as the only added dimension. Text uses shallow relief; the renderer uses unlit colors and disables the separate score HUD for this profile.
+
+An independent box-footprint projection matched every RGBA pixel in all 3,600 captured frames: 120,960,000 checked pixels, no missing/extra/overlapping footprints and no geometry drops. The scene peaked at 68 objects / 389 boxes. All 32 local native methods pass, including constrained worker-stack coverage. Offline Tabletop/Vertical renders were inspected with readable original lettering. This verifies source-plane artwork, not arbitrary-perspective AR screenshots or a nonexistent original 3D scene. Physical phone acceptance remains pending. See [profile details](ICE_HOCKEY.md) and [measured results](evidence/ice-hockey-faithful-validation.json).
+
+## Earlier ROM-opening crash regression
 
 [Corrected build #11](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39299234767) passed for `1ce8b7674034bc6724178c5ab904bf989b011cc5`. The iOS ARM64 native stack budget and archive passed. All 390 source files match the built Git blobs; IPA digest/CRC, resources and commercial-ROM exclusion verify. See [the full verification record](evidence/rom-opening-build.json).
 
@@ -69,7 +77,7 @@ Xcode reported two nonblocking warnings: skipped AppIntents metadata extraction 
 | Combat NTSC | Stella database MD5 | No ROM supplied | Experimental maze/vehicle/projectile candidates | Pending |
 | Breakout NTSC | Two Stella database MD5s | No ROM supplied | Experimental paddle/ball/brick formations; adjacent bricks can merge | Pending |
 | Pitfall! NTSC | Stella database MD5 | No ROM supplied | Experimental upright layers; semantic objects/animation incomplete | Pending |
-| Ice Hockey NTSC | Exact supplied SHA-256 and Stella MD5 | Yes, 3,600 local frames and save-byte invariance | Experimental dedicated native adapter; rink, goals, standing skaters and puck candidates | New profile pending |
+| Ice Hockey NTSC | Exact supplied SHA-256 and Stella MD5 | Yes, 3,600 complete-frame pixel matches and save-byte invariance | Original-art voxel relief including live scores/timer/logo; no authored rink details | New profile pending |
 | Unknown raw ROM | Computed SHA-256/MD5 | Depends on core/cart | Generic color components and heuristic depth, no accuracy guarantee | Pending |
 
 The emulator's broad cartridge support is inherited from Stella; the original fixtures and exact supplied Ice Hockey and Adventure revisions were exercised here. Its older baseline does not imply current Stella accuracy or compatibility with every modern homebrew cart. The frontend intentionally excludes streaming MovieCart and data over 1 MB. Generic output may lose same-color objects against backgrounds, split multicolor sprites, merge overlapping shapes, misclassify scenery or flicker with multiplexed sprites.
