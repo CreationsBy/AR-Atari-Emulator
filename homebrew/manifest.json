@@ -1,0 +1,17 @@
+{
+  "title": "Tabletop Test",
+  "sha256": "e1b260aaa4cfb8e38e7a7d8b331615ae44b42a6926b13167b0dc43051c9bdf9b",
+  "size": 4096,
+  "ram": {
+    "PlayerX": 0,
+    "PlayerY": 1,
+    "EnemyX": 2,
+    "Counter": 3,
+    "Fire": 4,
+    "Room": 5,
+    "Collision": 6,
+    "Temp0": 7,
+    "Temp1": 8,
+    "SelectHeld": 9
+  }
+}

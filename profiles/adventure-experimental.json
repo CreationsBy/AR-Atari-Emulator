@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "adventure-ntsc-experimental-v1",
+  "title": "Adventure",
+  "sha256": [],
+  "md5": ["157bddb7192754a45372be196797f284"],
+  "compatibility": "experimental",
+  "notes": "NTSC hash from Stella DefProps.hxx. Size rules give rooms tall walls and small items volume. No commercial ROM was available for validation. Dragons, castles, held items and room transitions need authored semantic rules; this is not full profile support.",
+  "controller": "joystick",
+  "perspective": "topDown",
+  "backgroundIndex": -1,
+  "hudTop": 0.08,
+  "hudBottom": 0,
+  "sceneRAMOffset": -1,
+  "defaultHeight": 0.035,
+  "rules": [
+    {"name": "Room walls", "role": 1, "minWidth": 0.22, "minHeight": 0.06, "height": 0.12},
+    {"name": "Player square candidate", "role": 2, "maxWidth": 0.045, "maxHeight": 0.045, "height": 0.04},
+    {"name": "Dragon or item silhouette", "role": 2, "maxWidth": 0.20, "maxHeight": 0.40, "height": 0.055}
+  ]
+}

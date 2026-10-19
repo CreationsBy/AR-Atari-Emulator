@@ -1,0 +1,7 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {"label": "Build and test Windows native core", "type": "shell", "command": "powershell", "args": ["-NoProfile", "-File", "${workspaceFolder}\\scripts\\Build-Windows.ps1"], "problemMatcher": [], "group": "build"},
+    {"label": "Run live 3D emulator preview", "type": "shell", "command": "powershell", "args": ["-NoProfile", "-File", "${workspaceFolder}\\scripts\\Start-Preview.ps1"], "problemMatcher": []}
+  ]
+}

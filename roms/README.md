@@ -1,0 +1,1 @@
+Commercial ROMs are not distributed with this project. Import your own legally obtained cartridges through Files on the iPhone. The original, redistributable Tabletop Test cartridge is in ios/Resources and its assembly source is in homebrew.

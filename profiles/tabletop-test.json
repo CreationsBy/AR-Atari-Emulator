@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "id": "tabletop-test-v1",
+  "title": "Tabletop Test",
+  "sha256": [
+    "e1b260aaa4cfb8e38e7a7d8b331615ae44b42a6926b13167b0dc43051c9bdf9b"
+  ],
+  "md5": [],
+  "compatibility": "development",
+  "notes": "Original 4 KB cartridge. Blue player, red moving actor, room-dependent walls, Fire missile and TIA tone. Validated headlessly; iPhone validation pending.",
+  "controller": "joystick",
+  "perspective": "topDown",
+  "backgroundIndex": 0,
+  "hudTop": 0,
+  "hudBottom": 0,
+  "sceneRAMOffset": 5,
+  "defaultHeight": 0.025,
+  "rules": [
+    {
+      "name": "Blue player",
+      "colorIndex": 132,
+      "role": 2,
+      "height": 0.045
+    },
+    {
+      "name": "Red actor",
+      "colorIndex": 70,
+      "role": 2,
+      "height": 0.06
+    },
+    {
+      "name": "Green room walls",
+      "colorIndex": 200,
+      "role": 1,
+      "height": 0.1
+    },
+    {
+      "name": "Orange room walls",
+      "colorIndex": 40,
+      "role": 1,
+      "height": 0.1
+    }
+  ]
+}

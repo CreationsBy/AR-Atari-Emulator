@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "combat-ntsc-experimental-v1",
+  "title": "Combat",
+  "sha256": [],
+  "md5": ["4c8832ed387bbafc055320c05205bc08"],
+  "compatibility": "experimental",
+  "notes": "Unvalidated NTSC size-based rules. Tank/aircraft variants require more profiles. No commercial ROM included or tested.",
+  "controller": "joystick",
+  "perspective": "topDown",
+  "backgroundIndex": -1,
+  "hudTop": 0.15,
+  "hudBottom": 0,
+  "sceneRAMOffset": -1,
+  "defaultHeight": 0.035,
+  "rules": [
+    {"name": "Projectile candidates", "role": 3, "maxWidth": 0.03, "maxHeight": 0.04, "height": 0.016, "elevation": 0.025},
+    {"name": "Maze candidates", "role": 1, "minWidth": 0.16, "height": 0.10},
+    {"name": "Vehicles", "role": 2, "maxWidth": 0.14, "height": 0.05}
+  ]
+}

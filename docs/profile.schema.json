@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Atari Diorama conversion profile v1",
+  "type": "object",
+  "required": ["schemaVersion","id","title","sha256","md5","compatibility","notes","controller","perspective","backgroundIndex","hudTop","hudBottom","sceneRAMOffset","defaultHeight","rules"],
+  "properties": {
+    "schemaVersion": {"const":1}, "id":{"type":"string","minLength":1}, "title":{"type":"string"}, "notes":{"type":"string"},
+    "sha256":{"type":"array","items":{"type":"string","pattern":"^[a-f0-9]{64}$"}},
+    "md5":{"type":"array","items":{"type":"string","pattern":"^[a-f0-9]{32}$"}},
+    "compatibility":{"enum":["development","experimental","generic","full"]},
+    "controller":{"enum":["joystick","paddles"]}, "perspective":{"enum":["topDown","sideView"]},
+    "backgroundIndex":{"type":"integer","minimum":-1,"maximum":255},
+    "sceneRAMOffset":{"type":"integer","minimum":-1,"maximum":127},
+    "hudTop":{"type":"number","minimum":0,"exclusiveMaximum":1}, "hudBottom":{"type":"number","minimum":0,"exclusiveMaximum":1},
+    "defaultHeight":{"type":"number","exclusiveMinimum":0,"maximum":0.5},
+    "rules":{"type":"array","maxItems":128,"items":{"type":"object","required":["name","role","height"],"properties":{
+      "name":{"type":"string"}, "role":{"type":"integer","minimum":0,"maximum":5},
+      "colorIndex":{"type":"integer","minimum":-1,"maximum":255},
+      "minX":{"$ref":"#/$defs/unit"},"maxX":{"$ref":"#/$defs/unit"},"minY":{"$ref":"#/$defs/unit"},"maxY":{"$ref":"#/$defs/unit"},
+      "minWidth":{"$ref":"#/$defs/unit"},"maxWidth":{"$ref":"#/$defs/unit"},"minHeight":{"$ref":"#/$defs/unit"},"maxHeight":{"$ref":"#/$defs/unit"},
+      "height":{"type":"number","exclusiveMinimum":0,"maximum":0.5}, "elevation":{"type":"number","minimum":-0.5,"maximum":1},
+      "pattern":{"type":"string","pattern":"^[a-fA-F0-9]{16}$"}
+    },"additionalProperties":false}},
+    "program":{"type":"array","maxItems":128,"items":{"type":"object","required":["ramOffset","mask","equals","ruleIndex"],"properties":{
+      "ramOffset":{"type":"integer","minimum":0,"maximum":127}, "mask":{"type":"integer","minimum":0,"maximum":255},
+      "equals":{"type":"integer","minimum":0,"maximum":255}, "ruleIndex":{"type":"integer","minimum":0,"maximum":127},
+      "height":{"type":"number","exclusiveMinimum":0,"maximum":0.5},"elevation":{"type":"number","minimum":-0.5,"maximum":1}
+    },"additionalProperties":false}}
+  },
+  "additionalProperties":false,
+  "$defs":{"unit":{"type":"number","minimum":0,"maximum":1}}
+}

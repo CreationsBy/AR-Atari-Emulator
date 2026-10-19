@@ -1,0 +1,95 @@
+name: Build and verify iOS prototype
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      signing:
+        description: IPA signing mode
+        type: choice
+        options: [unsigned, development, ad-hoc]
+        default: unsigned
+      bundle_id:
+        description: Bundle identifier (must match a signed provisioning profile)
+        default: org.example.AtariDiorama
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  native-tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python scripts/verify_vendor.py
+      - run: python scripts/assemble_homebrew.py
+      - run: python scripts/validate_project.py
+      - run: python scripts/build_native.py --jobs 4
+      - name: Real emulator and reconstruction tests
+        shell: bash
+        run: |
+          set -o pipefail
+          python -m unittest discover -s tests -v 2>&1 | tee build/native-test-results.txt
+      - run: python scripts/capture_evidence.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-validation
+          path: |
+            build/native-test-results.txt
+            build/evidence/
+  ios:
+    needs: native-tests
+    runs-on: macos-15
+    timeout-minutes: 45
+    env:
+      SIGNING_MODE: ${{ inputs.signing || 'unsigned' }}
+      BUNDLE_ID: ${{ inputs.bundle_id || 'org.example.AtariDiorama' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inspect Apple tools and install project generator
+        run: |
+          xcodebuild -version
+          xcrun --sdk iphoneos --show-sdk-version
+          if ! command -v xcodegen >/dev/null; then brew install xcodegen; fi
+          xcodegen --version
+      - name: Prepare signed build
+        if: env.SIGNING_MODE != 'unsigned'
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          BUILD_PROVISION_PROFILE_BASE64: ${{ secrets.BUILD_PROVISION_PROFILE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+        run: python scripts/signing.py prepare
+      - name: Build device archive and package IPA
+        run: bash scripts/build_ios.sh
+      - name: Package matching source for GPL distribution
+        run: python scripts/package_source.py
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: AtariDiorama-${{ env.SIGNING_MODE }}
+          path: |
+            build/ipa/*
+            build/deliverables/AtariDiorama-source.zip
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios-build-logs
+          path: |
+            build/logs/
+            build/archive-results.xcresult/
+          retention-days: 7
+      - name: Remove temporary signing credentials
+        if: always() && env.SIGNING_MODE != 'unsigned'
+        run: python scripts/signing.py cleanup

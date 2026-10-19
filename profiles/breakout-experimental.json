@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "breakout-ntsc-experimental-v1",
+  "title": "Breakout",
+  "sha256": [],
+  "md5": ["f34f08e5eb96e500e851a80be3277a56", "4df6124093ccb4f0b6c26a719f4b7706"],
+  "compatibility": "experimental",
+  "notes": "Unvalidated size/position rules. Absolute paddle input selected. Adjacent same-color bricks may merge until gaps open; per-brick semantic segmentation is pending. No commercial ROM included or tested.",
+  "controller": "paddles",
+  "perspective": "topDown",
+  "backgroundIndex": -1,
+  "hudTop": 0.15,
+  "hudBottom": 0,
+  "sceneRAMOffset": -1,
+  "defaultHeight": 0.035,
+  "rules": [
+    {"name": "Ball candidate", "role": 3, "maxWidth": 0.035, "maxHeight": 0.04, "height": 0.02, "elevation": 0.015},
+    {"name": "Paddle candidate", "role": 2, "minY": 0.75, "maxWidth": 0.25, "height": 0.035},
+    {"name": "Brick formations", "role": 4, "maxY": 0.60, "height": 0.06}
+  ]
+}

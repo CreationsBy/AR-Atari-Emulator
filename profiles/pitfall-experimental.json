@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "pitfall-ntsc-experimental-v1",
+  "title": "Pitfall!",
+  "sha256": [],
+  "md5": ["3e90cf23106f2e08b2781e41299de556"],
+  "compatibility": "experimental",
+  "notes": "Unvalidated upright silhouette layers. Trees, ladders, pits and animation semantics remain unauthored. Original side-view gameplay is unchanged.",
+  "controller": "joystick",
+  "perspective": "sideView",
+  "backgroundIndex": -1,
+  "hudTop": 0.16,
+  "hudBottom": 0,
+  "sceneRAMOffset": -1,
+  "defaultHeight": 0.04,
+  "rules": [
+    {"name": "Landscape", "role": 5, "minWidth": 0.35, "height": 0.025, "elevation": -0.055},
+    {"name": "Actor candidates", "role": 2, "maxWidth": 0.15, "height": 0.045, "elevation": 0.02}
+  ]
+}

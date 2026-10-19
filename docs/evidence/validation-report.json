@@ -1,0 +1,32 @@
+{
+  "core": {
+    "core_revision": "7d1361e407e63f29e52892655069e5fb4096e691",
+    "platform": "host",
+    "sources": 100
+  },
+  "romSHA256": "e1b260aaa4cfb8e38e7a7d8b331615ae44b42a6926b13167b0dc43051c9bdf9b",
+  "framesExecuted": 240,
+  "frameSize": [
+    160,
+    210
+  ],
+  "requestedFPS": 59.92,
+  "audioSampleRate": 31400.0,
+  "headlessWallSeconds": 0.24342699999942852,
+  "headlessThroughputFPS": 985.9218574790941,
+  "reconstructionMedianMS": 0.2115,
+  "reconstructionP95MS": 0.3192,
+  "objects": 9,
+  "boxes": 42,
+  "droppedObjects": 0,
+  "tiaWritesLastFrame": 824,
+  "tiaTraceDropped": 0,
+  "joystickBefore": 68,
+  "joystickAfter20Frames": 88,
+  "audioFramesCaptured": 125760,
+  "audioNonzeroSamples": 125756,
+  "iOSCompiled": false,
+  "iPhoneTested": false,
+  "ARTested": false,
+  "note": "Host-only evidence. Throughput includes Python capture overhead; not an iPhone FPS measurement."
+}

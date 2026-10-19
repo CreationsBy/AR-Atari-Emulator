@@ -1,0 +1,9 @@
+* text=auto
+*.sh text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
+*.a26 binary
+*.png binary
+*.wav binary
+third_party/stella2014/** -text
+
