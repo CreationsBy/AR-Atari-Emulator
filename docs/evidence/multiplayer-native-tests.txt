@@ -1,0 +1,21 @@
+test_received_audio_plays_without_initializing_or_loading_a_rom (test_native.GuestWithoutCartridge.test_received_audio_plays_without_initializing_or_loading_a_rom) ... ok
+test_demo_second_player_takes_over_red_actor (test_native.NativeIntegration.test_demo_second_player_takes_over_red_actor) ... ok
+test_hardware_playfield_collision_is_visible_in_ram (test_native.NativeIntegration.test_hardware_playfield_collision_is_visible_in_ram) ... ok
+test_joystick_simultaneous_fire_audio_and_geometry (test_native.NativeIntegration.test_joystick_simultaneous_fire_audio_and_geometry) ... ok
+test_multiplayer_audio_tap_is_independent_and_guest_playback_preserves_state (test_native.NativeIntegration.test_multiplayer_audio_tap_is_independent_and_guest_playback_preserves_state) ... ok
+test_original_rom_reproducible (test_native.NativeIntegration.test_original_rom_reproducible) ... ok
+test_paddle_capacitor_inputs_and_both_fire_buttons (test_native.NativeIntegration.test_paddle_capacitor_inputs_and_both_fire_buttons) ... ok
+test_real_core_frame_ram_and_tia (test_native.NativeIntegration.test_real_core_frame_ram_and_tia) ... ok
+test_reconstruction_does_not_change_game_state (test_native.NativeIntegration.test_reconstruction_does_not_change_game_state) ... ok
+test_repeated_rom_load_and_paddle_device (test_native.NativeIntegration.test_repeated_rom_load_and_paddle_device) ... ok
+test_room_transition_and_mesh_tracking (test_native.NativeIntegration.test_room_transition_and_mesh_tracking) ... ok
+test_save_restore_deterministic_replay (test_native.NativeIntegration.test_save_restore_deterministic_replay) ... ok
+test_two_joystick_ports_and_fire_buttons_are_independent (test_native.NativeIntegration.test_two_joystick_ports_and_fire_buttons_are_independent) ... ok
+test_budget_and_hud (test_native.Segmentation.test_budget_and_hud) ... ok
+test_holes_and_immediate_deletion (test_native.Segmentation.test_holes_and_immediate_deletion) ... ok
+test_side_view_volumetric_mesh (test_native.Segmentation.test_side_view_volumetric_mesh) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.420s
+
+OK

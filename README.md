@@ -2,9 +2,9 @@
 
 A working Windows native-emulation prototype, plus native iOS application source for a tabletop Atari 2600 diorama. A real Stella core runs the cartridge. A separate renderer reconstructs its pixels into individual volumetric objects.
 
-**Current status: 16 native tests pass. The user reports that the earlier build's AR works with the test cartridge and their own Atari ROMs on their iPhone. Private Wi-Fi multiplayer is implemented and undergoing hosted verification; its two-phone AR behavior still needs device testing.** The commercial game profiles remain explicit experiments rather than independently certified compatibility results. See [compatibility and milestone results](docs/COMPATIBILITY.md).
+**Current status: 16 native tests, encrypted two-endpoint multiplayer tests and the iPhone archive all pass. The user reports that the earlier build's AR works with the test cartridge and their own Atari ROMs on their iPhone. The new Wi-Fi multiplayer build still needs testing on two physical iPhones.** The commercial game profiles remain explicit experiments rather than independently certified compatibility results. See [compatibility and milestone results](docs/COMPATIBILITY.md).
 
-[Successful unsigned build #1](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39179809317) · [Download IPA and matching source artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39179809317/artifacts/12155528893). The hosted artifact expires November 1, 2026 at 7:15 PM EST; later pushes can produce a fresh build. Its [verification record](docs/evidence/ios-build.json) identifies the exact built commit and IPA checksum.
+[Successful multiplayer build #5](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963) · [Download IPA and matching source artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963/artifacts/12157618280). Re-sign and install the same new build on both iPhones. The hosted artifact expires November 1, 2026 at 8:25 PM EST; later pushes can produce a fresh build. Its [verification record](docs/evidence/multiplayer-build.json) identifies the exact built commit and IPA checksum.
 
 ## Run the working prototype now
 

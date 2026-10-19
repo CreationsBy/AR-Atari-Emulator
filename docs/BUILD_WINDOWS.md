@@ -1,6 +1,6 @@
 # Windows editing, hosted iOS builds and sideloading
 
-No local Mac, Xcode or local VM is needed. Source edits and native validation happen on Windows. Apple's device compilation happens on a hosted Mac. [Unsigned build #1 passed](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39179809317) with Xcode 16.4 and the iPhoneOS 18.5 SDK.
+No local Mac, Xcode or local VM is needed. Source edits and native validation happen on Windows. Apple's device compilation happens on a hosted Mac. [Multiplayer build #5 passed](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963) with Xcode 16.4 and the iPhoneOS 18.5 SDK. Install the same multiplayer build on both phones and follow [the Wi-Fi host/join walkthrough](LOCAL_MULTIPLAYER.md).
 
 ## 1. Open and validate the project
 
@@ -45,18 +45,20 @@ The push to `main` starts **Build and verify iOS prototype**. You can also selec
 The workflow:
 
 1. Verifies vendored source and original-ROM hashes on Linux.
-2. Builds the native core, runs twelve test methods and captures evidence.
+2. Builds the native core, runs sixteen test methods and captures evidence.
 3. Starts a GitHub-hosted `macos-15` runner and records its Xcode/SDK versions.
 4. Installs XcodeGen if needed and generates `ios/AtariDiorama.xcodeproj` from the checked-in YAML.
 5. Cross-compiles an arm64 iOS static core with the selected SDK and iOS 16 minimum deployment target.
 6. Builds an iPhone device archive, packages a conventional `Payload/AtariDiorama.app` IPA, and verifies structure and required resources.
 7. Uploads the IPA, a signing-status manifest, the complete matching source ZIP, and build logs.
 
+Before the device archive, the Mac also compiles and runs the multiplayer protocol and actual encrypted two-endpoint loopback tests. A failing test prevents the IPA artifact from being published as a successful build.
+
 No signing secrets are required for `unsigned`. Its filename is **AtariDiorama-UNSIGNED-requires-resigning.ipa**. This is a package for a signing tool, not an app that can already be installed and launched.
 
 On a green run, open the run's **Artifacts** section and download `AtariDiorama-unsigned`. Extract the downloaded artifact ZIP to find the `.ipa`. On failure, download `ios-build-logs` and inspect `xcode-archive.log`, `native-ios.log` and the result bundle. `pipefail` prevents a successful `tee` command from concealing an Xcode failure.
 
-The first Apple compilation succeeded without source fixes. [Download the verified unsigned artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39179809317/artifacts/12155528893) before its November 1, 2026, 7:15 PM EST expiration, or run the workflow again. A local verified copy is at `build/deliverables/AtariDiorama-UNSIGNED-requires-resigning.ipa`, alongside `artifact-manifest.json` and the matching `AtariDiorama-source.zip`. The complete original downloads and logs are under `build/github-run-1/`. Build details and checksum are recorded in [the verification record](evidence/ios-build.json).
+The multiplayer Apple archive and all automated tests passed. [Download the verified unsigned artifact](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963/artifacts/12157618280) before its November 1, 2026, 8:25 PM EST expiration, or run the workflow again. A local verified copy is at `build/deliverables/AtariDiorama-UNSIGNED-requires-resigning.ipa`, alongside `artifact-manifest.json` and the matching `AtariDiorama-source.zip`. The complete downloads and logs are under `build/github-run-5/`; the earlier build is retained in `build/github-run-1/`. Build details and checksum are recorded in [the verification record](evidence/multiplayer-build.json). Physical two-phone multiplayer testing remains pending.
 
 ## 4. Install with a free Apple account from Windows
 

@@ -1,0 +1,87 @@
+{
+  "verifiedDate": "2026-10-18",
+  "timezone": "America/New_York",
+  "repository": "CreationsBy/AR-Atari-Emulator",
+  "run": {
+    "id": 39185044963,
+    "number": 5,
+    "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963",
+    "commit": "e14eb626c5e9b11c9852c9763ba2d8e113e737ad",
+    "tree": "82c250a4bfa1e8218a50642cc39f40ff74cb17cc",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "native": {
+    "windowsTestsPassed": 16,
+    "hostedUbuntuTestsPassed": 16,
+    "sourcesCompiled": 100,
+    "vendorFilesVerified": 286
+  },
+  "network": {
+    "hostedMacTestsPassed": true,
+    "transport": "Network.framework TLS 1.2 PSK / AES-128-GCM",
+    "discovery": "Bonjour _atari-ar._tcp",
+    "releaseInterface": "Wi-Fi only; peer-to-peer disabled",
+    "testedInterface": "TCP loopback",
+    "checks": [
+      "Room-code generation and normalization",
+      "Guest input authority and finite paddle values",
+      "Geometry, pixels and PCM roundtrip",
+      "Compression and fragmented/coalesced TCP framing",
+      "Malformed, oversized, truncated and incompatible messages rejected",
+      "Actual TLS connection and incorrect-code rejection",
+      "Bidirectional input, scene, PCM and map-blob transport",
+      "Frame ACK backpressure and bounded retained audio",
+      "Third peer rejected",
+      "Disconnect and rejoin"
+    ]
+  },
+  "ios": {
+    "runner": "macos-15",
+    "xcode": "16.4",
+    "xcodeBuild": "16F6",
+    "sdk": "iPhoneOS 18.5",
+    "deploymentTarget": "16.0",
+    "architecture": "arm64",
+    "archiveSucceeded": true
+  },
+  "artifacts": [
+    {
+      "id": 12158175343,
+      "name": "ios-build-logs",
+      "sha256": "ac513e44465878aeb8c351ac911737c18578ac67ac5e48d4db7a196f45a4d35d",
+      "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963/artifacts/12158175343",
+      "expiresAt": "2026-10-26T01:25:20Z"
+    },
+    {
+      "id": 12158035392,
+      "name": "native-validation",
+      "sha256": "9b73c3cd5dacb9f20f544589035979bb55dceb57ed9cf3e37821e5a09180f998",
+      "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963/artifacts/12158035392",
+      "expiresAt": "2027-01-17T01:22:23Z"
+    },
+    {
+      "id": 12157618280,
+      "name": "AtariDiorama-unsigned",
+      "sha256": "015cd3639fbc05db1f29b0eb2deffbe0584001564d513ef256fceee88b600f18",
+      "url": "https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963/artifacts/12157618280",
+      "expiresAt": "2026-11-02T01:25:18Z"
+    }
+  ],
+  "localVerification": {
+    "artifactArchiveDigestsMatched": true,
+    "ipaZipCRC": "passed",
+    "sourceZipCRC": "passed",
+    "sourceFilesMatchedToCommit": 365,
+    "ipaBytes": 655971,
+    "ipaSha256": "d5a479768921ef092e5b9eaf1cfe465db845f13ee1ad85d4a8a53bb97e6359dc",
+    "bonjourAndLocalNetworkPlistKeys": true,
+    "twoPlayerHomebrewMatchesSource": true
+  },
+  "userReportedEarlierSingleDeviceAR": "User reports AR works with the original test ROM and their supplied Atari ROMs on their phone; model, iOS version and ROM identities not recorded.",
+  "requiresResigning": true,
+  "physicalTwoPhoneWiFiTested": false,
+  "sharedARAlignmentDeviceTested": false,
+  "deviceLatencyOrAudioQualityMeasured": false,
+  "signedExportTested": false
+}

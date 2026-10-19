@@ -8,6 +8,8 @@ The user reports successful AR operation of the earlier build with the included 
 
 Private Wi-Fi multiplayer now implements room-code joining, host-only emulation, independent Player 2 joystick/paddle inputs, scene/original-pixel/audio streaming and shared-table ARWorldMap alignment. The native suite now has 16 passing methods, including independent joystick-port/button probes, an independent network audio tap and guest playback, and the updated homebrew's Player 2 actor. Hosted network/build verification is tracked separately from physical two-phone testing. See [LOCAL_MULTIPLAYER.md](LOCAL_MULTIPLAYER.md) and [the pending two-phone acceptance checks](DEVICE_TESTING.md#two-phone-multiplayer-acceptance-pending).
 
+[Multiplayer build #5](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963) passed for commit `e14eb626c5e9b11c9852c9763ba2d8e113e737ad`: 16 hosted native tests, protocol validation and real TLS-PSK loopback connections, followed by the arm64 iPhone archive. The downloaded IPA's digest, device executable, local-network/Bonjour permission keys, two-player fixture and ZIP CRC were verified on Windows. All 365 source ZIP files exactly match that built commit. See [the machine-readable record](evidence/multiplayer-build.json), [hosted multiplayer output](evidence/multiplayer-tests.txt) and [native runner output](evidence/multiplayer-native-tests.txt). Loopback tests do not establish physical Wi-Fi discovery, shared-table alignment, device latency or audio quality.
+
 ## Executed tests
 
 Windows x64, portable Zig 0.13.0, Python 3.13.13 from the existing Blender installation. The pinned Stella tree contains 286 verified files; the native build compiles 100 sources. Twelve tests execute against the real compiled DLL:

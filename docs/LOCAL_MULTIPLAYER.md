@@ -2,6 +2,8 @@
 
 Install the same multiplayer build on both iPhones. Only Player 1 needs the cartridge. There is no account, internet server, cellular route or ROM download on Player 2's phone.
 
+[Download the verified multiplayer IPA and matching source](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963/artifacts/12157618280), then re-sign/install using [BUILD_WINDOWS.md](BUILD_WINDOWS.md). [Build #5 passed](https://github.com/CreationsBy/AR-Atari-Emulator/actions/runs/39185044963); its [verification record](evidence/multiplayer-build.json) distinguishes hosted tests from the pending two-phone acceptance.
+
 ## Host and join
 
 1. Connect both phones to the same Wi-Fi and allow **Local Network** and **Camera** access when prompted. Guest networks with client isolation can prevent discovery or connections.
