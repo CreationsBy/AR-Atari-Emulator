@@ -24,6 +24,7 @@ struct DioramaView: UIViewRepresentable {
         private var anchor = AnchorEntity(world: SIMD3<Float>.zero)
         private var arAnchor: ARAnchor?
         private var entities: [UInt64: ModelEntity] = [:]
+        private var entityRoles: [UInt64: Int32] = [:]
         private var geometry: [UInt64: UInt64] = [:]
         private var colors: [UInt64: UInt32] = [:]
         private var meshCache: [UInt64: MeshResource] = [:]
@@ -200,6 +201,9 @@ struct DioramaView: UIViewRepresentable {
             world.scale = SIMD3<Float>(repeating: presentation.width)
             world.orientation = presentation.worldRotation(nativeUpright: nativeUpright)
             world.position = presentation.worldOffset(nativeUpright: nativeUpright)
+            for (id, entity) in entities {
+                entity.orientation = presentation.actorRotation(reconstruction: model.profile.reconstruction, role: entityRoles[id] ?? 0)
+            }
             // Side-view profiles already use an upright pixel plane. Only their
             // presentation backing changes, rather than rotating them twice.
             if presentation.upright && nativeUpright {
@@ -264,13 +268,15 @@ struct DioramaView: UIViewRepresentable {
         private func render(_ snapshot: FrameSnapshot) {
             if lastScene != snapshot.sceneID {
                 entities.values.forEach { $0.removeFromParent() }
-                entities.removeAll(); geometry.removeAll(); colors.removeAll(); lastScene = snapshot.sceneID
+                entities.removeAll(); entityRoles.removeAll(); geometry.removeAll(); colors.removeAll(); lastScene = snapshot.sceneID
             }
             var live = Set<UInt64>()
             for object in snapshot.objects {
                 live.insert(object.id)
                 let entity = entities[object.id] ?? ModelEntity()
                 if entities[object.id] == nil { world.addChild(entity); entities[object.id] = entity }
+                entityRoles[object.id] = object.role
+                entity.orientation = model.presentation.actorRotation(reconstruction: model.profile.reconstruction, role: object.role)
                 entity.position = [object.x, object.y, object.z]
                 if geometry[object.id] != object.geometry_hash || colors[object.id] != object.color_rgba {
                     do {
@@ -299,6 +305,7 @@ struct DioramaView: UIViewRepresentable {
             }
             for id in Array(entities.keys) where !live.contains(id) {
                 entities.removeValue(forKey: id)?.removeFromParent(); geometry.removeValue(forKey: id); colors.removeValue(forKey: id)
+                entityRoles.removeValue(forKey: id)
             }
         }
         private static func mesh(_ boxes: [ADBox]) throws -> MeshResource {

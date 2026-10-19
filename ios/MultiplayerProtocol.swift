@@ -39,6 +39,12 @@ struct SharedPresentation: Codable, Equatable {
         // Pivot the entire upright scene around its bottom edge, including tilt.
         upright && !nativeUpright ? -worldRotation(nativeUpright: false).act(SIMD3<Float>(0,0,0.375)) * width : .zero
     }
+    func actorRotation(reconstruction: String?, role: Int32) -> simd_quatf {
+        // Semantic skaters already stand above their foot anchor. In a vertical
+        // rink their silhouettes should stand in the screen plane, not lie on it.
+        upright && reconstruction == "iceHockeyNTSCv1" && role == 2 ?
+            simd_quatf(angle: -.pi / 2, axis: [1,0,0]) : simd_quatf()
+    }
     func validate() throws {
         guard width.isFinite, (0.08...1.5).contains(width), rotation.isFinite, abs(rotation) < 100_000,
               tilt.isFinite, (-60...60).contains(tilt) else { throw MultiplayerError.invalid("Invalid shared placement.") }

@@ -33,7 +33,7 @@ def main():
                 objects=[{'id':o.id,'role':o.role,'colorIndex':o.color_index,'rgba':o.color_rgba,
                     'position':[o.x,o.y,o.z],'pattern':f'{o.pattern:016x}',
                     'boxes':[[b.x,b.y,b.z,b.width,b.height,b.depth] for b in s.boxes[o.first_box:o.first_box+o.box_count]]} for o in objs]
-                scene={'frame':i,'objects':objects}
+                scene={'frame':i,'reconstruction':'iceHockeyNTSCv1','objects':objects}
                 (output/f'scene-{i}.json').write_text(json.dumps(scene))
                 if i==240:(output/'reconstructed-scene.json').write_text(json.dumps(scene))
                 captures.append({'frame':i,'objects':s.object_count,'boxes':s.box_count,'heads':sum(o.role==2 and o.color_index==70 for o in objs),'puckComponents':sum(o.role==3 for o in objs)})

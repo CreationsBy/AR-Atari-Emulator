@@ -27,9 +27,11 @@ def material(name,color):
 for obj in data['objects']:
     vertices=[];faces=[];px,py,pz=obj['position']
     for x,y,z,w,h,d in obj['boxes']:
-        x+=px;y+=py;z+=pz
         start=len(vertices)
         corners=[(x+sx*w/2,y+sy*h/2,z+sz*d/2) for sx,sz,sy in [(-1,-1,-1),(1,-1,-1),(1,1,-1),(-1,1,-1),(-1,-1,1),(1,-1,1),(1,1,1),(-1,1,1)]]
+        if args.upright and data.get('reconstruction')=='iceHockeyNTSCv1' and obj['role']==2:
+            corners=[(cx,cz,-cy) for cx,cy,cz in corners]
+        corners=[(cx+px,cy+py,cz+pz) for cx,cy,cz in corners]
         vertices += [(cx,cy,0.375-cz) if args.upright else (cx,cz,cy) for cx,cy,cz in corners]
         faces += [tuple(start+i for i in f) for f in [(0,3,2,1),(4,5,6,7),(0,1,5,4),(1,2,6,5),(2,3,7,6),(3,0,4,7)]]
     mesh=bpy.data.meshes.new(str(obj['id']));mesh.from_pydata(vertices,[],faces);mesh.update()
@@ -39,7 +41,7 @@ bpy.ops.mesh.primitive_cube_add(size=1,location=(0,0,-.012));base=bpy.context.ob
 if args.upright:base.location=(0,-.012,.375);base.dimensions=(1.04,.02,.79)
 base.data.materials.append(material('Base',[.022,.032,.044]))
 bpy.ops.mesh.primitive_plane_add(size=200,location=(0,0,-.026));bpy.context.object.data.materials.append(material('Ground',[.055,.073,.09]))
-bpy.ops.object.light_add(type='AREA',location=(-1,-1,2));bpy.context.object.data.energy=180;bpy.context.object.data.shape='DISK';bpy.context.object.data.size=2
+bpy.ops.object.light_add(type='AREA',location=(-1,1.5 if args.upright else -1,2));bpy.context.object.data.energy=180;bpy.context.object.data.shape='DISK';bpy.context.object.data.size=2
 bpy.ops.object.camera_add(location=(1.1,1.4,1.4));camera=bpy.context.object
 camera.rotation_euler=(Vector((0,0,.375 if args.upright else .02))-camera.location).to_track_quat('-Z','Y').to_euler();camera.data.type='ORTHO';camera.data.ortho_scale=1.55
 scene=bpy.context.scene;scene.camera=camera;scene.render.engine='CYCLES';scene.cycles.samples=24

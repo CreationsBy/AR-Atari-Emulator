@@ -49,6 +49,8 @@ func rejects(_ body: () throws -> Void) throws {
         let top = pose.worldRotation(nativeUpright: false).act(SIMD3<Float>(0,0,-0.375)) * pose.width + pose.worldOffset(nativeUpright: false)
         try expect(simd_length(bottom) < 0.0001 && top.y > 0.25, "Upright world is not standing on its bottom edge")
         try expect(abs(pose.worldRotation(nativeUpright: true).angle) < 0.0001, "Side-view profile rotated twice")
+        let skaterHead = pose.worldRotation(nativeUpright: false).act(pose.actorRotation(reconstruction: "iceHockeyNTSCv1", role: 2).act(SIMD3<Float>(0,0.07,0)))
+        try expect(skaterHead.y > 0.069 && abs(skaterHead.z) < 0.001, "Vertical skater silhouette lies sideways on the rink")
         var tilted = settings; tilted.tilt = 30; tilted.rotation = 45
         let tiltedPose = SharedPresentation(tilted)
         let foot = tiltedPose.worldRotation(nativeUpright: false).act(SIMD3<Float>(0,0,0.375)) * tiltedPose.width + tiltedPose.worldOffset(nativeUpright: false)
