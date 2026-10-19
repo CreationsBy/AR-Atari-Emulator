@@ -32,6 +32,40 @@ func rejects(_ body: () throws -> Void) throws {
         s.pcm = Data(repeating: 1, count: 524 * 4)
         return s
     }
+    @MainActor static func engineLoadingTests() async throws {
+        let engine = EmulationEngine()
+        let data = try Data(contentsOf: URL(fileURLWithPath: "ios/Resources/TabletopTest.a26"))
+        let profile = try JSONDecoder().decode(GameProfile.self, from: Data(contentsOf: URL(fileURLWithPath: "profiles/tabletop-test.json")))
+        for attempt in 0..<4 {
+            let loaded: Result<Double, Error> = await withCheckedContinuation { continuation in
+                engine.load(data: data, filename: "TabletopTest.a26", profile: profile, controller: "joystick") {
+                    continuation.resume(returning: $0)
+                }
+            }
+            let rate = try loaded.get()
+            try expect(rate > 0, "Worker ROM load has no sample rate")
+            engine.reset()
+            var snapshot: FrameSnapshot?
+            // The real cartridge has an initial blank TIA frame before its
+            // reset handler finishes; drive normal frames until it draws.
+            for frame in 0..<8 {
+                snapshot = await withCheckedContinuation { continuation in
+                    engine.advance(now: Double(attempt + 1) + Double(frame) / 60) { continuation.resume(returning: $0) }
+                }
+                if !(snapshot?.objects.isEmpty ?? true) { break }
+            }
+            try expect(snapshot?.width == 160 && !(snapshot?.objects.isEmpty ?? true), "Worker load/reset produced no reconstructed frame")
+            let saved: Result<Data, Error> = await withCheckedContinuation { continuation in
+                engine.save { continuation.resume(returning: $0) }
+            }
+            let state = try saved.get()
+            let restored: Result<Void, Error> = await withCheckedContinuation { continuation in
+                engine.restore(state) { continuation.resume(returning: $0) }
+            }
+            try restored.get()
+        }
+        print("PASS: actual EmulationEngine dispatch-queue ROM load, reset, first frame and save/restore (4 cycles)")
+    }
     static func protocolTests() throws {
         for _ in 0..<100 { try expect(RoomCode.valid(RoomCode.make()), "Generated room code invalid") }
         try expect(RoomCode.normalize(" abcd-efgh ") == "ABCDEFGH", "Room code normalization")
@@ -154,7 +188,7 @@ func rejects(_ body: () throws -> Void) throws {
     }
     @MainActor static func main() async {
         do {
-            try protocolTests(); try await transportTests()
+            try protocolTests(); try await engineLoadingTests(); try await transportTests()
             print("All multiplayer tests passed. Physical Wi-Fi and shared-AR alignment still require two iPhones.")
         } catch { print("FAIL: \(error)"); exit(1) }
     }

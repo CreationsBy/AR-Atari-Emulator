@@ -19,6 +19,9 @@ int lastRoom=-1;
 uint32_t objectLimit,boxLimit;
 struct Sprite { Mask mask{}; int x=0,y=0,state=0,color=0; uint32_t rgba=0; uint64_t frame=0; bool valid=false; };
 std::array<Sprite,18> cached;
+// One emulator queue owns this adapter. Keep raster-sized working storage off
+// the small iOS worker stack, and reuse it instead of allocating it per frame.
+struct Workspace { Mask playfield{},floor{},claimed{},revealed{},player{},patch{}; } workspace;
 struct Rect {int x,y,w,h;};
 std::vector<Rect> rectangles(const Mask &mask) {
     std::vector<Rect> rects;std::map<std::pair<int,int>,int> active;
@@ -59,7 +62,14 @@ bool emit(uint64_t id,int role,int color,uint32_t rgba,const Mask &mask,float he
     o.geometry_hash=o.pattern=hash;o.box_count=uint32_t(rects.size());objects.push_back(o);return true;
 }
 }
-extern "C" void ad_reset_adventure(){objects.clear();boxes.clear();cached={};lastRoom=-1;lastFrame=0;++sceneID;}
+extern "C" void ad_reset_adventure(){
+    objects.clear();boxes.clear();
+    // Aggregate assignment creates a ~605 KB temporary with the ARM64 ABI.
+    // This reset runs for *every* cartridge, including generic/demo profiles.
+    // Invalid entries are never read; masks are cleared in place when captured.
+    for(auto &sprite:cached)sprite.valid=false;
+    lastRoom=-1;lastFrame=0;++sceneID;
+}
 extern "C" const ADScene *ad_reconstruct_adventure(const ADFrame *f,const ADProfile *p) {
     size_t size=0;const auto rom=ad_loaded_cartridge(&size);
     if(!rom || size!=4096 || !f->ram || !f->indices || f->width!=W || f->height!=H || f->ram[10]>30)return nullptr;
@@ -75,7 +85,9 @@ extern "C" const ADScene *ad_reconstruct_adventure(const ADFrame *f,const ADProf
     objectLimit=std::min(p->max_objects?p->max_objects:uint32_t(AD_MAX_OBJECTS),uint32_t(AD_MAX_OBJECTS));
     boxLimit=std::min(p->max_boxes?p->max_boxes:uint32_t(AD_MAX_BOXES),uint32_t(AD_MAX_BOXES));
     float depth=std::clamp(p->default_height,.004f,.15f);
-    Mask playfield{},floor{},claimed{},revealed{};
+    auto &playfield=workspace.playfield;auto &floor=workspace.floor;
+    auto &claimed=workspace.claimed;auto &revealed=workspace.revealed;
+    playfield.fill(0);floor.fill(0);claimed.fill(0);revealed.fill(0);
     int control=read(0xfe1b+room*9+4);
     std::array<int,256> backgroundCounts{};std::array<uint32_t,256> palette{};
     for(int y=2;y<195;++y)for(int x=0;x<W;++x) {
@@ -102,7 +114,7 @@ extern "C" const ADScene *ad_reconstruct_adventure(const ADFrame *f,const ADProf
             for(int x=std::max(0,x0);x<std::min(W,x0+8);++x)playfield[y*W+x]=0;
     }
     // Explicit ball geometry stays separate even when touching a same-color wall.
-    Mask player{};int px=int(f->ram[11])-2,py=213-2*int(f->ram[12]);
+    auto &player=workspace.player;player.fill(0);int px=int(f->ram[11])-2,py=213-2*int(f->ram[12]);
     for(int y=py;y<py+8;++y)for(int x=px;x<px+4;++x)
         if(x>=0 && x<W && y>=2 && y<195 && (f->indices[y*W+x]&254)!=bg)player[y*W+x]=claimed[y*W+x]=1;
     int playerColor=-1;for(int i=0;i<W*H;++i)if(player[i]){playerColor=f->indices[i]&254;break;}
@@ -127,13 +139,14 @@ extern "C" const ADScene *ad_reconstruct_adventure(const ADFrame *f,const ADProf
                 if(!playfield[i] && !player[i] && c!=bg)++colors[c];
             }
             int surroundColor=int(std::max_element(colors.begin(),colors.end())-colors.begin());
-            bool visible=colors[surroundColor]>=32;Mask patch{};
+            bool visible=colors[surroundColor]>=32;auto &patch=workspace.patch;patch.fill(0);
             if(visible)for(int y=std::max(2,y0);y<std::min(195,y0+64);++y)for(int x=std::max(0,x0);x<std::min(W,x0+32);++x)revealed[y*W+x]=1;
             if(visible)for(int i=0;i<W*H;++i)if(revealed[i] && !playfield[i] && !player[i] && (f->indices[i]&254)==surroundColor)patch[i]=1;
             emit(3000+surroundColor,AD_PLATFORM,surroundColor,palette[surroundColor],patch,.003f,0,false);
             continue;
         }
-        Sprite sprite{};sprite.x=x0;sprite.y=y0;sprite.frame=f->number;
+        auto &sprite=cached[id];sprite.mask.fill(0);sprite.valid=false;
+        sprite.x=x0;sprite.y=y0;sprite.frame=f->number;
         sprite.state=read(word(0xff44+offset+2));
         std::array<int,256> colors{};
         for(int row=0;row<96 && ptr+row<0x10000;++row) {
@@ -152,7 +165,7 @@ extern "C" const ADScene *ad_reconstruct_adventure(const ADFrame *f,const ADProf
             if((f->indices[i]&254)!=sprite.color)sprite.mask[i]=0;
             else claimed[i]=1;
         }
-        sprite.rgba=palette[sprite.color];sprite.valid=colors[sprite.color]>0;cached[id]=sprite;
+        sprite.rgba=palette[sprite.color];sprite.valid=colors[sprite.color]>0;
     }
     for(int id=1;id<18;++id) {
         auto &s=cached[id];if(!s.valid)continue;

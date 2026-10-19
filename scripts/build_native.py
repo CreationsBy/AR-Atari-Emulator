@@ -108,6 +108,10 @@ def main():
         command = [str(Path(args.zig).resolve()), 'c++' if cpp else 'cc'] if args.zig else [('clang++' if cpp else 'clang') if apple else os.environ.get('CXX' if cpp else 'CC', 'c++' if cpp else 'cc')]
         obj = output / (hashlib.sha256(str(source).encode()).hexdigest()[:18] + '.o')
         flags = common + (['-std=c++17'] if cpp else ['-std=gnu99'])
+        if source.parent == ROOT / 'native/src':
+            # App-authored bridge/adapters run on an iOS background queue.
+            # Catch large frame/aggregate temporaries on the actual target ABI.
+            flags += ['-Wframe-larger-than=65536', '-Werror=frame-larger-than']
         stamp = obj.with_suffix('.command')
         digest = hashlib.sha256((' '.join(command + flags)).encode()).hexdigest()
         headers = list((ROOT / 'native/include').glob('*.h'))
